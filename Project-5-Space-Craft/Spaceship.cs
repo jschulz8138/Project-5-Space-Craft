@@ -2,7 +2,7 @@
 
 namespace Project_5_Space_Craft
 {
-    internal class Spaceship
+    class Spaceship
     {
         private List<SpaceshipReadings> data;
         private Timer timer;

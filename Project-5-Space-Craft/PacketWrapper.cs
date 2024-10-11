@@ -2,7 +2,7 @@
 
 namespace Project_5_Space_Craft
 {
-    internal class PacketWrapper
+    public class PacketWrapper
     {
         SpaceshipReadings readings;
         public PacketWrapper(SpaceshipReadings readings)
