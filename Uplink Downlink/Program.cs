@@ -1,2 +1,10 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, Uplink Downlink!");
+﻿using Uplink_Downlink;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var link = new Link("http://localhost:5000");
+        link.StartServer();
+    }
+}
