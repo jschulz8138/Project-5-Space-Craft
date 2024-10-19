@@ -13,7 +13,7 @@ namespace Payload_Ops_Tests
             PacketWrapper pw = new PacketWrapper(new ReadingsStub());
             Dictionary<string, string> expected = new Dictionary<string, string>() {
 
-                { "datetime", "10/10/2024 2:02:00 PM"},
+                { "datetime", DateTime.Now.ToString(new CultureInfo("en-US"))},
                 { "datatype", "Project_5_Space_Craft.ReadingsStub" },
                 { "data", "0"},
                 { "crc", "FFFFFFFF" }
@@ -23,7 +23,7 @@ namespace Payload_Ops_Tests
             //Assert
             foreach (KeyValuePair<string, string> entry in actual)
             {
-                Assert.AreEqual(entry.value, expected[entry.actual]);
+                Assert.AreEqual(expected[entry.Key], entry.Value);
             }
         }
     }
