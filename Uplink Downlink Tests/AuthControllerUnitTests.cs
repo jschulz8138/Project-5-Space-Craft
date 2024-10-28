@@ -5,7 +5,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-
+using LinkServer.Controllers;
+using System.Reflection;
 namespace LinkServer.Controllers.Tests
 {
     [TestClass]
@@ -17,9 +18,8 @@ namespace LinkServer.Controllers.Tests
         [TestInitialize]
         public void Setup()
         {
-            // Mocking HttpContext for the controller
             var httpContext = new DefaultHttpContext();
-            httpContext.Session = new MockHttpSession(); // Use the mock session here
+            httpContext.Session = new MockHttpSession();
 
             _controller = new AuthenticatorController
             {
@@ -29,6 +29,22 @@ namespace LinkServer.Controllers.Tests
                 }
             };
         }
+
+        [TestCleanup]
+        public void Teardown()
+        {
+            var authenticatedUsersField = typeof(AuthenticatorController)
+            .GetField("_authenticatedUsers", BindingFlags.Static | BindingFlags.NonPublic);
+
+            if (authenticatedUsersField != null)
+            {
+                var authenticatedUsers = authenticatedUsersField.GetValue(null) as IDictionary<string, bool>;
+                authenticatedUsers?.Clear();
+            }
+
+        }
+
+
 
         // Login function tests
 
@@ -140,7 +156,7 @@ namespace LinkServer.Controllers.Tests
 
         public void Set(string key, byte[] value) => _sessionStorage[key] = value;
 
-        public byte[] Get(string key) => _sessionStorage.TryGetValue(key, out var value) ? value : null;
+        public byte[]? Get(string key) => _sessionStorage.TryGetValue(key, out var value) ? value : null;
 
         public void Remove(string key) => _sessionStorage.Remove(key);
 
@@ -153,8 +169,6 @@ namespace LinkServer.Controllers.Tests
         public Task LoadAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
         public Task CommitAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-        // Implement the missing TryGetValue method
         public bool TryGetValue(string key, out byte[]? value)
         {
             return _sessionStorage.TryGetValue(key, out value);
