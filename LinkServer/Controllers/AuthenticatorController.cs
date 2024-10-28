@@ -19,7 +19,9 @@ namespace LinkServer.Controllers
             {"user2", "password2" }
         };
 
-        // Static dictionary to store logged-in sessions (as an example)
+        private short _loginAttempts = 0;
+
+        // Static dictionary to store logged-in sessions
         private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
 
@@ -27,18 +29,21 @@ namespace LinkServer.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserCredentials credentials)
         {
-            if(_authenticatedUsers.ContainsKey(credentials.Username))
-            {
-                return Ok("Already authenticated");
-            }
-            else if (_users.TryGetValue(credentials.Username, out var password) && password == credentials.Password)
+            if (_loginAttempts >= 3)
+                return Unauthorized("Too many login attempts.");
+
+            if (_authenticatedUsers.ContainsKey(credentials.Username))
+                return Ok("Already authenticated.");
+
+            if (_users.TryGetValue(credentials.Username, out var password) && password == credentials.Password)
             {
                 _authenticatedUsers[credentials.Username] = true;
                 HttpContext.Session.SetString("username", credentials.Username);
-                return Ok("Authenticated");
+                return Ok("Authenticated.");
             }
 
-            return Unauthorized("Invalid credentials");
+            _loginAttempts++;
+            return Unauthorized("Invalid credentials.");
         }
 
         [HttpPost("logout")]

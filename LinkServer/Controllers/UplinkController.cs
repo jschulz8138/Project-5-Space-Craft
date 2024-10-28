@@ -8,11 +8,9 @@ namespace LinkServer.Controllers
     [ServiceFilter(typeof(AuthenticateFilter))]
     public class UplinkController : ControllerBase
     {
-
         private static PacketWrapper _allData = new PacketWrapper("{\"sensorData\": {\"temperature\": 22.5, \"humidity\": 55.0, \"status\": \"operational\"}}");
         private static PacketWrapper _confirmationPacketSettings = new PacketWrapper("{\"settings\": {\"temperature-setting\": 21.5, \"humidity-setting\": 45.0, \"power-setting\": \"power saving\"}}");
 
-        // this is an example of a endpoint
         // POST api/uplink/send
         [HttpPost("send")]
         public IActionResult SendUplink([FromBody] PacketWrapper packet)
