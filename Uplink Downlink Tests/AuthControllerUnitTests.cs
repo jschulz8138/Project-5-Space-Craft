@@ -60,7 +60,7 @@ namespace LinkServer.Controllers.Tests
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Authenticated", result.Value);
+            Assert.AreEqual("Successfully authenticated.", result.Value);
             Assert.IsTrue(AuthenticatorController.IsAuthenticated("user1"));
         }
 
@@ -76,7 +76,7 @@ namespace LinkServer.Controllers.Tests
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Invalid credentials", result.Value);
+            Assert.AreEqual("Authentication failed, invalid user credentials.", result.Value);
             Assert.IsFalse(AuthenticatorController.IsAuthenticated("user1"));
         }
 
