@@ -19,20 +19,41 @@ namespace LinkServer.Controllers
             return Ok(new { Message = "Uplink received and processed" });
         }
 
+        // Put apu/uplink/update-settings
+        [HttpPut("update-settings")]
+        public IActionResult UpdateSettings([FromBody] PacketWrapper settings)
+        {
+            // REPLACE WITH STUB / ACTUAL CALL FROM PAYLOAD OPS
+            _confirmationPacketSettings = settings;
+
+            if(_confirmationPacketSettings != null)
+            {
+                return Ok(_confirmationPacketSettings);
+            }
+            else
+            {
+                return BadRequest("Settings not updated.");
+            }
+        }
+
+        // GET api/uplink/request-settings
+        [HttpGet("request-settings")]
+        public IActionResult RequestSettings()
+        {
+            // REPLACE WITH STUB / ACTUAL CALL FROM PAYLOAD OPS
+            PacketWrapper currentSettings = new PacketWrapper("{\"settings\": {\"temperature-setting\": 21.5, \"humidity-setting\": 45.0, \"power-setting\": \"power saving\"}}");
+
+            return Ok(currentSettings);
+        }
+
         //  GET api/uplink/request-all-data
         [HttpGet("request-all-data")]
         public IActionResult RequestAllData()
         {
-            return Ok(_allData);
-            // Call function to payload ops to get current settings and put it in a packet to send to the ground station (this is the updating of all important senesor data (new route may be added for showing current settings
-        }
+            // REPLACE WITH STUB / ACTUAL CALL FROM PAYLOAD OPS
+            PacketWrapper allData = new PacketWrapper("{\"sensorData\": {\"temperature\": 22.5, \"humidity\": 55.0, \"status\": \"operational\"}}");
 
-        // Put apu/uplink/update-settings
-        [HttpPut("update-settings")]
-        public IActionResult UpdateSettings()
-        {
-            return Ok(_confirmationPacketSettings);
-            // Call function to PayloadOaps to pass a packet on
+            return Ok(allData);
         }
     }
 }

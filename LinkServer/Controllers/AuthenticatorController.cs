@@ -13,19 +13,15 @@ namespace LinkServer.Controllers
     [Route("api/[controller]")]
     public class AuthenticatorController : ControllerBase
     {
-        private static readonly Dictionary<string, string> _users = new()
-        {
-            {"user1", "password1" },
-            {"user2", "password2" }
-        };
+        private static readonly List<UserCredentials> _users =
+        [
+            new UserCredentials { Username = "user1", Password = "password1" },
+            new UserCredentials { Username = "user2", Password = "password2" }
+        ];
 
         private short _loginAttempts = 0;
-
-        // Static dictionary to store logged-in sessions
         private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
-
-        //I believe the route is api/Authenticator/login
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserCredentials credentials)
         {
@@ -35,15 +31,16 @@ namespace LinkServer.Controllers
             if (_authenticatedUsers.ContainsKey(credentials.Username))
                 return Ok("Already authenticated.");
 
-            if (_users.TryGetValue(credentials.Username, out var password) && password == credentials.Password)
+            var user = _users.FirstOrDefault(u => u.Username == credentials.Username && u.Password == credentials.Password);
+            if (user != null)
             {
                 _authenticatedUsers[credentials.Username] = true;
                 HttpContext.Session.SetString("username", credentials.Username);
-                return Ok("Authenticated.");
+                return Ok("Successfully authenticated.");
             }
 
             _loginAttempts++;
-            return Unauthorized("Invalid credentials.");
+            return Unauthorized("Authentication failed, invalid user credentials.");
         }
 
         [HttpPost("logout")]
