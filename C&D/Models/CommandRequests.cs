@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace C_D.Models
 {
-    internal class CommandRequests
+    public class CommandRequest
     {
+        public string CommandType { get; set; }
+        public string Command { get; set; }
     }
 }

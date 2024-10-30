@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace C_D.Models
 {
-    internal class TelemetryReadings
+    public class TelemetryReadings
     {
+        public string Data { get; set; }
     }
 }

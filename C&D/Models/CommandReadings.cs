@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace C_D.Models
 {
-    internal class CommandReadings
+    public class CommandReadings
     {
+        public string Status { get; set; }
     }
 }

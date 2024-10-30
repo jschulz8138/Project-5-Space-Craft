@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace C_D.Models
 {
-    internal class TelemetryResponse
+    public class TelemetryResponse
     {
+        public string Temperature { get; set; }
+        public string Position { get; set; }
+        public string PowerStatus { get; set; }
     }
 }
