@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LinkServer.Controllers;
 using System.Reflection;
+
 namespace LinkServer.Controllers.Tests
 {
     [TestClass]
@@ -41,13 +42,9 @@ namespace LinkServer.Controllers.Tests
                 var authenticatedUsers = authenticatedUsersField.GetValue(null) as IDictionary<string, bool>;
                 authenticatedUsers?.Clear();
             }
-
         }
 
-
-
-        // Login function tests
-
+            // LOGIN FUNCITON TESTS
         // Successful test should be a successful authentication
         [TestMethod]
         public void Login_WithValidCredentials_ShouldAuthenticateUser()
@@ -80,8 +77,45 @@ namespace LinkServer.Controllers.Tests
             Assert.IsFalse(AuthenticatorController.IsAuthenticated("user1"));
         }
 
-        // Logout function tests
+        [TestMethod]
+        public void Login_WithExceededAttempts_ShouldReturnUnauthorized()
+        {
+            // Arrange
+            var credentials = new UserCredentials { Username = "user1", Password = "wrongpassword" };
 
+            // Act - Fail login 3 times
+            for (int i = 0; i < 3; i++)
+            {
+                _controller.Login(credentials);
+            }
+
+            // Act - Fourth login attempt
+            var result = _controller.Login(credentials) as UnauthorizedObjectResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Too many login attempts.", result.Value);
+        }
+
+        [TestMethod]
+        public void Login_WhenAlreadyAuthenticated_ShouldReturnOk()
+        {
+            // Arrange
+            var credentials = new UserCredentials { Username = "user1", Password = "password1" };
+
+            // Log the user in initially
+            _controller.Login(credentials);
+
+            // Act - Attempt to login again
+            var result = _controller.Login(credentials) as OkObjectResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Already authenticated.", result.Value);
+        }
+
+
+            // LOGOUT FUNCTION TESTS
         // Attempts to logout, should return a successful logged out response
         [TestMethod]
         public void Logout_WhenUserIsAuthenticated_ShouldLogoutUser()
@@ -115,11 +149,43 @@ namespace LinkServer.Controllers.Tests
             Assert.AreEqual("User is not logged in", result.Value);
         }
 
-        // IsAuthenticated function tests
+        [TestMethod]
+        public void Logout_WithNonexistentUser_ShouldReturnBadRequest()
+        {
+            // Arrange
+            var credentials = new UserCredentials { Username = "nonexistent", Password = "password" };
 
+            // Act
+            var result = _controller.Logout(credentials) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("User is not logged in", result.Value);
+        }
+
+        [TestMethod]
+        public void Logout_AfterMultipleLoginAttempts_ShouldLogoutUser()
+        {
+            // Arrange
+            var credentials = new UserCredentials { Username = "user1", Password = "password1" };
+
+            // Multiple login attempts (some correct, some incorrect)
+            _controller.Login(credentials); // successful login
+            _controller.Login(new UserCredentials { Username = "user1", Password = "wrongpassword" });
+
+            // Act - Logout
+            var result = _controller.Logout(credentials) as OkObjectResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Logged out", result.Value);
+            Assert.IsFalse(AuthenticatorController.IsAuthenticated("user1"));
+        }
+
+            // IS_AUTHENTICATED TEST
         // Tests the isAuthenticated function (Successful Test)
         [TestMethod]
-        public void IsAuthenticated_ShouldReturnTrueWhenUserIsAuthenticated()
+        public void IsAuthenticated_TrueWhenAuthenticated()
         {
             // Arrange
             var credentials = new UserCredentials { Username = "user1", Password = "password1" };
@@ -135,7 +201,7 @@ namespace LinkServer.Controllers.Tests
 
         // Tests the isAuthenticated function (Unsuccessful Test)
         [TestMethod]
-        public void IsAuthenticated_ShouldReturnFalseWhenUserIsNotAuthenticated()
+        public void IsAuthenticated_FalseWhenNotAuthenticated()
         {
             // Act
             var result = AuthenticatorController.IsAuthenticated("user1");

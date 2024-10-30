@@ -27,9 +27,11 @@ namespace LinkServer.Controllers
         {
             if (_loginAttempts >= 3)
                 return Unauthorized("Too many login attempts.");
+                // Log
 
             if (_authenticatedUsers.ContainsKey(credentials.Username))
                 return Ok("Already authenticated.");
+                // Log
 
             var user = _users.FirstOrDefault(u => u.Username == credentials.Username && u.Password == credentials.Password);
             if (user != null)
@@ -37,10 +39,12 @@ namespace LinkServer.Controllers
                 _authenticatedUsers[credentials.Username] = true;
                 HttpContext.Session.SetString("username", credentials.Username);
                 return Ok("Successfully authenticated.");
+                // Log
             }
 
             _loginAttempts++;
             return Unauthorized("Authentication failed, invalid user credentials.");
+            // Log
         }
 
         [HttpPost("logout")]
@@ -51,9 +55,11 @@ namespace LinkServer.Controllers
                 _authenticatedUsers.TryRemove(credentials.Username, out _);
                 HttpContext.Session.Remove("username");
                 return Ok("Logged out");
+                // Log
             }
 
             return BadRequest("User is not logged in");
+
         }
 
         public static bool IsAuthenticated(string username)

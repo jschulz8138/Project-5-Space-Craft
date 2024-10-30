@@ -1,5 +1,6 @@
 using LinkServer.Filters;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Specialized;
 
 namespace LinkServer.Controllers
 {
@@ -9,7 +10,7 @@ namespace LinkServer.Controllers
     public class UplinkController : ControllerBase
     {
         private static PacketWrapper _allData = new PacketWrapper("{\"sensorData\": {\"temperature\": 22.5, \"humidity\": 55.0, \"status\": \"operational\"}}");
-        private static PacketWrapper _confirmationPacketSettings = new PacketWrapper("{\"settings\": {\"temperature-setting\": 21.5, \"humidity-setting\": 45.0, \"power-setting\": \"power saving\"}}");
+        private static PacketWrapper _currentSettings = new PacketWrapper("{\"settings\": {\"temperature-setting\": 21.5, \"humidity-setting\": 45.0, \"power-setting\": \"power saving\"}}");
 
         // POST api/uplink/send
         [HttpPost("send")]
@@ -24,15 +25,15 @@ namespace LinkServer.Controllers
         public IActionResult UpdateSettings([FromBody] PacketWrapper settings)
         {
             // REPLACE WITH STUB / ACTUAL CALL FROM PAYLOAD OPS
-            _confirmationPacketSettings = settings;
+            _currentSettings = settings;
 
-            if(_confirmationPacketSettings != null)
+            if(_currentSettings != null)
             {
-                return Ok(_confirmationPacketSettings);
+                return Ok(_currentSettings);
             }
             else
             {
-                return BadRequest("Settings not updated.");
+                return BadRequest("Settings not updated."); 
             }
         }
 
@@ -41,9 +42,10 @@ namespace LinkServer.Controllers
         public IActionResult RequestSettings()
         {
             // REPLACE WITH STUB / ACTUAL CALL FROM PAYLOAD OPS
-            PacketWrapper currentSettings = new PacketWrapper("{\"settings\": {\"temperature-setting\": 21.5, \"humidity-setting\": 45.0, \"power-setting\": \"power saving\"}}");
+            PacketWrapper currentSettingsPacket = _currentSettings;
+            Console.WriteLine(currentSettingsPacket.ToString());
 
-            return Ok(currentSettings);
+            return Ok(currentSettingsPacket);
         }
 
         //  GET api/uplink/request-all-data
