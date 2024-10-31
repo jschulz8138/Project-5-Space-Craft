@@ -1,38 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using C_D.Models;
-
-using System.Globalization;
-using C_D.Models;
-
-namespace C_D.Utils
+﻿namespace CAndD.Utils
 {
-    public class PacketWrapper
+    public static class PacketWrapper
     {
-        private readonly TelemetryReadings _readings;
-
-        public PacketWrapper(TelemetryReadings readings)
+        public static string WrapPacket(string data)
         {
-            _readings = readings;
-        }
-
-        public Dictionary<string, string> ToJson()
-        {
-            var data = new Dictionary<string, string>
-            {
-                { "datetime", DateTime.Now.ToString(new CultureInfo("en-US")) },
-                { "datatype", _readings.GetType().ToString() },
-                { "data", _readings.Data },
-                { "crc", CrcCalculator() }
-            };
-            return data;
-        }
-
-        private string CrcCalculator()
-        {
-            return 0xFFFFFFFF.ToString("X8");
+            // Wrap data into a packet format if necessary
+            return $"<Packet>{data}</Packet>";
         }
     }
 }
-

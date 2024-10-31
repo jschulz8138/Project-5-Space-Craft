@@ -1,14 +1,18 @@
-﻿using C_D.Controllers;
+﻿using CAndD.Controllers;
 
-namespace C_D
+namespace CAndD
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Starting C&D System HTTP Server...");
             var controller = new CAndDController();
-            controller.StartServer();
+
+            // Simulate a command input
+            controller.ProcessCommand("AdjustPower 50%");
+
+            // Display telemetry data
+            controller.DisplayTelemetryData();
         }
     }
 }

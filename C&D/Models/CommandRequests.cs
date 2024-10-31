@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace C_D.Models
+﻿namespace CAndD.Models
 {
     public class CommandRequest
     {
         public string CommandType { get; set; }
-        public string Command { get; set; }
+        public string Target { get; set; }
+        public string Parameters { get; set; }
     }
 }

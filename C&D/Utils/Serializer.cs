@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
+using CAndD.Models;
 
-using System.Text.Json;
-
-namespace C_D.Utils
+namespace CAndD.Utils
 {
     public static class Serializer
     {
-        public static string Serialize<T>(T data) => JsonSerializer.Serialize(data);
-
-        public static T Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json);
+        public static string SerializeTelemetry(TelemetryResponse telemetry)
+        {
+            return JsonSerializer.Serialize(telemetry);
+        }
     }
 }
