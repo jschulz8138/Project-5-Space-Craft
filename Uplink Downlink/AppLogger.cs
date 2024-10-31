@@ -21,6 +21,9 @@ namespace Uplink_Downlink
         public abstract void LogLogout(string userId);
         public abstract void LogAuthentication(string userId, bool success);
 
+        //new abstract method to log incoming packets
+        public abstract void LogIncomingPacket(string packetData);
+
         protected virtual void WriteToFile(string content)
         {
             try
