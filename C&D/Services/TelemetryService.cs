@@ -1,5 +1,6 @@
-﻿using System.Text.Json;
+﻿using System;
 using System.IO;
+using System.Text.Json;
 using CAndD.Models;
 
 namespace CAndD.Services
@@ -19,8 +20,22 @@ namespace CAndD.Services
 
         public void SaveTelemetryDataAsJson(TelemetryResponse telemetryData)
         {
-            string jsonString = JsonSerializer.Serialize(telemetryData, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText("TelemetryData.json", jsonString);
+            // Get the solution root directory and build the path
+            string solutionRootPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+            string filePath = Path.Combine(solutionRootPath, "TelemetryData.json");
+
+            try
+            {
+                // Serialize and save the data
+                string jsonString = JsonSerializer.Serialize(telemetryData, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(filePath, jsonString);
+
+                Console.WriteLine($"Telemetry data created successfully .");  // Testing to check file path
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save telemetry data. Error: {ex.Message}");
+            }
         }
     }
 }
