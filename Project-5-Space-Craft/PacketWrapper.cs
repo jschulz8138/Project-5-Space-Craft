@@ -1,27 +1,22 @@
-﻿using System.Globalization;
-
+﻿//PayloadOps
+//PacketWrapper implementation for packetizing data for transfer
+using System.Text.Json;
 namespace Project_5_Space_Craft
 {
     public class PacketWrapper
     {
-        SpaceshipReadings readings;
-        public PacketWrapper(SpaceshipReadings readings)
+        //given a spaceship reading, convert it to a string in the form of a json object
+        public String ToJson(SpaceshipReading reading)
         {
-            this.readings = readings;
+            SpaceshipPacket pkt = new SpaceshipPacket(reading);
+            return JsonSerializer.Serialize(pkt);
         }
-        public Dictionary<string, string> ToJson()
+
+        //Given a json packet in the form of a string, convert it to a readable packet
+        public SpaceshipPacket ToReading(String packet)
         {
-            Dictionary<string, string> d = new Dictionary<string, string>();
-            d.Add("datetime", DateTime.Now.ToString(new CultureInfo("en-US")));
-            d.Add("datatype", readings.GetType().ToString());
-            d.Add("data", readings.getData());
-            d.Add("crc", this.CrcCalculator());
-            return d;
-        }
-        //Placeholder Stub
-        private string CrcCalculator()
-        {
-            return 0xFFFFFFFF.ToString("X8");
+            SpaceshipPacket? pkt = JsonSerializer.Deserialize<SpaceshipPacket>(packet);
+            return pkt;
         }
     }
 }
