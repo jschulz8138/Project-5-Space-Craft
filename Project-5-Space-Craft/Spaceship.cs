@@ -4,14 +4,14 @@ namespace Project_5_Space_Craft
 {
     public class Spaceship
     {
-        private List<SpaceshipReading> spaceShipReadings;
+        private List<IReading> spaceShipReadings;
         private Timer timer;
         private PacketWrapper pktWrapper;
 
 
         public Spaceship() {
             //initalize variables
-            this.spaceShipReadings = new List<SpaceshipReading>();
+            this.spaceShipReadings = new List<IReading>();
             pktWrapper = new PacketWrapper();
 
             DateTime now = DateTime.Now;
@@ -30,16 +30,16 @@ namespace Project_5_Space_Craft
             this.timer = new Timer(this.TimedEvent, null, nextEvent - now, eventLength);
         }
 
-        public void AddReading(SpaceshipReading reading)
+        public void AddReading(IReading reading)
         {
             spaceShipReadings.Add(reading);
         }
 
         //TODO: Connect functionality to uplink / downlink
-        public String SendReading(SpaceshipReading reading)
+        public String SendReading(IReading reading)
         {
             spaceShipReadings.Remove(reading);
-            return pktWrapper.ToJson<Packet>(reading);
+            return pktWrapper.ToJsonReadings(reading);
         }
 
 
@@ -47,7 +47,7 @@ namespace Project_5_Space_Craft
         {
             Console.WriteLine("Event triggered at: " + DateTime.Now);
 
-            foreach (SpaceshipReading reading in spaceShipReadings)
+            foreach (IReading reading in spaceShipReadings)
             {
                 SendReading(reading);
             }

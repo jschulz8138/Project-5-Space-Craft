@@ -4,9 +4,9 @@ using System.IO.Hashing;
 using System.Text;
 namespace Project_5_Space_Craft
 {
-    public class FunctionPacket : Packet
+    public class FunctionPacket : IPacket
     {
-        public FunctionPacket(SpaceshipReading reading)
+        public FunctionPacket(IReading reading)
         {
 
         }

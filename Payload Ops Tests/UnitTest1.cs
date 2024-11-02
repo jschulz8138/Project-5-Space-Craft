@@ -1,30 +1,234 @@
-using System.Globalization;
-using System.Net.Sockets;
+//Payload Ops
+//Unit and Integration Tests
 using Project_5_Space_Craft;
 namespace Payload_Ops_Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class FunctionPacketTests
     {
         [TestMethod]
-        public void TM001PacketWrapperToJson()
+        public void FNPKT_0001_Constructor_Not_Null()
         {
-        //    //Arange
-        //    PacketWrapper pw = new PacketWrapper(new ReadingsStub());
-        //    Dictionary<string, string> expected = new Dictionary<string, string>() {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            Assert.IsNotNull(funcPkt);
+        }
+    }
 
-        //        { "datetime", "10/10/2024 2:02:00 PM"},
-        //        { "datatype", "Project_5_Space_Craft.ReadingsStub" },
-        //        { "data", "0"},
-        //        { "crc", "FFFFFFFF" }
-        //};
-        //    //Act
-        //    Dictionary<string, string> actual = pw.ToJson();
-        //    //Assert
-        //    foreach (KeyValuePair<string, string> entry in actual)
-        //    {
-        //        Assert.AreEqual(entry.value, expected[entry.actual]);
-        //    }
+    [TestClass]
+    public class SpaceshipTests
+    {
+        [TestMethod]
+        public void SPACESHIP_0001_Constructor_Variant_Not_Null()
+        {
+            Spaceship spaceShip = new Spaceship();
+            Assert.IsNotNull(spaceShip);
+        }
+    }
+    [TestClass]
+    public class ReadingsPacketTests
+    {
+        [TestMethod]
+        public void RDPKT_0001_Constructor_Variant_1_Not_Null()
+        {
+            ReadingsPacket readingPkt = new ReadingsPacket("dataType", "data");
+            Assert.IsNotNull(readingPkt);
+        }
+
+        [TestMethod]
+        public void RDPKT_0002_Constructor_Variant_2_Not_Null()
+        {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            Assert.IsNotNull(readingPkt);
+        }
+
+        //TODO
+        [TestMethod]
+        public void RDPKT_0003_Constructor_Variant_1_Data_Correct_DateTime()
+        {
+            ReadingsPacket readingPkt = new ReadingsPacket("dataType", "data");
+            DateTime actual = readingPkt.DateTime;
+            DateTime expected = actual;
+            Assert.AreEqual(actual, expected);
+        }
+
+        //TODO
+        [TestMethod]
+        public void RDPKT_0004_Constructor_Variant_2_Data_Correct_DateTime()
+        {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            DateTime actual = readingPkt.DateTime;
+            DateTime expected = actual;
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void RDPKT_0005_Constructor_Variant_1_Data_Correct_DataType()
+        {
+            ReadingsPacket readingPkt = new ReadingsPacket("dataType", "data");
+            string actual = readingPkt.DataType;
+            string expected = "dataType";
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void RDPKT_0006_Constructor_Variant_2_Data_Correct_DataType()
+        {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            string actual = readingPkt.DataType;
+            string expected = "ReadingsStub";
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void RDPKT_0007_Constructor_Variant_1_Data_Correct_Data()
+        {
+            ReadingsPacket readingPkt = new ReadingsPacket("dataType", "data");
+            string actual = readingPkt.Data;
+            string expected = "data";
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void RDPKT_0008_Constructor_Variant_2_Data_Correct_Data()
+        {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            string actual = readingPkt.Data;
+            string expected = "This is the data";
+            Assert.AreEqual(actual, expected);
+        }
+
+        //TODO
+        [TestMethod]
+        public void RDPKT_0009_Constructor_Variant_1_Data_Correct_CRC()
+        {
+            ReadingsPacket readingPkt = new ReadingsPacket("dataType", "data");
+            string actual = readingPkt.PacketCRC;
+            string expected = actual;
+            Assert.AreEqual(actual, expected);
+        }
+
+        //TODO
+        [TestMethod]
+        public void RDPKT_0010_Constructor_Variant_2_Data_Correct_CRC()
+        {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            string actual = readingPkt.PacketCRC;
+            string expected = actual;
+            Assert.AreEqual(actual, expected);
+        }
+
+        //TODO
+        [TestMethod]
+        public void RDPKT_0011_Calculate_CRC()
+        {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            readingPkt.CalculateCRC();
+            string actual = readingPkt.PacketCRC;
+            string expected = actual;
+            Assert.AreEqual(actual, expected);
+        }
+
+        //TODO
+        [TestMethod]
+        public void RDPKT_0012_Convert_Byte_Array()
+        {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            byte[] actual = readingPkt.ConvertToByteArray("test");
+            byte[] expected = actual;
+            Assert.AreEqual(actual, expected);
+        }
+
+        //TODO
+        [TestMethod]
+        public void RDPKT_0013_Validate_CRC()
+        {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            bool actual = readingPkt.ValidateCRC("test");
+            bool expected = true;
+            Assert.AreEqual(actual, expected);
+        }
+    }
+
+    [TestClass]
+    public class PacketWrapperTests
+    {
+        [TestMethod]
+        public void PKTWRAP_0001_Constructor_Not_Null()
+        {
+            PacketWrapper pktWrap = new PacketWrapper();
+            Assert.IsNotNull(pktWrap);
+        }
+
+        ////TODO
+        //[TestMethod]
+        //public void PKTWRAP_0002_To_Json_Readings()
+        //{
+        //    ReadingsStub stub = new ReadingsStub("TestingData");
+        //    ReadingsPacket rdPkt = new ReadingsPacket(stub);
+        //    PacketWrapper pktWrap = new PacketWrapper();
+        //    string actual = pktWrap.ToJsonReadings(rdPkt);
+        //    string expected = "test";
+        //    Assert.AreEqual(actual, expected);
+        //}
+
+        ////TODO
+        //[TestMethod]
+        //public void PKTWRAP_0003_To_Json_Function()
+        //{
+        //    ReadingsStub stub = new ReadingsStub("TestingData");
+        //    PacketWrapper pktWrap = new PacketWrapper();
+        //    FunctionPacket funcPkt = new FunctionPacket(stub);
+        //    string actual = pktWrap.ToJsonFunction(funcPkt);
+        //    string expected = "test";
+        //    Assert.AreEqual(actual, expected);
+        //}
+
+        ////TODO
+        //[TestMethod]
+        //public void PKTWRAP_0004_To_Reading()
+        //{
+        //    PacketWrapper pktWrap = new PacketWrapper();
+        //    IPacket actual = pktWrap.ToReading("");
+        //    Assert.IsNotNull(actual);
+        //}
+    }
+
+    [TestClass]
+    public class ReadingStubTests
+    {
+        [TestMethod]
+        public void RDSB_0001_Constructor_Not_Null()
+        {
+            ReadingsStub stub = new ReadingsStub("testData");
+            Assert.IsNotNull(stub);
+        }
+
+        [TestMethod]
+        public void RDSB_0002_GetData()
+        {
+            ReadingsStub stub = new ReadingsStub("testData");
+            string expected = "testData";
+            string actual = stub.GetData();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RDSB_0003_SetData()
+        {
+            ReadingsStub stub = new ReadingsStub("testData");
+            stub.SetData("changedData");
+            string expected = "changedData";
+            string actual = stub.GetData();
+            Assert.AreEqual(expected, actual);
         }
     }
 }
