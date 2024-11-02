@@ -4,7 +4,7 @@ using System.IO.Hashing;
 using System.Text;
 namespace Project_5_Space_Craft
 {
-    public class SpaceshipPacket
+    public class SpaceshipPacket : Packet
     {
         private DateTime dateTime;
         private string dataType;
@@ -28,7 +28,7 @@ namespace Project_5_Space_Craft
         }
 
         //Calculates the CRC based on the dateTime, dataType, and data
-        private string CalculateCRC()
+        private string calculateCRC()
         {
             Crc32 crc = new Crc32();
             crc.Append(ConvertToByteArray(dateTime.ToString()));
@@ -38,9 +38,15 @@ namespace Project_5_Space_Craft
         }
 
         //Helper function to convert a given string to a byte array
-        private byte[] ConvertToByteArray(string str)
+        private byte[] convertToByteArray(string str)
         {
             return Encoding.ASCII.GetBytes(str);
+        }
+
+        //TODO
+        //
+        private bool validateCRC(string crc){
+            return true;
         }
     }
 }
