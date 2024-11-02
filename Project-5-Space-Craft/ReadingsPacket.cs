@@ -4,14 +4,18 @@ using System.IO.Hashing;
 using System.Text;
 namespace Project_5_Space_Craft
 {
-    public class SpaceshipPacket : Packet
+    public class ReadingsPacket : IPacket
     {
         private DateTime dateTime;
+        public DateTime DateTime { get { return dateTime; } }
         private string dataType;
+        public string DataType { get { return dataType; } }
         private string data;
+        public string Data { get { return data; } }
         private string packetCRC;
+        public string PacketCRC { get { return packetCRC; } }
 
-        public SpaceshipPacket(string dataType, string data)
+        public ReadingsPacket(string dataType, string data)
         {
             dateTime = DateTime.Now;
             this.dataType = dataType;
@@ -19,7 +23,7 @@ namespace Project_5_Space_Craft
             packetCRC = CalculateCRC();
         }
 
-        public SpaceshipPacket(SpaceshipReading reading)
+        public ReadingsPacket(IReading reading)
         {
             dateTime = DateTime.Now;
             this.dataType = reading.GetType().Name;
@@ -28,24 +32,23 @@ namespace Project_5_Space_Craft
         }
 
         //Calculates the CRC based on the dateTime, dataType, and data
-        private string calculateCRC()
+        public string CalculateCRC()
         {
             Crc32 crc = new Crc32();
             crc.Append(ConvertToByteArray(dateTime.ToString()));
             crc.Append(ConvertToByteArray(dataType));
             crc.Append(ConvertToByteArray(data));
-            return crc.GetCurrentHash().ToString();
+            return BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
         }
 
         //Helper function to convert a given string to a byte array
-        private byte[] convertToByteArray(string str)
+        public byte[] ConvertToByteArray(string str)
         {
             return Encoding.ASCII.GetBytes(str);
         }
 
         //TODO
-        //
-        private bool validateCRC(string crc){
+        public bool ValidateCRC(string crc){
             return true;
         }
     }

@@ -1,14 +1,19 @@
 //PayloadOps
 //Packet Definition for a function call
+using System.IO.Hashing;
+using System.Text;
 namespace Project_5_Space_Craft
 {
-    public class FunctionPacket : Packet
+    public class FunctionPacket : IPacket
     {
-        //TODO:WRITE a constructor
+        public FunctionPacket(IReading reading)
+        {
+
+        }
 
         //TODO
         //Calculates the CRC based on the dateTime, dataType, and data
-        private string calculateCRC()
+        public string CalculateCRC()
         {
             Crc32 crc = new Crc32();
             //crc.Append(ConvertToByteArray(dateTime.ToString()));
@@ -18,14 +23,13 @@ namespace Project_5_Space_Craft
         }
 
         //Helper function to convert a given string to a byte array
-        private byte[] convertToByteArray(string str)
+        public byte[] ConvertToByteArray(string str)
         {
             return Encoding.ASCII.GetBytes(str);
         }
 
         //TODO
-        //
-        private bool validateCRC(string crc){
+        public bool ValidateCRC(string crc){
             return true;
         }
     }
