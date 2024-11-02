@@ -5,11 +5,20 @@ namespace Project_5_Space_Craft
 {
     public class PacketWrapper
     {
-        //TODO: ADd constructor
-        //given a spaceship reading, convert it to a string in the form of a json object
-        public String ToJson<Packet>(SpaceshipReading reading)
+        public PacketWrapper()
         {
-            Packet pkt = new Packet(reading);
+
+        }
+
+        //given a spaceship reading, convert it to a string in the form of a json object
+        public String ToJson<T>(SpaceshipReading reading)
+        {
+            Packet pkt;
+            Type listType = typeof(T);
+            if (listType == typeof(SpaceshipPacket))
+                pkt = new SpaceshipPacket(reading);
+            else
+                pkt = new FunctionPacket(reading);
             return JsonSerializer.Serialize(pkt);
         }
 

@@ -28,7 +28,7 @@ namespace Project_5_Space_Craft
         }
 
         //Calculates the CRC based on the dateTime, dataType, and data
-        private string calculateCRC()
+        public string CalculateCRC()
         {
             Crc32 crc = new Crc32();
             crc.Append(ConvertToByteArray(dateTime.ToString()));
@@ -38,14 +38,13 @@ namespace Project_5_Space_Craft
         }
 
         //Helper function to convert a given string to a byte array
-        private byte[] convertToByteArray(string str)
+        public byte[] ConvertToByteArray(string str)
         {
             return Encoding.ASCII.GetBytes(str);
         }
 
         //TODO
-        //
-        private bool validateCRC(string crc){
+        public bool ValidateCRC(string crc){
             return true;
         }
     }
