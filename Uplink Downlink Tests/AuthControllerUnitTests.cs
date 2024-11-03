@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LinkServer.Controllers;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LinkServer.Controllers.Tests
 {
@@ -243,9 +244,20 @@ namespace LinkServer.Controllers.Tests
         public Task LoadAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
         public Task CommitAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-        public bool TryGetValue(string key, out byte[]? value)
+
+        public bool TryGetValue(string key, [NotNullWhen(true)] out byte[]? value)
         {
-            return _sessionStorage.TryGetValue(key, out value);
+            // Check if the key exists in the session storage
+            if (_sessionStorage.TryGetValue(key, out var tempValue))
+            {
+                value = tempValue;
+                return true;
+            }
+            else
+            {
+                value = null; // Set to null if key not found
+                return false;
+            }
         }
     }
 }
