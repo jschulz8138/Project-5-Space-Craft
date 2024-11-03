@@ -14,16 +14,17 @@ namespace LinkServer.Controllers
     [Route("api/[controller]")]
     public class AuthenticatorController : ControllerBase
     {
-        private static readonly List<UserCredentials> _users =
-        [
+        private static readonly List<UserCredentials> _users = new List<UserCredentials>
+        {
             new UserCredentials { Username = "user1", Password = "password1" },
             new UserCredentials { Username = "user2", Password = "password2" }
-        ];
-        
-        private readonly AppLogger _logger;
+        };
+
+
+        private readonly AppLogger? _logger;
 
         // inject AppLogger through constructor
-        public AuthenticatorController(AppLogger logger)
+        public AuthenticatorController(AppLogger? logger = null)
         {
             _logger = logger;
         }
@@ -37,27 +38,29 @@ namespace LinkServer.Controllers
 
             if (_loginAttempts >= 3)
             {
-                _logger.LogAuthentication(credentials.Username, success: false)
+                _logger?.LogAuthentication(credentials.Username, success: false);
                 return Unauthorized("Too many login attempts.");
             }
 
             if (_authenticatedUsers.ContainsKey(credentials.Username))
             {
+                _logger?.LogAuthentication(credentials.Username, success: true);
                 return Ok("Already authenticated.");
-                _logger.LogAuthentication(credentials.Username, success: true)
             }
-            
+
+
             var user = _users.FirstOrDefault(u => u.Username == credentials.Username && u.Password == credentials.Password);
             if (user != null)
             {
                 _authenticatedUsers[credentials.Username] = true;
                 HttpContext.Session.SetString("username", credentials.Username);
-                _logger.LogAuthentication(credentials.Username, success: true)
+                _loginAttempts = 0;
+                _logger?.LogAuthentication(credentials.Username, success: true);
                 return Ok("Successfully authenticated.");
             }
 
             _loginAttempts++;
-            _logger.LogAuthentication(credentials.Username, success: false)
+            _logger?.LogAuthentication(credentials.Username, success: false);
             return Unauthorized("Authentication failed, invalid user credentials.");
         }
 
@@ -70,7 +73,7 @@ namespace LinkServer.Controllers
                 HttpContext.Session.Remove("username");
 
                 // log the logout event
-                _logger.LogLogout(credentials.Username);
+                _logger?.LogLogout(credentials.Username);
 
                 return Ok("Logged out");
                 // Log

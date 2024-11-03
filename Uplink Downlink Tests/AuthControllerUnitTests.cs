@@ -20,9 +20,9 @@ namespace LinkServer.Controllers.Tests
         public void Setup()
         {
             var httpContext = new DefaultHttpContext();
-            httpContext.Session = new MockHttpSession();
+            httpContext.Session = new MockHttpSession(); 
 
-            _controller = new AuthenticatorController
+            _controller = new AuthenticatorController(null)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -34,17 +34,25 @@ namespace LinkServer.Controllers.Tests
         [TestCleanup]
         public void Teardown()
         {
+            // Clear the authenticated users collection
             var authenticatedUsersField = typeof(AuthenticatorController)
-            .GetField("_authenticatedUsers", BindingFlags.Static | BindingFlags.NonPublic);
-
+                .GetField("_authenticatedUsers", BindingFlags.Static | BindingFlags.NonPublic);
             if (authenticatedUsersField != null)
             {
                 var authenticatedUsers = authenticatedUsersField.GetValue(null) as IDictionary<string, bool>;
                 authenticatedUsers?.Clear();
             }
+
+            // Reset login attempts
+            var loginAttemptsField = typeof(AuthenticatorController)
+                .GetField("_loginAttempts", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (loginAttemptsField != null)
+            {
+                loginAttemptsField.SetValue(_controller, (short)0);
+            }
         }
 
-            // LOGIN FUNCITON TESTS
+        // LOGIN FUNCITON TESTS
         // Successful test should be a successful authentication
         [TestMethod]
         public void Login_WithValidCredentials_ShouldAuthenticateUser()

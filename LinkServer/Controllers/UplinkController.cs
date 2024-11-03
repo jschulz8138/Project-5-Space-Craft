@@ -13,20 +13,21 @@ namespace LinkServer.Controllers
         private static PacketWrapper _allData = new PacketWrapper("{\"sensorData\": {\"temperature\": 22.5, \"humidity\": 55.0, \"status\": \"operational\"}}");
         private static PacketWrapper _currentSettings = new PacketWrapper("{\"settings\": {\"temperature-setting\": 21.5, \"humidity-setting\": 45.0, \"power-setting\": \"power saving\"}}");
 
-        private readonly AppLogger _logger;
-
+        private readonly AppLogger? _logger;
+        
         // inject AppLogger through constructor
-        public UplinkController(AppLogger logger)
+        public UplinkController(AppLogger? logger = null) // Added Null version to construtor for testing purposes
         {
             _logger = logger;
         }
+
 
         // POST api/uplink/send
         [HttpPost("send")]
         public IActionResult SendUplink([FromBody] PacketWrapper packet)
         {
             // log metadata about this request
-            _logger.LogMetadata("POST", "api/uplink/send", 200);
+            _logger?.LogMetadata("POST", "api/uplink/send", 200);
 
             Console.WriteLine($"Received uplink: {packet.JsonData}");
             return Ok(new { Message = "Uplink received and processed" });
@@ -67,7 +68,7 @@ namespace LinkServer.Controllers
         {
             // REPLACE WITH STUB / ACTUAL CALL FROM PAYLOAD OPS
             PacketWrapper allData = new PacketWrapper("{\"sensorData\": {\"temperature\": 22.5, \"humidity\": 55.0, \"status\": \"operational\"}}");
-            _logger.LogMetadata("GET", "api/uplink/request-all-data", 200);
+            _logger?.LogMetadata("GET", "api/uplink/request-all-data", 200);
             return Ok(allData);
         }
 
@@ -76,7 +77,7 @@ namespace LinkServer.Controllers
         public IActionResult UpdateSettings()
         {
             _logger.LogMetadata("PUT", "api/uplink/update-settings", 200);
-            return Ok(_confirmationPacketSettings);
+            return Ok(new { Message = "Settings updated successfully" });
         }
     }
 }
