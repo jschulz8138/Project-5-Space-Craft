@@ -11,11 +11,11 @@ namespace Project_5_Space_Craft
         }
 
         public string GetCommand(){
-            return this.thrust.ToSting();
+            return this.thrust.ToString();
         }
 
         public void RunCommand(){
-            Console.WriteLine($"Executing command: {this.thrust.ToString}");
+            Console.WriteLine($"Executing command: {this.thrust.ToString()}");
         }
     }
 }
