@@ -13,7 +13,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void FNPKT_0001_Constructor_Not_Null()
         {
-            ReadingsStub stub = new ReadingsStub("This is the data");
+            IncreaseThrustFunction stub = new IncreaseThrustFunction(420);
             FunctionPacket funcPkt = new FunctionPacket(stub);
             Assert.IsNotNull(funcPkt);
         }
