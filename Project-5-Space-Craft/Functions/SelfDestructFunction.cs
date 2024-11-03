@@ -11,7 +11,7 @@ namespace Project_5_Space_Craft
         }
 
         public string GetCommand(){
-            return this.authorization.ToString;
+            return this.authorization.ToString();
         }
 
         public void RunCommand(){
