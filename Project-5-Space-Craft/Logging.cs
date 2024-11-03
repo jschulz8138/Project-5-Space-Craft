@@ -1,23 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿//Payload Ops
+//File that handles logging to both the console and writing to an excel file
 namespace Project_5_Space_Craft
 {
-    internal class Logging
+    static class Logging
     {
-        //interacts with packetwrapper
+        private static String currentPacketType = "";
+        private static String currentSendingDirection = "";
+        private static String currentPacketData = "";
+        private static DateTime currentTime;
 
-        //type packet, when it was sent, incoming / outgoing, data
-        void test()
+        //Interacts with PacketWrapper
+        public static void LogPacket(String packetType, String direction, String data)
         {
-            Console.WriteLine();
+            currentPacketType = packetType;
+            currentSendingDirection = direction;
+            currentPacketData = data;
+            currentTime = DateTime.Now;
+            logFile();
+            logConsole();
         }
 
-        //log console
+        private static void logFile()
+        {
+            
+        }
 
-        //log file
+        private static void logConsole()
+        {
+            Console.WriteLine("Packet Detected!" +
+                " DataType: " + currentPacketData +
+                " Time: " + currentTime +
+                " Direction: " + currentSendingDirection +
+                " Data: " + currentPacketData);
+        }
     }
 }
+

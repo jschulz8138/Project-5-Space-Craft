@@ -19,6 +19,7 @@ DataPacket pkt = new DataPacket(stub);
 Console.WriteLine(pkt.ToJson());
 
 //Console.WriteLine(pktWrap.ToJsonReadings(stub));
+Logging.LogPacket("Temperature", "Outbound", "-95c");
 
 
 
