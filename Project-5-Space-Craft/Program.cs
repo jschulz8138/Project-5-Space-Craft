@@ -14,4 +14,8 @@ ship.SendReading(testReading);
 
 ReadingsStub stub = new ReadingsStub("TestingData");
 PacketWrapper pktWrap = new PacketWrapper();
-Console.WriteLine(pktWrap.ToJsonReadings(stub));
+pktWrap.ToJson(stub);
+//Console.WriteLine(pktWrap.ToJsonReadings(stub));
+
+
+

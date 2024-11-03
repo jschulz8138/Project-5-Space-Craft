@@ -13,7 +13,7 @@ namespace Project_5_Space_Craft
         //given a spaceship reading, convert it to a string in the form of a json object, used for reading packets
         public String ToJsonReadings(IReading reading)
         {
-            IPacket pkt = new ReadingsPacket(reading);
+            IPacket pkt = new DataPacket(reading);
             return JsonSerializer.Serialize(pkt);
         }
 
@@ -24,11 +24,26 @@ namespace Project_5_Space_Craft
             return JsonSerializer.Serialize(pkt);
         }
 
+        public String ToJson(IReading reading)
+        {
+            if (typeof(IReading).IsAssignableFrom(typeof(FunctionPacket)))
+            {
+                return "function";
+            }
+            else if (typeof(IReading).IsAssignableFrom(typeof(DataPacket)))
+            {
+                return "readings";
+            }
+            else
+            {
+                return "none";
+            }
+        }
         //Given a json packet in the form of a string, convert it to a readable packet
         public IPacket ToReading(String packet)
         {
             //TODO: Figure this out :)
-            ReadingsPacket? pkt = JsonSerializer.Deserialize<ReadingsPacket>(packet);
+            DataPacket? pkt = JsonSerializer.Deserialize<DataPacket>(packet);
             return pkt;
         }
     }

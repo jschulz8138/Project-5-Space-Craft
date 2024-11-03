@@ -31,7 +31,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void RDPKT_0001_Constructor_Variant_1_Not_Null()
         {
-            ReadingsPacket readingPkt = new ReadingsPacket("dataType", "data");
+            DataPacket readingPkt = new DataPacket("dataType", "data");
             Assert.IsNotNull(readingPkt);
         }
 
@@ -39,7 +39,7 @@ namespace Payload_Ops_Tests
         public void RDPKT_0002_Constructor_Variant_2_Not_Null()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
-            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            DataPacket readingPkt = new DataPacket(stub);
             Assert.IsNotNull(readingPkt);
         }
 
@@ -47,7 +47,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void RDPKT_0003_Constructor_Variant_1_Data_Correct_DateTime()
         {
-            ReadingsPacket readingPkt = new ReadingsPacket("dataType", "data");
+            DataPacket readingPkt = new DataPacket("dataType", "data");
             DateTime actual = readingPkt.DateTime;
             DateTime expected = actual;
             Assert.AreEqual(actual, expected);
@@ -58,7 +58,7 @@ namespace Payload_Ops_Tests
         public void RDPKT_0004_Constructor_Variant_2_Data_Correct_DateTime()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
-            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            DataPacket readingPkt = new DataPacket(stub);
             DateTime actual = readingPkt.DateTime;
             DateTime expected = actual;
             Assert.AreEqual(actual, expected);
@@ -67,7 +67,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void RDPKT_0005_Constructor_Variant_1_Data_Correct_DataType()
         {
-            ReadingsPacket readingPkt = new ReadingsPacket("dataType", "data");
+            DataPacket readingPkt = new DataPacket("dataType", "data");
             string actual = readingPkt.DataType;
             string expected = "dataType";
             Assert.AreEqual(actual, expected);
@@ -77,7 +77,7 @@ namespace Payload_Ops_Tests
         public void RDPKT_0006_Constructor_Variant_2_Data_Correct_DataType()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
-            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            DataPacket readingPkt = new DataPacket(stub);
             string actual = readingPkt.DataType;
             string expected = "ReadingsStub";
             Assert.AreEqual(actual, expected);
@@ -86,7 +86,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void RDPKT_0007_Constructor_Variant_1_Data_Correct_Data()
         {
-            ReadingsPacket readingPkt = new ReadingsPacket("dataType", "data");
+            DataPacket readingPkt = new DataPacket("dataType", "data");
             string actual = readingPkt.Data;
             string expected = "data";
             Assert.AreEqual(actual, expected);
@@ -96,7 +96,7 @@ namespace Payload_Ops_Tests
         public void RDPKT_0008_Constructor_Variant_2_Data_Correct_Data()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
-            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            DataPacket readingPkt = new DataPacket(stub);
             string actual = readingPkt.Data;
             string expected = "This is the data";
             Assert.AreEqual(actual, expected);
@@ -106,7 +106,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void RDPKT_0009_Constructor_Variant_1_Data_Correct_CRC()
         {
-            ReadingsPacket readingPkt = new ReadingsPacket("dataType", "data");
+            DataPacket readingPkt = new DataPacket("dataType", "data");
             string actual = readingPkt.PacketCRC;
             string expected = actual;
             Assert.AreEqual(actual, expected);
@@ -117,7 +117,7 @@ namespace Payload_Ops_Tests
         public void RDPKT_0010_Constructor_Variant_2_Data_Correct_CRC()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
-            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            DataPacket readingPkt = new DataPacket(stub);
             string actual = readingPkt.PacketCRC;
             string expected = actual;
             Assert.AreEqual(actual, expected);
@@ -128,7 +128,7 @@ namespace Payload_Ops_Tests
         public void RDPKT_0011_Calculate_CRC()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
-            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            DataPacket readingPkt = new DataPacket(stub);
             readingPkt.CalculateCRC();
             string actual = readingPkt.PacketCRC;
             string expected = actual;
@@ -140,7 +140,7 @@ namespace Payload_Ops_Tests
         public void RDPKT_0012_Convert_Byte_Array()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
-            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            DataPacket readingPkt = new DataPacket(stub);
             byte[] actual = readingPkt.ConvertToByteArray("test");
             byte[] expected = actual;
             Assert.AreEqual(actual, expected);
@@ -151,7 +151,7 @@ namespace Payload_Ops_Tests
         public void RDPKT_0013_Validate_CRC()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
-            ReadingsPacket readingPkt = new ReadingsPacket(stub);
+            DataPacket readingPkt = new DataPacket(stub);
             bool actual = readingPkt.ValidateCRC("test");
             bool expected = true;
             Assert.AreEqual(actual, expected);
