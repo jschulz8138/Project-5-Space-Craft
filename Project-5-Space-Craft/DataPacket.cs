@@ -48,9 +48,8 @@ namespace Project_5_Space_Craft
             return Encoding.ASCII.GetBytes(str);
         }
 
-        //TODO
         public bool ValidateCRC(string crc){
-            return true;
+            return this.CalculateCRC == crc;
         }
 
         public String ToJson()
