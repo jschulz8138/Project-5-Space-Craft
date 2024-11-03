@@ -14,6 +14,12 @@ namespace Uplink_Downlink
         private readonly string _url;
         public Link(string url)
         {
+            // Validates the URL for throwing exception
+            if (!Uri.TryCreate(url, UriKind.Absolute, out _))
+            {
+                throw new UriFormatException("Invalid URL format.");
+            }
+
             _url = url;
             _client = new RestClient(url);
         }

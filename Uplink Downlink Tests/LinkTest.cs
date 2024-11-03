@@ -53,19 +53,14 @@ namespace UnitTest_UplinkDownlink
             Assert.AreEqual(testUrl, restClient.Options.BaseUrl.ToString());
         }
 
-        ////Handlingthe Url which are not valid
+        // Invalid url test
 
-        //[TestMethod]
-        //[ExpectedException(typeof(UriFormatException))]
-        //public void _ShouldThrowExceptionForInvalidUrl()
-        //{
-        //    string invalidUrl = "invalid-url";
-        //    Link link = new Link(invalidUrl);
-
-
-        //}
+        [TestMethod]
+        [ExpectedException(typeof(UriFormatException))]
+        public void _ShouldThrowExceptionForInvalidUrl()
+        {
+            string invalidUrl = "invalid-url";
+            Link link = new Link(invalidUrl);
+        }
     }
-
-
-
 }
