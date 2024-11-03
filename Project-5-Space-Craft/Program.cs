@@ -13,5 +13,16 @@ ship.AddReading(testReading);
 ship.SendReading(testReading);
 
 ReadingsStub stub = new ReadingsStub("TestingData");
-PacketWrapper pktWrap = new PacketWrapper();
-Console.WriteLine(pktWrap.ToJsonReadings(stub));
+DataPacket pkt = new DataPacket(stub);
+//PacketWrapper pktWrap = new PacketWrapper();
+
+Console.WriteLine(pkt.ToJson());
+
+//Console.WriteLine(pktWrap.ToJsonReadings(stub));
+Logging.LogPacket("Temperature", "Outbound", "-95c");
+Logging.LogPacket("Radiation", "Outbound", "Extreme");
+Logging.LogPacket("Position", "Inbound", "Move Up");
+Logging.LogPacket("Velocity", "Outbound", "8232m/s");
+
+
+

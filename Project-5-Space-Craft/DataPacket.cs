@@ -2,9 +2,10 @@
 //Packet Definition for spaceship, contains a dateTime, dataType, data, and CRC
 using System.IO.Hashing;
 using System.Text;
+using System.Text.Json;
 namespace Project_5_Space_Craft
 {
-    public class ReadingsPacket : IPacket
+    public class DataPacket : IPacket
     {
         private DateTime dateTime;
         public DateTime DateTime { get { return dateTime; } }
@@ -15,7 +16,7 @@ namespace Project_5_Space_Craft
         private string packetCRC;
         public string PacketCRC { get { return packetCRC; } }
 
-        public ReadingsPacket(string dataType, string data)
+        public DataPacket(string dataType, string data)
         {
             dateTime = DateTime.Now;
             this.dataType = dataType;
@@ -23,7 +24,7 @@ namespace Project_5_Space_Craft
             packetCRC = CalculateCRC();
         }
 
-        public ReadingsPacket(IReading reading)
+        public DataPacket(IReading reading)
         {
             dateTime = DateTime.Now;
             this.dataType = reading.GetType().Name;
@@ -50,6 +51,11 @@ namespace Project_5_Space_Craft
         //TODO
         public bool ValidateCRC(string crc){
             return true;
+        }
+
+        public String ToJson()
+        {
+            return JsonSerializer.Serialize(this);
         }
     }
 }

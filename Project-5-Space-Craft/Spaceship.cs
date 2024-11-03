@@ -39,7 +39,7 @@ namespace Project_5_Space_Craft
         public String SendReading(IReading reading)
         {
             spaceShipReadings.Remove(reading);
-            return pktWrapper.ToJsonReadings(reading);
+            return pktWrapper.ToJson();
         }
 
 

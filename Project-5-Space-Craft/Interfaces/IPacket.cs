@@ -12,6 +12,8 @@ namespace Project_5_Space_Craft
 
         //Validates the CRC
         public bool ValidateCRC(string crc);
+
+        public String ToJson();
     }
 
 }

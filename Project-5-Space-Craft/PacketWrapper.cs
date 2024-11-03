@@ -1,5 +1,7 @@
 ﻿//PayloadOps
 //PacketWrapper implementation for packetizing data for transfer
+using System.Text;
+using System;
 using System.Text.Json;
 namespace Project_5_Space_Craft
 {
@@ -10,26 +12,29 @@ namespace Project_5_Space_Craft
 
         }
 
-        //given a spaceship reading, convert it to a string in the form of a json object, used for reading packets
-        public String ToJsonReadings(IReading reading)
+
+        //Calculates the CRC based on the dateTime, dataType, and data
+        public string CalculateCRC()
         {
-            IPacket pkt = new ReadingsPacket(reading);
-            return JsonSerializer.Serialize(pkt);
+
+            return "";
         }
 
-        //given a spaceship reading, convert it to a string in the form of a json object, used for function packets
-        public String ToJsonFunction(IReading reading)
+        //Helper function to convert a given string to a byte array
+        public byte[] ConvertToByteArray(string str)
         {
-            IPacket pkt = new FunctionPacket(reading);
-            return JsonSerializer.Serialize(pkt);
+            return Encoding.ASCII.GetBytes(str);
         }
 
-        //Given a json packet in the form of a string, convert it to a readable packet
-        public IPacket ToReading(String packet)
+        //TODO
+        public bool ValidateCRC(string crc)
         {
-            //TODO: Figure this out :)
-            ReadingsPacket? pkt = JsonSerializer.Deserialize<ReadingsPacket>(packet);
-            return pkt;
+            return true;
+        }
+
+        public String ToJson()
+        {
+            return "";
         }
     }
 }
