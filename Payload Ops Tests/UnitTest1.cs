@@ -11,11 +11,150 @@ namespace Payload_Ops_Tests
     public class FunctionPacketTests
     {
         [TestMethod]
-        public void FNPKT_0001_Constructor_Not_Null()
+        public void FNPKT_0001_Constructor_Not_Null_1()
         {
-            IncreaseThrustFunction stub = new IncreaseThrustFunction(420);
+            FunctionStub stub = new FunctionStub("test command");
             FunctionPacket funcPkt = new FunctionPacket(stub);
             Assert.IsNotNull(funcPkt);
+        }
+
+        [TestMethod]
+        public void FNPKT_0002_Constructor_Not_Null_2()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("test type","test command");
+            Assert.IsNotNull(funcPkt);
+        }
+
+        [TestMethod]
+        public void FNPKT_0003_Constructor_Variant_1_Data_Correct_DateTime()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            String actual = funcPkt.DateTime.ToString();
+            String expected = DateTime.Now.ToString();
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0004_Constructor_Variant_2_Data_Correct_DateTime()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("test type", "test command");
+            String actual = funcPkt.DateTime.ToString();
+            String expected = DateTime.Now.ToString();
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0005_Constructor_Variant_1_Data_Correct_FunctionType()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            string actual = funcPkt.FunctionType;
+            string expected = "FunctionStub";
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0006_Constructor_Variant_2_Data_Correct_FunctionType()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("test type", "test command");
+            string actual = funcPkt.FunctionType;
+            string expected = "test type";
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0007_Constructor_Variant_1_Data_Correct_Command()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            string actual = funcPkt.Command;
+            string expected = "Some Command";
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0008_Constructor_Variant_2_Data_Correct_Command()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("test type", "test command");
+            string actual = funcPkt.Command;
+            string expected = "test command";
+            Assert.AreEqual(actual, expected);
+        }
+
+
+        [TestMethod]
+        public void FNPKT_0009_Constructor_Variant_1_Data_Correct_CRC()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            Crc32 crc = new Crc32();
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.DateTime.ToString()));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
+            string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
+            string actual = funcPkt.PacketCRC;
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0010_Constructor_Variant_2_Data_Correct_CRC()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("test type", "test command");
+            Crc32 crc = new Crc32();
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.DateTime.ToString()));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
+            string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
+            string actual = funcPkt.PacketCRC;
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0011_Calculate_CRC()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            funcPkt.CalculateCRC();
+            Crc32 crc = new Crc32();
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.DateTime.ToString()));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
+            string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
+            string actual = funcPkt.PacketCRC;
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0012_Convert_Byte_Array()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            byte[] actual = funcPkt.ConvertToByteArray("This is the test string");
+            byte[] expected = Encoding.ASCII.GetBytes("This is the test string");
+            bool testPassed = expected.SequenceEqual(actual);
+            Assert.IsTrue(testPassed);
+        }
+
+        [TestMethod]
+        public void FNPKT_0013_Validate_CRC_True()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            FunctionPacket funcPktCopy = new FunctionPacket(stub);
+            bool actual = funcPkt.ValidateCRC(funcPktCopy.PacketCRC);
+            bool expected = true;
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0014_Validate_CRC_False()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            bool actual = funcPkt.ValidateCRC("probably wrong");
+            bool expected = false;
+            Assert.AreEqual(actual, expected);
         }
     }
 
@@ -157,14 +296,24 @@ namespace Payload_Ops_Tests
             Assert.IsTrue(testPassed);
         }
 
-        //TODO
         [TestMethod]
-        public void RDPKT_0013_Validate_CRC()
+        public void RDPKT_0013_Validate_CRC_True()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
             DataPacket readingPkt = new DataPacket(stub);
-            bool actual = readingPkt.ValidateCRC("test");
+            DataPacket readingPktCopy = new DataPacket(stub);
+            bool actual = readingPkt.ValidateCRC(readingPktCopy.PacketCRC);
             bool expected = true;
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void RDPKT_0014_Validate_CRC_False()
+        {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            DataPacket readingPkt = new DataPacket(stub);
+            bool actual = readingPkt.ValidateCRC("probably wrong");
+            bool expected = false;
             Assert.AreEqual(actual, expected);
         }
     }

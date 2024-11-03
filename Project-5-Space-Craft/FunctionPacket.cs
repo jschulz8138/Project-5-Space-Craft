@@ -39,7 +39,7 @@ namespace Project_5_Space_Craft
             crc.Append(ConvertToByteArray(dateTime.ToString()));
             crc.Append(ConvertToByteArray(functionType));
             crc.Append(ConvertToByteArray(command));
-            return crc.GetCurrentHash().ToString();
+            return BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
         }
 
         //Helper function to convert a given string to a byte array
