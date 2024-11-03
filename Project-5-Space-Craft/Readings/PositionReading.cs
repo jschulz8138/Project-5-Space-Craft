@@ -1,12 +1,12 @@
-﻿//PayloadOps TODO:// Remove this stub
-//This is an example stud for an implementation of SpaceshipReadings
+﻿//PayloadOps
+//Implementation of Position Readings, inheriting from IReading
 namespace Project_5_Space_Craft
 {
-    public class ReadingsStub : IReading
+    public class PositionReading : IReading
     {
         private string data;
 
-        public ReadingsStub(string data) {
+        public PositionReading(string data) {
             this.data = data;
         }
 

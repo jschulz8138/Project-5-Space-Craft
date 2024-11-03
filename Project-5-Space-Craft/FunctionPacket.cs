@@ -2,6 +2,7 @@
 //Packet Definition for a function call
 using System.IO.Hashing;
 using System.Text;
+using System.Text.Json;
 namespace Project_5_Space_Craft
 {
     public class FunctionPacket : IPacket
@@ -31,6 +32,11 @@ namespace Project_5_Space_Craft
         //TODO
         public bool ValidateCRC(string crc){
             return true;
+        }
+
+        public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Payload_Ops_Tests
         }
     }
     [TestClass]
-    public class ReadingsPacketTests
+    public class DataPacketTests
     {
         [TestMethod]
         public void RDPKT_0001_Constructor_Variant_1_Not_Null()
@@ -202,29 +202,149 @@ namespace Payload_Ops_Tests
         //}
     }
 
+    //[TestClass]
+    //public class ReadingStubTests
+    //{
+    //    [TestMethod]
+    //    public void RDSB_0001_Constructor_Not_Null()
+    //    {
+    //        ReadingsStub stub = new ReadingsStub("testData");
+    //        Assert.IsNotNull(stub);
+    //    }
+
+    //    [TestMethod]
+    //    public void RDSB_0002_GetData()
+    //    {
+    //        ReadingsStub stub = new ReadingsStub("testData");
+    //        string expected = "testData";
+    //        string actual = stub.GetData();
+    //        Assert.AreEqual(expected, actual);
+    //    }
+
+    //    [TestMethod]
+    //    public void RDSB_0003_SetData()
+    //    {
+    //        ReadingsStub stub = new ReadingsStub("testData");
+    //        stub.SetData("changedData");
+    //        string expected = "changedData";
+    //        string actual = stub.GetData();
+    //        Assert.AreEqual(expected, actual);
+    //    }
+    //}
+
     [TestClass]
-    public class ReadingStubTests
+    public class PositionReadingTests
     {
         [TestMethod]
-        public void RDSB_0001_Constructor_Not_Null()
+        public void POSRD_0001_Constructor_Not_Null()
         {
-            ReadingsStub stub = new ReadingsStub("testData");
+            PositionReading stub = new PositionReading("testData");
             Assert.IsNotNull(stub);
         }
 
         [TestMethod]
-        public void RDSB_0002_GetData()
+        public void POSRD_0002_GetData()
         {
-            ReadingsStub stub = new ReadingsStub("testData");
+            PositionReading stub = new PositionReading("testData");
             string expected = "testData";
             string actual = stub.GetData();
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void RDSB_0003_SetData()
+        public void POSRD_0003_SetData()
         {
-            ReadingsStub stub = new ReadingsStub("testData");
+            PositionReading stub = new PositionReading("testData");
+            stub.SetData("changedData");
+            string expected = "changedData";
+            string actual = stub.GetData();
+            Assert.AreEqual(expected, actual);
+        }
+    }
+
+    [TestClass]
+    public class RadiationReadingTests
+    {
+        [TestMethod]
+        public void RADRD_0001_Constructor_Not_Null()
+        {
+            RadiationReading stub = new RadiationReading("testData");
+            Assert.IsNotNull(stub);
+        }
+
+        [TestMethod]
+        public void RADRD_0002_GetData()
+        {
+            RadiationReading stub = new RadiationReading("testData");
+            string expected = "testData";
+            string actual = stub.GetData();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RADRD_0003_SetData()
+        {
+            RadiationReading stub = new RadiationReading("testData");
+            stub.SetData("changedData");
+            string expected = "changedData";
+            string actual = stub.GetData();
+            Assert.AreEqual(expected, actual);
+        }
+    }
+
+    [TestClass]
+    public class TemperatureReadingTests
+    {
+        [TestMethod]
+        public void TEMPRD_0001_Constructor_Not_Null()
+        {
+            TemperatureReading stub = new TemperatureReading("testData");
+            Assert.IsNotNull(stub);
+        }
+
+        [TestMethod]
+        public void TEMPRD_0002_GetData()
+        {
+            TemperatureReading stub = new TemperatureReading("testData");
+            string expected = "testData";
+            string actual = stub.GetData();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TEMPRD_0003_SetData()
+        {
+            TemperatureReading stub = new TemperatureReading("testData");
+            stub.SetData("changedData");
+            string expected = "changedData";
+            string actual = stub.GetData();
+            Assert.AreEqual(expected, actual);
+        }
+    }
+
+    [TestClass]
+    public class VelocityReadingTests
+    {
+        [TestMethod]
+        public void VELRD_0001_Constructor_Not_Null()
+        {
+            VelocityReading stub = new VelocityReading("testData");
+            Assert.IsNotNull(stub);
+        }
+
+        [TestMethod]
+        public void VELRD_0002_GetData()
+        {
+            VelocityReading stub = new VelocityReading("testData");
+            string expected = "testData";
+            string actual = stub.GetData();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void VELRD_0003_SetData()
+        {
+            VelocityReading stub = new VelocityReading("testData");
             stub.SetData("changedData");
             string expected = "changedData";
             string actual = stub.GetData();

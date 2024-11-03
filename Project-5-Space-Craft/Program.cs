@@ -13,8 +13,11 @@ ship.AddReading(testReading);
 ship.SendReading(testReading);
 
 ReadingsStub stub = new ReadingsStub("TestingData");
-PacketWrapper pktWrap = new PacketWrapper();
-pktWrap.ToJson(stub);
+DataPacket pkt = new DataPacket(stub);
+//PacketWrapper pktWrap = new PacketWrapper();
+
+Console.WriteLine(pkt.ToJson());
+
 //Console.WriteLine(pktWrap.ToJsonReadings(stub));
 
 
