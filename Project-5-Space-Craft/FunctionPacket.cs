@@ -19,16 +19,24 @@ namespace Project_5_Space_Craft
         public FunctionPacket(IFunction function)
         {
             dateTime = DateTime.Now;
-            this.dataType = function.GetType().Name;
-            this.data = function.GetCommand();
+            this.functionType = function.GetType().Name;
+            this.command = function.GetCommand();
             packetCRC = CalculateCRC();
         }
 
-        public DataPacket(string functionType, string command)
+        public FunctionPacket(string functionType, string command)
         {
             dateTime = DateTime.Now;
             this.functionType = functionType;
             this.command = command;
+            packetCRC = CalculateCRC();
+        }
+
+        public FunctionPacket(IReading reading)
+        {
+            dateTime = DateTime.Now;
+            this.functionType = reading.GetType().Name;
+            this.command = reading.GetData();
             packetCRC = CalculateCRC();
         }
 
@@ -49,7 +57,7 @@ namespace Project_5_Space_Craft
         }
 
         public bool ValidateCRC(string crc){
-            return this.CalculateCRC == crc;
+            return this.CalculateCRC() == crc;
         }
 
         public string ToJson()
