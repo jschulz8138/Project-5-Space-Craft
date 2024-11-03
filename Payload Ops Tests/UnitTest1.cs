@@ -157,14 +157,24 @@ namespace Payload_Ops_Tests
             Assert.IsTrue(testPassed);
         }
 
-        //TODO
         [TestMethod]
-        public void RDPKT_0013_Validate_CRC()
+        public void RDPKT_0013_Validate_CRC_True()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
             DataPacket readingPkt = new DataPacket(stub);
-            bool actual = readingPkt.ValidateCRC("test");
+            DataPacket readingPktCopy = new DataPacket(stub);
+            bool actual = readingPkt.ValidateCRC(readingPktCopy.PacketCRC);
             bool expected = true;
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void RDPKT_0014_Validate_CRC_False()
+        {
+            ReadingsStub stub = new ReadingsStub("This is the data");
+            DataPacket readingPkt = new DataPacket(stub);
+            bool actual = readingPkt.ValidateCRC("probably wrong");
+            bool expected = false;
             Assert.AreEqual(actual, expected);
         }
     }
