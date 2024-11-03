@@ -7,19 +7,38 @@ namespace Project_5_Space_Craft
 {
     public class FunctionPacket : IPacket
     {
-        public FunctionPacket(IReading reading)
-        {
+        private DateTime dateTime;
+        public DateTime DateTime { get { return dateTime; } }
+        private string functionType;
+        public string FunctionType { get { return functionType; } }
+        private string command;
+        public string Command { get { return command; } }
+        private string packetCRC;
+        public string PacketCRC { get { return packetCRC; } }
 
+        public FunctionPacket(IFunction function)
+        {
+            dateTime = DateTime.Now;
+            this.dataType = function.GetType().Name;
+            this.data = function.GetCommand();
+            packetCRC = CalculateCRC();
         }
 
-        //TODO
+        public DataPacket(string functionType, string command)
+        {
+            dateTime = DateTime.Now;
+            this.functionType = functionType;
+            this.command = command;
+            packetCRC = CalculateCRC();
+        }
+
         //Calculates the CRC based on the dateTime, dataType, and data
         public string CalculateCRC()
         {
             Crc32 crc = new Crc32();
-            //crc.Append(ConvertToByteArray(dateTime.ToString()));
-            //crc.Append(ConvertToByteArray(dataType));
-            //crc.Append(ConvertToByteArray(data));
+            crc.Append(ConvertToByteArray(dateTime.ToString()));
+            crc.Append(ConvertToByteArray(functionType));
+            crc.Append(ConvertToByteArray(command));
             return crc.GetCurrentHash().ToString();
         }
 
@@ -29,9 +48,8 @@ namespace Project_5_Space_Craft
             return Encoding.ASCII.GetBytes(str);
         }
 
-        //TODO
         public bool ValidateCRC(string crc){
-            return true;
+            return this.CalculateCRC == crc;
         }
 
         public string ToJson()
