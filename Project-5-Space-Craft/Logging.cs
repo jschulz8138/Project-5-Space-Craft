@@ -3,46 +3,40 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
+using System.Data;
 
 namespace Project_5_Space_Craft
 {
     static class Logging
     {
-        private static String filename = "../../../test.xlsx";
-        private static String currentPacketType = "";
-        private static String currentSendingDirection = "";
-        private static String currentPacketData = "";
-        private static DateTime currentTime;
+        private static String filename = "../../../LogFiles.xlsx";
 
         //Interacts with PacketWrapper
         public static void LogPacket(String packetType, String direction, String data)
         {
-            currentPacketType = packetType;
-            currentSendingDirection = direction;
-            currentPacketData = data;
-            currentTime = DateTime.Now;
-            logFile();
-            logConsole();
+            logFile(packetType, direction, data, DateTime.Now);
+            logConsole(packetType, direction, data, DateTime.Now);
         }
 
-        private static void logFile()
+        private static void logFile(String type, String dir, String data, DateTime dt)
         {
-            string time = currentTime.ToString("yyyy MMMM dd h:mm:ss tt");
-            InsertText(filename, currentPacketType, "A", GetNextEmptyCell(filename, "Sheet1", "A"));
+            string time = dt.ToString("yyyy MMMM dd h:mm:ss tt");
+            InsertText(filename, type, "A", GetNextEmptyCell(filename, "Sheet1", "A"));
             InsertText(filename, time, "B", GetNextEmptyCell(filename, "Sheet1", "B"));
-            InsertText(filename, currentSendingDirection, "C", GetNextEmptyCell(filename, "Sheet1", "C"));
-            InsertText(filename, currentPacketData, "D", GetNextEmptyCell(filename, "Sheet1", "D"));
+            InsertText(filename, dir, "C", GetNextEmptyCell(filename, "Sheet1", "C"));
+            InsertText(filename, data, "D", GetNextEmptyCell(filename, "Sheet1", "D"));
         }
 
-        private static void logConsole()
+        private static void logConsole(String type, String dir, String data, DateTime dt)
         {
             Console.WriteLine("Packet Detected!" +
-                " DataType: " + currentPacketData +
-                " Time: " + currentTime +
-                " Direction: " + currentSendingDirection +
-                " Data: " + currentPacketData);
+                " DataType: " + type +
+                " Time: " + dt +
+                " Direction: " + dir +
+                " Data: " + data);
         }
 
+        //Excel Helper Functions
         public static void InsertText(string docName, string text, string col, uint row)
         {
             using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(docName, true))
