@@ -1,7 +1,9 @@
 using LinkServer.Filters;
+using Uplink_Downlink;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<AppLogger>(new ServerLogger("server_logs.txt"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();

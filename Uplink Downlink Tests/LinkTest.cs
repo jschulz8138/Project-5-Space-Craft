@@ -19,8 +19,8 @@ namespace UnitTest_UplinkDownlink
             var urlField = typeof(Link).GetField("_url", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             var clientField = typeof(Link).GetField("_client", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
-            Assert.AreEqual(testUrl, urlField.GetValue(link));  // Ensuring that the _url field is set correctly
-            Assert.IsNotNull(clientField.GetValue(link));  // Ensure that the _client (RestClient) is initialized
+            Assert.AreEqual(testUrl, urlField?.GetValue(link));  // Ensuring that the _url field is set correctly
+            Assert.IsNotNull(clientField?.GetValue(link));  // Ensure that the _client (RestClient) is initialized
         }
 
         //Testing whether the -url is stored correctly
@@ -33,7 +33,7 @@ namespace UnitTest_UplinkDownlink
 
             var urlField = typeof(Link).GetField("_url", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
-            Assert.AreEqual(testUrl, urlField.GetValue(link));
+            Assert.AreEqual(testUrl, urlField?.GetValue(link));
         }
 
         //Testing that RestCLient is  initiallized correctly with the provide URL
@@ -44,28 +44,23 @@ namespace UnitTest_UplinkDownlink
             Link link = new Link(testUrl);
 
             var clientField = typeof(Link).GetField("_client", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var restClient = clientField.GetValue(link) as RestClient;
+            var restClient = clientField?.GetValue(link) as RestClient;
 
             // Ensuring that the RestClient is initialized
             Assert.IsNotNull(restClient);
 
             // Checking if the RestClient's BaseUrl is the correct URL
-            Assert.AreEqual(testUrl, restClient.Options.BaseUrl.ToString());
+            Assert.AreEqual(testUrl, restClient.Options.BaseUrl?.ToString());
         }
 
-        ////Handlingthe Url which are not valid
+        // Invalid url test
 
-        //[TestMethod]
-        //[ExpectedException(typeof(UriFormatException))]
-        //public void _ShouldThrowExceptionForInvalidUrl()
-        //{
-        //    string invalidUrl = "invalid-url";
-        //    Link link = new Link(invalidUrl);
-
-
-        //}
+        [TestMethod]
+        [ExpectedException(typeof(UriFormatException))]
+        public void _ShouldThrowExceptionForInvalidUrl()
+        {
+            string invalidUrl = "invalid-url";
+            Link link = new Link(invalidUrl);
+        }
     }
-
-
-
 }
