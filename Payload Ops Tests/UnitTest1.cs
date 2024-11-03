@@ -1,6 +1,10 @@
 //Payload Ops
 //Unit and Integration Tests
 using Project_5_Space_Craft;
+using System;
+using System.IO.Hashing;
+using System.Linq;
+using System.Text;
 namespace Payload_Ops_Tests
 {
     [TestClass]
@@ -43,24 +47,22 @@ namespace Payload_Ops_Tests
             Assert.IsNotNull(readingPkt);
         }
 
-        //TODO
         [TestMethod]
         public void RDPKT_0003_Constructor_Variant_1_Data_Correct_DateTime()
         {
             DataPacket readingPkt = new DataPacket("dataType", "data");
-            DateTime actual = readingPkt.DateTime;
-            DateTime expected = actual;
+            String actual = readingPkt.DateTime.ToString();
+            String expected = DateTime.Now.ToString(); 
             Assert.AreEqual(actual, expected);
         }
 
-        //TODO
         [TestMethod]
         public void RDPKT_0004_Constructor_Variant_2_Data_Correct_DateTime()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
             DataPacket readingPkt = new DataPacket(stub);
-            DateTime actual = readingPkt.DateTime;
-            DateTime expected = actual;
+            String actual = readingPkt.DateTime.ToString();
+            String expected = DateTime.Now.ToString();
             Assert.AreEqual(actual, expected);
         }
 
@@ -102,48 +104,57 @@ namespace Payload_Ops_Tests
             Assert.AreEqual(actual, expected);
         }
 
-        //TODO
         [TestMethod]
         public void RDPKT_0009_Constructor_Variant_1_Data_Correct_CRC()
         {
             DataPacket readingPkt = new DataPacket("dataType", "data");
+            Crc32 crc = new Crc32();
+            crc.Append(readingPkt.ConvertToByteArray(readingPkt.DateTime.ToString()));
+            crc.Append(readingPkt.ConvertToByteArray(readingPkt.DataType));
+            crc.Append(readingPkt.ConvertToByteArray(readingPkt.Data));
+            string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
             string actual = readingPkt.PacketCRC;
-            string expected = actual;
             Assert.AreEqual(actual, expected);
         }
 
-        //TODO
         [TestMethod]
         public void RDPKT_0010_Constructor_Variant_2_Data_Correct_CRC()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
             DataPacket readingPkt = new DataPacket(stub);
+            Crc32 crc = new Crc32();
+            crc.Append(readingPkt.ConvertToByteArray(readingPkt.DateTime.ToString()));
+            crc.Append(readingPkt.ConvertToByteArray(readingPkt.DataType));
+            crc.Append(readingPkt.ConvertToByteArray(readingPkt.Data));
+            string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
             string actual = readingPkt.PacketCRC;
-            string expected = actual;
             Assert.AreEqual(actual, expected);
         }
 
-        //TODO
         [TestMethod]
         public void RDPKT_0011_Calculate_CRC()
         {
             ReadingsStub stub = new ReadingsStub("This is the data");
             DataPacket readingPkt = new DataPacket(stub);
             readingPkt.CalculateCRC();
+            Crc32 crc = new Crc32();
+            crc.Append(readingPkt.ConvertToByteArray(readingPkt.DateTime.ToString()));
+            crc.Append(readingPkt.ConvertToByteArray(readingPkt.DataType));
+            crc.Append(readingPkt.ConvertToByteArray(readingPkt.Data));
+            string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
             string actual = readingPkt.PacketCRC;
-            string expected = actual;
             Assert.AreEqual(actual, expected);
         }
 
-        //TODO
         [TestMethod]
         public void RDPKT_0012_Convert_Byte_Array()
         {
-            ReadingsStub stub = new ReadingsStub("This is the data");
+            ReadingsStub stub = new ReadingsStub("");
             DataPacket readingPkt = new DataPacket(stub);
-            byte[] actual = readingPkt.ConvertToByteArray("test");
-            byte[] expected = actual;
-            Assert.AreEqual(actual, expected);
+            byte[] actual = readingPkt.ConvertToByteArray("This is the test string");
+            byte[] expected = Encoding.ASCII.GetBytes("This is the test string");
+            bool testPassed = expected.SequenceEqual(actual);
+            Assert.IsTrue(testPassed);
         }
 
         //TODO
