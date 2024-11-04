@@ -1,27 +1,40 @@
-﻿using System.Globalization;
-
+﻿//PayloadOps
+//PacketWrapper implementation for packetizing data for transfer
+using System.Text;
+using System;
+using System.Text.Json;
 namespace Project_5_Space_Craft
 {
     public class PacketWrapper
     {
-        SpaceshipReadings readings;
-        public PacketWrapper(SpaceshipReadings readings)
+        public PacketWrapper()
         {
-            this.readings = readings;
+
         }
-        public Dictionary<string, string> ToJson()
+
+
+        //Calculates the CRC based on the dateTime, dataType, and data
+        public string CalculateCRC()
         {
-            Dictionary<string, string> d = new Dictionary<string, string>();
-            d.Add("datetime", DateTime.Now.ToString(new CultureInfo("en-US")));
-            d.Add("datatype", readings.GetType().ToString());
-            d.Add("data", readings.getData());
-            d.Add("crc", this.CrcCalculator());
-            return d;
+
+            return "";
         }
-        //Placeholder Stub
-        private string CrcCalculator()
+
+        //Helper function to convert a given string to a byte array
+        public byte[] ConvertToByteArray(string str)
         {
-            return 0xFFFFFFFF.ToString("X8");
+            return Encoding.ASCII.GetBytes(str);
+        }
+
+        //TODO
+        public bool ValidateCRC(string crc)
+        {
+            return true;
+        }
+
+        public String ToJson()
+        {
+            return "";
         }
     }
 }

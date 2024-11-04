@@ -1,22 +1,28 @@
-﻿using System;
-
+﻿//Payload Ops
+//Implementation of Spaceship that runs the overall program. 
 namespace Project_5_Space_Craft
 {
-    class Spaceship
+    public class Spaceship
     {
-        private List<SpaceshipReadings> data;
+        private List<IReading> spaceShipReadings;
         private Timer timer;
+        private PacketWrapper pktWrapper;
+
+
         public Spaceship() {
-            this.data = new List<SpaceshipReadings>();
+            //initalize variables
+            this.spaceShipReadings = new List<IReading>();
+            pktWrapper = new PacketWrapper();
 
             DateTime now = DateTime.Now;
-#if DEBUG
-            // For DEBUG: Set to trigger every minute
+
+#if DEBUG   // For DEBUG: Set to trigger every minute
             DateTime nextEvent = now.AddMinutes(1).AddSeconds(-now.Second).AddMilliseconds(-now.Millisecond);
             Console.WriteLine($"Timer set to trigger every minute in DEBUG mode.");
             TimeSpan eventLength = TimeSpan.FromMinutes(1);
-#else
-            // For RELEASE: Set to trigger every hour
+
+
+#else       // For RELEASE: Set to trigger every hour
             DateTime nextEvent = now.AddHours(1).AddMinutes(-now.Minute).AddSeconds(-now.Second).AddMilliseconds(-now.Millisecond);
             Console.WriteLine($"Timer set to trigger every hour in RELEASE mode.");
             TimeSpan eventLength = TimeSpan.FromHours(1);
@@ -24,40 +30,28 @@ namespace Project_5_Space_Craft
             this.timer = new Timer(this.TimedEvent, null, nextEvent - now, eventLength);
         }
 
-        public Spaceship Add(SpaceshipReadings data)
+        public void AddReading(IReading reading)
         {
-            this.data.Add(data);
-            return this;
+            spaceShipReadings.Add(reading);
         }
+
+        //TODO: Connect functionality to uplink / downlink
+        public String SendReading(IReading reading)
+        {
+            spaceShipReadings.Remove(reading);
+            return pktWrapper.ToJson();
+        }
+
 
         private void TimedEvent(object? state)
         {
             Console.WriteLine("Event triggered at: " + DateTime.Now);
-            //Need to spin up some packet wrappers \o/
-            foreach (SpaceshipReadings singleData in this.data)
+
+            foreach (IReading reading in spaceShipReadings)
             {
-                int num = Send(new PacketWrapper(singleData));
+                SendReading(reading);
             }
 
-        }
-
-        private int Send(PacketWrapper packet)
-        {
-
-            //This function is blocked by uplink downlink
-            //return uplink.downlink.send(packet)
-            foreach (KeyValuePair<string, string> entry in packet.ToJson())
-            {
-                // do something with entry.Value or entry.Key
-                Console.WriteLine(entry.Key + " : " + entry.Value + ",");
-            }
-            return 1;
-        }
-
-        private void UnpackMessage()
-        {
-            //This function is blocked by uplink downlink
-            //switch per type of message and handle
         }
     }
 }
