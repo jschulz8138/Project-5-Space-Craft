@@ -8,4 +8,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Project-5-Space-Craft\Payload Ops.csproj" />
+  </ItemGroup>
+
 </Project>
