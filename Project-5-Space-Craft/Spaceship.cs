@@ -50,7 +50,7 @@ namespace Project_5_Space_Craft
 
             while (spaceShipReadings.Count() != 0)
             {
-                SendReading(reading);
+                SendReading(spaceShipReadings[0]);
             }
             
 
