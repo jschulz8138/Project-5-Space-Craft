@@ -39,18 +39,20 @@ namespace Project_5_Space_Craft
         public String SendReading(IReading reading)
         {
             spaceShipReadings.Remove(reading);
+            Logging.LogPacket("Test Data", "Outbound", "-test");
             return pktWrapper.ToJson();
         }
 
 
         private void TimedEvent(object? state)
         {
-            Console.WriteLine("Event triggered at: " + DateTime.Now);
+            Console.WriteLine("Readings sent at: " + DateTime.Now);
 
-            foreach (IReading reading in spaceShipReadings)
+            while (spaceShipReadings.Count() != 0)
             {
                 SendReading(reading);
             }
+            
 
         }
     }
