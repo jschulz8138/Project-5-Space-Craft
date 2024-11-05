@@ -17,7 +17,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '8.0' # Replace with your .NET version
+        dotnet-version: '8.0'
 
     - name: Restore dependencies
       run: dotnet restore
@@ -25,8 +25,11 @@ jobs:
     - name: Build the solution
       run: dotnet build --no-restore
 
-    - name: Run all tests in UnitTest1 class
-      run: dotnet test "Payload Ops Tests/Payload Ops Tests.csproj" --filter "FullyQualifiedName~Payload_Ops_Tests"  --collect:"XPlat Code Coverage" --results-directory ./TestResults
+    - name: Run tests in Payload Ops Tests project
+      run: dotnet test "Payload Ops Tests/Payload Ops Tests.csproj" --filter "FullyQualifiedName~Payload_Ops_Tests" --collect:"XPlat Code Coverage" --results-directory ./TestResults/PayloadOps
+
+    - name: Run tests in Uplink Downlink Tests project
+      run: dotnet test "Tests/Uplink Downlink Tests.csproj" --filter "FullyQualifiedName~Uplink_Downlink_Tests" --collect:"XPlat Code Coverage" --results-directory ./TestResults/UplinkDownlink
 
     - name: Display coverage results
       run: grep 'line-rate' ./TestResults/*/coverage.cobertura.xml
