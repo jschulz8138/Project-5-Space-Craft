@@ -14,7 +14,8 @@ namespace CAndD.Services
                 Position = "X:0, Y:1, Z:3",
                 Temperature = 28.5f,
                 Radiation = 1.2f,
-                Velocity = 3.4f
+                Velocity = 3.4f,
+                Timestamp = DateTime.Now
             };
         }
 
