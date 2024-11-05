@@ -26,16 +26,16 @@ namespace Uplink_Downlink
             WriteToFile($"{DateTime.Now}, SERVER LOGOUT, User: {userId}");
         }
 
-        public override void LogAuthentication(string userId, bool success)
+        public override void LogAuthentication(string userId, bool success,string reason="")
         {
-            string status = success ? "SUCCESS" : "FAILURE";
+            string status = success ? "SUCCESS" : $"FAILURE: {reason}";
             WriteToFile($"{DateTime.Now}, SERVER AUTHENTICATION, User: {userId}, Status: {status}");
         }
 
-        //new method to log incoming packets
-        public override void LogIncomingPacket(string packetData)
+        //new method to log incoming packets 
+        public override void LogPacketReceived(string packetData)
         {
-            WriteToFile($"{DateTime.Now}, INCOMING PACKET RECEIVED , Data: {packetData}");
+            WriteToFile($"{DateTime.Now}, INCOMING PACKET RECEIVED, Data: {packetData}");
         }
     }
 }

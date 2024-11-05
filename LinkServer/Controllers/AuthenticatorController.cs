@@ -31,6 +31,16 @@ namespace LinkServer.Controllers
         // Static dictionary to store logged-in sessions (as an example)
         private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
+        // Simulated packet reception method for demonstration
+        [HttpPost("receive-packet")]
+        public IActionResult ReceivePacket([FromBody] PacketWrapper packet)
+        {
+            // Log the incoming packet event
+            _logger.LogPacketReceived(packet.JsonData);
+
+            return Ok("Packet received and logged.");
+        }
+
 
         //I believe the route is api/Authenticator/login
         [HttpPost("login")]
@@ -47,22 +57,39 @@ namespace LinkServer.Controllers
 
                 return Ok("Already authenticated");
             }
-            else if (_users.TryGetValue(credentials.Username, out var password) && password == credentials.Password)
+            bool usernameExists = _users.ContainsKey(credentials.Username);
+            bool passwordMatches = usernameExists && _users[credentials.Username] == credentials.Password;
+            
+            if (usernameExists && passwordMatches)
             {
                 _authenticatedUsers[credentials.Username] = true;
                 HttpContext.Session.SetString("username", credentials.Username);
-
+                
                 // log successful authentication
                 _logger.LogAuthentication(credentials.Username, success: true);
 
                 return Ok("Authenticated");
             }
+            else
+            {
+                //Log failed authentication attempt and determine specific error messages
+                if (!usernameExists && !passwordMatches)
+                {
+                    _logger.LogAuthentication(credentials.Username, success: false, reason: "both username and password are invalid");
+                }
+                else if (!usernameExists)
+                {
+                    _logger.LogAuthentication(credentials.Username, success: false, reason: "username is invalid");
+                }
+                else
+                {
+                    _logger.LogAuthentication(credentials.Username, success: false, reason: "password is invalid");
+                }
 
-            // log failed authentication attempt
-            _logger.LogAuthentication(credentials.Username, success: false);
-
-            return Unauthorized("Invalid credentials");
+                return Unauthorized("Invalid credentials");
+            }
         }
+
 
         [HttpPost("logout")]
         public IActionResult Logout([FromBody] UserCredentials credentials)
