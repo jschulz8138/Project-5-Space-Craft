@@ -33,6 +33,16 @@ namespace LinkServer.Controllers
             return Ok(new { Message = "Uplink received and processed" });
         }
 
+        // Simulated packet reception method for demonstration
+        [HttpPost("receive-packet")]
+        public IActionResult ReceivePacket([FromBody] PacketWrapper packet)
+        {
+            // Log the incoming packet event
+            _logger.LogPacketReceived(packet.JsonData);
+
+            return Ok("Packet received and logged.");
+        }
+
         //  GET api/uplink/request-all-data
         [HttpGet("request-all-data")]
         public IActionResult RequestAllData()
@@ -42,6 +52,8 @@ namespace LinkServer.Controllers
             return Ok(_allData);
             // Call function to payload ops to get current settings and put it in a packet to send to the ground station (this is the updating of all important senesor data (new route may be added for showing current settings
         }
+
+       
 
         // Put apu/uplink/update-settings
         [HttpPut("update-settings")]

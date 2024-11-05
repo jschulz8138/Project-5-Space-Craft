@@ -18,14 +18,6 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-////logging incoming packet,logging successfull and unsucessfull authentication 
-//var logger = app.Services.GetRequiredService<AppLogger>();
-
-//logger.LogIncomingPacket("packet data");
-//logger.LogAuthentication("user1", true);
-//logger.LogAuthentication("user2", false);
-
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

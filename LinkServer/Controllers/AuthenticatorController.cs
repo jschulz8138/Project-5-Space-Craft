@@ -31,17 +31,6 @@ namespace LinkServer.Controllers
         // Static dictionary to store logged-in sessions (as an example)
         private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
-        // Simulated packet reception method for demonstration
-        [HttpPost("receive-packet")]
-        public IActionResult ReceivePacket([FromBody] PacketWrapper packet)
-        {
-            // Log the incoming packet event
-            _logger.LogPacketReceived(packet.JsonData);
-
-            return Ok("Packet received and logged.");
-        }
-
-
         //I believe the route is api/Authenticator/login
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserCredentials credentials)
