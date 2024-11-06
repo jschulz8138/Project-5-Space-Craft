@@ -9,6 +9,10 @@ namespace Project_5_Space_Craft
         public IncreaseThrustFunction(int thrust) {
             this.thrust = thrust;
         }
+        public IncreaseThrustFunction(string thrust)
+        {
+            this.thrust = int.Parse(thrust);
+        }
 
         public string GetCommand(){
             return this.thrust.ToString();

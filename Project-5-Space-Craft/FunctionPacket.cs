@@ -1,12 +1,15 @@
 //PayloadOps
 //Packet Definition for a function call
 using System.IO.Hashing;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.Json;
 namespace Project_5_Space_Craft
 {
     public class FunctionPacket : IPacket
     {
+        //[JsonIgnore]
+        private IFunction function;
         private DateTime dateTime;
         public DateTime DateTime { get { return dateTime; } }
         private string functionType;
@@ -18,19 +21,35 @@ namespace Project_5_Space_Craft
 
         public FunctionPacket(IFunction function)
         {
+            this.function = function;
             dateTime = DateTime.Now;
             this.functionType = function.GetType().Name;
             this.command = function.GetCommand();
             packetCRC = CalculateCRC();
         }
 
-        public FunctionPacket(string functionType, string command)
+        public IFunction GetFunction()
         {
-            dateTime = DateTime.Now;
-            this.functionType = functionType;
-            this.command = command;
-            packetCRC = CalculateCRC();
+            return this.function ?? this.createFunction();
         }
+
+        private IFunction createFunction()
+        {
+            switch (this.functionType.ToLower())
+            {
+                case "selfdestructfunction": return new SelfDestructFunction(this.command);
+                case "increasethrustfunction": return new IncreaseThrustFunction(this.command);
+                default: return null;
+            }
+        }
+
+        //public FunctionPacket(string functionType, string command)
+        //{
+        //    dateTime = DateTime.Now;
+        //    this.functionType = functionType;
+        //    this.command = command;
+        //    packetCRC = CalculateCRC();
+        //}
 
         //Calculates the CRC based on the dateTime, dataType, and data
         public string CalculateCRC()
@@ -55,6 +74,14 @@ namespace Project_5_Space_Craft
         public string ToJson()
         {
             return JsonSerializer.Serialize(this);
+        }
+        public string GetPacketType()
+        {
+            return this.functionType;
+        }
+        public string GetPacketData()
+        {
+            return this.command;
         }
     }
 }

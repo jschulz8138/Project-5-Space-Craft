@@ -28,5 +28,5 @@ Console.WriteLine(pkt.ToJson());
 //Logging.LogPacket("Position", "Inbound", "Move Up");
 //Logging.LogPacket("Velocity", "Outbound", "8232m/s");
 
-string keepSpaceshipRunning = Console.ReadLine();
+//string keepSpaceshipRunning = Console.ReadLine();
 

@@ -93,7 +93,7 @@ namespace Payload_Ops_Tests
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
             string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
-            string actual = funcPkt.PacketCRC;
+            string actual = funcPkt.Crc;
             Assert.AreEqual(actual, expected);
         }
 
@@ -106,7 +106,7 @@ namespace Payload_Ops_Tests
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
             string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
-            string actual = funcPkt.PacketCRC;
+            string actual = funcPkt.Crc;
             Assert.AreEqual(actual, expected);
         }
 
@@ -121,7 +121,7 @@ namespace Payload_Ops_Tests
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
             string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
-            string actual = funcPkt.PacketCRC;
+            string actual = funcPkt.Crc;
             Assert.AreEqual(actual, expected);
         }
 
@@ -142,7 +142,7 @@ namespace Payload_Ops_Tests
             FunctionStub stub = new FunctionStub("test command");
             FunctionPacket funcPkt = new FunctionPacket(stub);
             FunctionPacket funcPktCopy = new FunctionPacket(stub);
-            bool actual = funcPkt.ValidateCRC(funcPktCopy.PacketCRC);
+            bool actual = funcPkt.ValidateCRC(funcPktCopy.Crc);
             bool expected = true;
             Assert.AreEqual(actual, expected);
         }
@@ -252,7 +252,7 @@ namespace Payload_Ops_Tests
             crc.Append(readingPkt.ConvertToByteArray(readingPkt.DataType));
             crc.Append(readingPkt.ConvertToByteArray(readingPkt.Data));
             string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
-            string actual = readingPkt.PacketCRC;
+            string actual = readingPkt.Crc;
             Assert.AreEqual(actual, expected);
         }
 
@@ -266,7 +266,7 @@ namespace Payload_Ops_Tests
             crc.Append(readingPkt.ConvertToByteArray(readingPkt.DataType));
             crc.Append(readingPkt.ConvertToByteArray(readingPkt.Data));
             string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
-            string actual = readingPkt.PacketCRC;
+            string actual = readingPkt.Crc;
             Assert.AreEqual(actual, expected);
         }
 
@@ -281,7 +281,7 @@ namespace Payload_Ops_Tests
             crc.Append(readingPkt.ConvertToByteArray(readingPkt.DataType));
             crc.Append(readingPkt.ConvertToByteArray(readingPkt.Data));
             string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
-            string actual = readingPkt.PacketCRC;
+            string actual = readingPkt.Crc;
             Assert.AreEqual(actual, expected);
         }
 
@@ -302,7 +302,7 @@ namespace Payload_Ops_Tests
             ReadingsStub stub = new ReadingsStub("This is the data");
             DataPacket readingPkt = new DataPacket(stub);
             DataPacket readingPktCopy = new DataPacket(stub);
-            bool actual = readingPkt.ValidateCRC(readingPktCopy.PacketCRC);
+            bool actual = readingPkt.ValidateCRC(readingPktCopy.Crc);
             bool expected = true;
             Assert.AreEqual(actual, expected);
         }
