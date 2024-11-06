@@ -70,7 +70,7 @@ namespace Payload_Ops_Tests
             FunctionStub stub = new FunctionStub("test command");
             FunctionPacket funcPkt = new FunctionPacket(stub);
             string actual = funcPkt.Command;
-            string expected = "Some Command";
+            string expected = "test command";
             Assert.AreEqual(actual, expected);
         }
 
