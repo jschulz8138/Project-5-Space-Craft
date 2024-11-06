@@ -4,7 +4,7 @@ using System.IO.Hashing;
 using System.Text;
 using System.Text.Json;
 using DocumentFormat.OpenXml.Office2016.Drawing.Command;
-namespace Project_5_Space_Craft
+namespace Project_5_Space_Craft.Packets
 {
     public class DataPacket : IPacket
     {
@@ -32,8 +32,8 @@ namespace Project_5_Space_Craft
             this.reading = reading;
 
             dateTime = DateTime.Now;
-            this.dataType = reading.GetType().Name;
-            this.data = reading.GetData();
+            dataType = reading.GetType().Name;
+            data = reading.GetData();
             crc = CalculateCRC();
         }
 
@@ -53,11 +53,12 @@ namespace Project_5_Space_Craft
             return Encoding.ASCII.GetBytes(str);
         }
 
-        public bool ValidateCRC(string crc){
-            return this.CalculateCRC() == crc;
+        public bool ValidateCRC(string crc)
+        {
+            return CalculateCRC() == crc;
         }
 
-        public String ToJson()
+        public string ToJson()
         {
             return JsonSerializer.Serialize(this);
         }

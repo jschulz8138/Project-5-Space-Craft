@@ -1,6 +1,7 @@
 ﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
+using Project_5_Space_Craft.Packets;
 namespace Project_5_Space_Craft
 {
     public class Spaceship
