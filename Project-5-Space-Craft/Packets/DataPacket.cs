@@ -3,33 +3,38 @@
 using System.IO.Hashing;
 using System.Text;
 using System.Text.Json;
-namespace Project_5_Space_Craft
+using DocumentFormat.OpenXml.Office2016.Drawing.Command;
+namespace Project_5_Space_Craft.Packets
 {
     public class DataPacket : IPacket
     {
+        private IReading reading;
         private DateTime dateTime;
         public DateTime DateTime { get { return dateTime; } }
         private string dataType;
         public string DataType { get { return dataType; } }
         private string data;
         public string Data { get { return data; } }
-        private string packetCRC;
-        public string PacketCRC { get { return packetCRC; } }
+        private string crc;
+        public string Crc { get { return crc; } }
 
-        public DataPacket(string dataType, string data)
-        {
-            dateTime = DateTime.Now;
-            this.dataType = dataType;
-            this.data = data;
-            packetCRC = CalculateCRC();
-        }
+        //public DataPacket(string dataType, string data)
+        //{
+        //    this.
+        //    dateTime = DateTime.Now;
+        //    this.dataType = dataType;
+        //    this.data = data;
+        //    crc = CalculateCRC();
+        //}
 
         public DataPacket(IReading reading)
         {
+            this.reading = reading;
+
             dateTime = DateTime.Now;
-            this.dataType = reading.GetType().Name;
-            this.data = reading.GetData();
-            packetCRC = CalculateCRC();
+            dataType = reading.GetType().Name;
+            data = reading.GetData();
+            crc = CalculateCRC();
         }
 
         //Calculates the CRC based on the dateTime, dataType, and data
@@ -48,13 +53,22 @@ namespace Project_5_Space_Craft
             return Encoding.ASCII.GetBytes(str);
         }
 
-        public bool ValidateCRC(string crc){
-            return this.CalculateCRC() == crc;
+        public bool ValidateCRC(string crc)
+        {
+            return CalculateCRC() == crc;
         }
 
-        public String ToJson()
+        public string ToJson()
         {
             return JsonSerializer.Serialize(this);
+        }
+        public string GetPacketType()
+        {
+            return dataType;
+        }
+        public string GetPacketData()
+        {
+            return data;
         }
     }
 }

@@ -4,6 +4,8 @@ namespace Project_5_Space_Craft
 {
     public interface IPacket
     {
+        public string GetPacketType();
+        public string GetPacketData();
         //Calculates the CRC
         public string CalculateCRC();
 

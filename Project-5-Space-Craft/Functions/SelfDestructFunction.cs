@@ -10,6 +10,11 @@ namespace Project_5_Space_Craft
             this.authorization = authorization;
         }
 
+        public SelfDestructFunction(string authorization)
+        {
+            this.authorization = bool.Parse(authorization);
+        }
+
         public string GetCommand(){
             return this.authorization.ToString();
         }

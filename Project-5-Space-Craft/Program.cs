@@ -1,5 +1,7 @@
 ﻿//Main program that spaceship will be created in.
 using Project_5_Space_Craft;
+using Project_5_Space_Craft.Packets;
+using Project_5_Space_Craft.Readings;
 
 
 //Create objects
@@ -28,5 +30,5 @@ Console.WriteLine(pkt.ToJson());
 //Logging.LogPacket("Position", "Inbound", "Move Up");
 //Logging.LogPacket("Velocity", "Outbound", "8232m/s");
 
-string keepSpaceshipRunning = Console.ReadLine();
+//string keepSpaceshipRunning = Console.ReadLine();
 
