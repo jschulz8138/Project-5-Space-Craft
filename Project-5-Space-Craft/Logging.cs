@@ -7,33 +7,36 @@ using System.Data;
 
 namespace Project_5_Space_Craft
 {
-    static class Logging
+    public static class Logging
     {
         private static String filename = "../../../LogFiles.xlsx";
 
         //Interacts with PacketWrapper
-        public static void LogPacket(String packetType, String direction, String data)
+        public static bool LogPacket(String packetType, String direction, String data)
         {
             logFile(packetType, direction, data, DateTime.Now);
             logConsole(packetType, direction, data, DateTime.Now);
+            return true;
         }
 
-        private static void logFile(String type, String dir, String data, DateTime dt)
+        public static bool logFile(String type, String dir, String data, DateTime dt)
         {
             string time = dt.ToString("yyyy MMMM dd h:mm:ss tt");
             InsertText(filename, type, "A", GetNextEmptyCell(filename, "Sheet1", "A"));
             InsertText(filename, time, "B", GetNextEmptyCell(filename, "Sheet1", "B"));
             InsertText(filename, dir, "C", GetNextEmptyCell(filename, "Sheet1", "C"));
             InsertText(filename, data, "D", GetNextEmptyCell(filename, "Sheet1", "D"));
+            return true;
         }
 
-        private static void logConsole(String type, String dir, String data, DateTime dt)
+        public static bool logConsole(String type, String dir, String data, DateTime dt)
         {
             Console.WriteLine("Packet Detected!" +
                 " DataType: " + type +
                 " Time: " + dt +
                 " Direction: " + dir +
                 " Data: " + data);
+            return true;
         }
 
         //Excel Helper Functions
