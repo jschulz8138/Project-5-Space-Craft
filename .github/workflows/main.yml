@@ -30,3 +30,5 @@ jobs:
 
     - name: Display coverage results
       run: grep 'line-rate' ./TestResults/*/coverage.cobertura.xml
+    - name: Display uncovered results
+      run: grep 'line-rate="0"' ./TestResults/*/coverage.cobertura.xml
