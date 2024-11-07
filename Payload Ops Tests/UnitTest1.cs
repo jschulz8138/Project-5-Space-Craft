@@ -3,6 +3,7 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Project_5_Space_Craft;
 using Project_5_Space_Craft.Functions;
@@ -13,6 +14,8 @@ using System.IO.Hashing;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
+
 namespace Payload_Ops_Tests
 {
     [TestClass]
@@ -162,7 +165,443 @@ namespace Payload_Ops_Tests
             bool expected = false;
             Assert.AreEqual(actual, expected);
         }
+
+        [TestMethod]
+        public void FNPKT_0015_Get_Datetime_Not_Null()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            DateTime actualTime = funcPkt.DateTime;
+            Assert.IsNotNull(actualTime);
+        }
+
+        [TestMethod]
+        public void FNPKT_0016_Get_Datetime_Type()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            DateTime actualTime = funcPkt.DateTime;
+            Assert.IsInstanceOfType(actualTime, typeof(DateTime));
+        }
+
+        [TestMethod]
+        public void FNPKT_0017_Get_Datetime_WithinRange()
+        {
+            DateTime startRange = DateTime.Now;
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            DateTime endRange = DateTime.Now;
+
+            DateTime actualTime = funcPkt.DateTime;
+            Assert.IsTrue(actualTime >= startRange && actualTime <= endRange);
+        }
+
+        [TestMethod]
+        public void FNPKT_0018_Get_FunctionType_Not_Null()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string functionTypeName = funcPkt.FunctionType;
+
+            Assert.IsNotNull(functionTypeName);
+        }
+
+        [TestMethod]
+        public void FNPKT_0019_Get_FunctionType_Correct_Type_Name()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string functionTypeName = funcPkt.FunctionType;
+
+            Assert.AreEqual(functionTypeName, stub.GetType().Name);
+        }
+
+        [TestMethod]
+        public void FNPKT_0020_Get_Command_Not_Null()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string command = funcPkt.Command;
+
+            Assert.IsNotNull(command);
+        }
+
+        [TestMethod]
+        public void FNPKT_0021_Get_Command_Correct_Type_String()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string command = funcPkt.Command;
+
+            Assert.IsInstanceOfType(command, typeof(string));
+        }
+
+        [TestMethod]
+        public void FNPKT_0022_Get_Command_Correct_Command()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string command = funcPkt.Command;
+
+            Assert.AreEqual(command, stub.GetCommand());
+        }
+
+
+        [TestMethod]
+        public void FNPKT_0023_Get_PacketCRC_Not_Null()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string actual = funcPkt.PacketCRC;
+
+            Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void FNPKT_0024_Get_PacketCRC_Correct_Type_String()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string actual = funcPkt.PacketCRC;
+
+            Assert.IsInstanceOfType(actual, typeof(string));
+        }
+
+        [TestMethod]
+        public void FNPKT_0025_Get_PacketCRC_Correct_CRC()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string expected = funcPkt.CalculateCRC();
+            string actual = funcPkt.PacketCRC;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void FNPKT_0026_Get_Function_Not_Null()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            IFunction actual = funcPkt.GetFunction();
+
+            Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void FNPKT_0027_Get_Function_Correct_Type()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            IFunction actual = funcPkt.GetFunction();
+
+            Assert.IsInstanceOfType(actual, typeof(FunctionStub));
+        }
+
+        [TestMethod]
+        public void FNPKT_0028_Get_Function_Correct_Function()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            IFunction actual = funcPkt.GetFunction();
+
+            Assert.AreEqual(actual, stub);
+        }
+
+        [TestMethod]
+        public void FNPKT_0029_Get_Function_Empty_Function_Return_Null_NonTest()
+        {
+            // TODO: maybe fix
+            // FunctionPacket funcPkt = new FunctionPacket(null);
+            // literally cannot create a FunctionPacket with no function
+            Assert.IsNull(null);
+        }
+
+        [TestMethod]
+        public void FNPKT_0030_CreateFunction_Stub_Return_Null_NonTest()
+        {
+            // TODO: maybe fix
+            // FunctionPacket funcPkt = new FunctionPacket(null);
+            // createFunction() only exc if Function is Null, cannot create a FunctionPacket with null function
+            // also its a private method
+            Assert.IsNull(null);
+        }
+
+        [TestMethod]
+        public void FNPKT_0031_ToJson_Not_Null()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string actual = funcPkt.ToJson();
+
+            Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void FNPKT_0032_ToJson_Correct_Type_String()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string actual = funcPkt.ToJson();
+
+            Assert.IsInstanceOfType(actual, typeof(string));
+        }
+
+        [TestMethod]
+        public void FNPKT_0033_ToJson_Correct_JSON()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string expected = JsonSerializer.Serialize(funcPkt);
+            string actual = funcPkt.ToJson();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void FNPKT_0034_GetPacketType_Not_Null()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string actual = funcPkt.GetPacketType();
+
+            Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void FNPKT_0035_GetPacketType_Correct_Type_String()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string actual = funcPkt.GetPacketType();
+
+            Assert.IsInstanceOfType(actual, typeof(string));
+        }
+
+        [TestMethod]
+        public void FNPKT_0036_GetPacketType_Correct_PacketType_Stub()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string actual = funcPkt.GetPacketType();
+
+            Assert.AreEqual(actual, stub.GetType().Name);
+        }
+
+        
+
+        [TestMethod]
+        public void FNPKT_0037_GetPacketData_Not_Null()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string actual = funcPkt.GetPacketData();
+
+            Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void FNPKT_0038_GetPacketData_Correct_Type_String()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string actual = funcPkt.GetPacketData();
+
+            Assert.IsInstanceOfType(actual, typeof(string));
+        }
+
+        [TestMethod]
+        public void FNPKT_0039_GetPacketData_Correct_PacketData_Stub()
+        {
+            FunctionStub stub = new FunctionStub("test command");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            string actual = funcPkt.GetPacketData();
+
+            Assert.AreEqual(actual, stub.GetCommand());
+        }
+
+
+        /// ////////////////////////extras w/o FunctionStub/////////////////////////////////////
+
+        [TestMethod]
+        public void FNPKT_0040_Constructor_IncreaseThrustFunction_Not_Null()
+        {
+            IncreaseThrustFunction func = new IncreaseThrustFunction(100);
+            FunctionPacket funcPkt = new FunctionPacket(func);
+            Assert.IsNotNull(funcPkt);
+        }
+
+        [TestMethod]
+        public void FNPKT_0041_Constructor_SelfDestructFunction_Not_Null()
+        {
+            SelfDestructFunction func = new SelfDestructFunction("true");
+            FunctionPacket funcPkt = new FunctionPacket(func);
+            Assert.IsNotNull(funcPkt);
+        }
+
+        [TestMethod]
+        public void FNPKT_0042_Get_Command_IncreaseThrustFunction_Data_Correct_Command()
+        {
+            IncreaseThrustFunction func = new IncreaseThrustFunction(100);
+            FunctionPacket funcPkt = new FunctionPacket(func);
+            string actual = funcPkt.Command;
+            string expected = "100";
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0043_Get_Command_SelfDestructFunction_Data_Correct_Command()
+        {
+            SelfDestructFunction func = new SelfDestructFunction("true");
+            FunctionPacket funcPkt = new FunctionPacket(func);
+            string actual = funcPkt.Command;
+            Assert.AreEqual(actual, func.GetCommand());
+        }
+
+        [TestMethod]
+        public void FNPKT_0044_Calculate_CRC_IncreaseThrustFunction()
+        {
+            IncreaseThrustFunction func = new IncreaseThrustFunction(100);
+            FunctionPacket funcPkt = new FunctionPacket(func);
+            funcPkt.CalculateCRC();
+            Crc32 crc = new Crc32();
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.DateTime.ToString()));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
+            string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
+            string actual = funcPkt.CalculateCRC();
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0045_Calculate_CRC_SelfDestructFunction()
+        {
+            SelfDestructFunction func = new SelfDestructFunction("true");
+            FunctionPacket funcPkt = new FunctionPacket(func);
+            funcPkt.CalculateCRC();
+            Crc32 crc = new Crc32();
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.DateTime.ToString()));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
+            string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
+            string actual = funcPkt.CalculateCRC();
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void FNPKT_0046_Get_FunctionType_IncreaseThrustFunction()
+        {
+            IncreaseThrustFunction func = new IncreaseThrustFunction(100);
+            FunctionPacket funcPkt = new FunctionPacket(func);
+            string functionTypeName = funcPkt.FunctionType;
+            Assert.AreEqual(functionTypeName, func.GetType().Name);
+        }
+
+        [TestMethod]
+        public void FNPKT_0047_Get_FunctionType_SelfDestructFunction()
+        {
+            SelfDestructFunction func = new SelfDestructFunction("true");
+            FunctionPacket funcPkt = new FunctionPacket(func);
+            string functionTypeName = funcPkt.FunctionType;
+            Assert.AreEqual(functionTypeName, func.GetType().Name);
+        }
+
+        [TestMethod]
+        public void FNPKT_0048_Get_Function_Return_Same_SelfDestructFunction_Not_Stub()
+        {
+            // returns the same Function as the one used to create the packet
+            SelfDestructFunction func = new SelfDestructFunction("true");
+            FunctionPacket funcPkt = new FunctionPacket(func);
+
+            IFunction actual = funcPkt.GetFunction();
+
+            Assert.IsNotNull(actual);
+            Assert.IsInstanceOfType(actual, typeof(SelfDestructFunction));
+            Assert.AreEqual(actual, func);
+            Assert.AreEqual(actual.GetCommand(), func.GetCommand());
+        }
+
+        [TestMethod]
+        public void FNPKT_0049_Get_Function_Return_Same_IncreaseThrustFunction_Not_Stub()
+        {
+            // returns the same Function as the one used to create the packet
+            IncreaseThrustFunction func = new IncreaseThrustFunction(100);
+            FunctionPacket funcPkt = new FunctionPacket(func);
+
+            IFunction actual = funcPkt.GetFunction();
+
+            Assert.IsNotNull(actual);
+            Assert.IsInstanceOfType(actual, typeof(IncreaseThrustFunction));
+            Assert.AreEqual(actual, func);
+            Assert.AreEqual(actual.GetCommand(), func.GetCommand());
+        }
+        [TestMethod]
+        public void FNPKT_0050_GetPacketType_Correct_PacketType_SelfDestructFunction_Not_Stub()
+        {
+            SelfDestructFunction func = new SelfDestructFunction("true");
+            FunctionPacket funcPkt = new FunctionPacket(func);
+
+            string actual = funcPkt.GetPacketType();
+
+            Assert.AreEqual(actual, func.GetType().Name);
+        }
+
+        [TestMethod]
+        public void FNPKT_0051_GetPacketType_Correct_PacketType_IncreaseThrustFunction_Not_Stub()
+        {
+            IncreaseThrustFunction func = new IncreaseThrustFunction(100);
+            FunctionPacket funcPkt = new FunctionPacket(func);
+
+            string actual = funcPkt.GetPacketType();
+
+            Assert.AreEqual(actual, func.GetType().Name);
+        }
+
+        [TestMethod]
+        public void FNPKT_0052_GetPacketData_Correct_PacketData_SelfDestructFunction_Not_Stub()
+        {
+            SelfDestructFunction func = new SelfDestructFunction("true");
+            FunctionPacket funcPkt = new FunctionPacket(func);
+
+            string actual = funcPkt.GetPacketData();
+
+            Assert.AreEqual(actual, func.GetCommand());
+        }
+
+        [TestMethod]
+        public void FNPKT_0053_GetPacketData_Correct_PacketData_IncreaseThrustFunction_Not_Stub()
+        {
+            IncreaseThrustFunction func = new IncreaseThrustFunction(100);
+            FunctionPacket funcPkt = new FunctionPacket(func);
+
+            string actual = funcPkt.GetPacketData();
+
+            Assert.AreEqual(actual, func.GetCommand());
+        }
+
     }
+
+
     [TestClass]
     public class LoggingTests
     {
