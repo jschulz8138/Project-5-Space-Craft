@@ -13,8 +13,10 @@ using System;
 using System.IO.Hashing;
 using System.Linq;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Reflection;
 
 namespace Payload_Ops_Tests
 {
@@ -598,7 +600,56 @@ namespace Payload_Ops_Tests
 
             Assert.AreEqual(actual, func.GetCommand());
         }
+        public void FNPKT_0054_GetFuntion_Stub_Null_Function_Prop()
+        {
 
+            FunctionStub stub = new FunctionStub("test command");
+
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            // set the function property to null
+            var functionProp = typeof(FunctionPacket).GetField("function", BindingFlags.NonPublic | BindingFlags.Instance);
+            functionProp.SetValue(funcPkt, null);
+
+            IFunction actual = funcPkt.GetFunction();
+
+            Assert.IsNull(actual);
+        }
+        [TestMethod]
+        public void FNPKT_0055_GetFuntion_IncreaseThrustFunction_Null_Function_Prop()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction(100);
+
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            // set the function property to null
+            var functionProp = typeof(FunctionPacket).GetField("function", BindingFlags.NonPublic | BindingFlags.Instance);
+            functionProp.SetValue(funcPkt, null);
+
+            IFunction actual = funcPkt.GetFunction();
+            IncreaseThrustFunction expected = new IncreaseThrustFunction(100);
+
+            Assert.AreEqual(actual.GetType(), typeof(IncreaseThrustFunction));
+            Assert.AreEqual(actual.GetCommand(), expected.GetCommand());
+        }
+
+        [TestMethod]
+        public void FNPKT_0056_GetFunction_SelfDestructFunction_Null_Function_Prop()
+        {
+            SelfDestructFunction stub = new SelfDestructFunction("true");
+
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+
+            // set the function property to null
+            var functionProp = typeof(FunctionPacket).GetField("function", BindingFlags.NonPublic | BindingFlags.Instance);
+            functionProp.SetValue(funcPkt, null);
+
+            IFunction actual = funcPkt.GetFunction();
+            SelfDestructFunction expected = new SelfDestructFunction("true");
+
+            Assert.AreEqual(actual.GetType(), typeof(SelfDestructFunction));
+            Assert.AreEqual(actual.GetCommand(), expected.GetCommand());
+        }
     }
 
 
