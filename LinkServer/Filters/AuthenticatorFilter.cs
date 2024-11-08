@@ -13,11 +13,11 @@ namespace LinkServer.Filters
 
             if (string.IsNullOrEmpty(username))
             {
-                context.Result = new UnauthorizedObjectResult("User is not authenticated");
+                context.Result = new UnauthorizedObjectResult("User is not authenticated.");
             }
         }
 
-            public void OnActionExecuted(ActionExecutedContext context)
+        public void OnActionExecuted(ActionExecutedContext context)
         {
             // Do nothing after the action executes
         }

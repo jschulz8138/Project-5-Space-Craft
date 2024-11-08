@@ -36,8 +36,11 @@ namespace LinkServer.Controllers
         public IActionResult Login([FromBody] UserCredentials credentials)
         {
 
-            // log the login attempt
-            _logger.LogLogin(credentials.Username);
+            if (_loginAttempts >= 3)
+            {
+                _logger.LogAuthentication(credentials.Username, success: false)
+                return Unauthorized("Too many login attempts.");
+            }
 
             if (_authenticatedUsers.ContainsKey(credentials.Username))
             {
@@ -92,9 +95,11 @@ namespace LinkServer.Controllers
                 _logger.LogLogout(credentials.Username);
 
                 return Ok("Logged out");
+                // Log
             }
 
             return BadRequest("User is not logged in");
+
         }
 
         public static bool IsAuthenticated(string username)
