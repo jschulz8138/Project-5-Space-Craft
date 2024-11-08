@@ -14,12 +14,6 @@ namespace LinkServer.Controllers
     [Route("api/[controller]")]
     public class AuthenticatorController : ControllerBase
     {
-        private static readonly List<UserCredentials> _users =
-        [
-            new UserCredentials { Username = "user1", Password = "password1" },
-            new UserCredentials { Username = "user2", Password = "password2" }
-        ];
-        
         private readonly AppLogger _logger;
 
         // inject AppLogger through constructor
@@ -28,38 +22,66 @@ namespace LinkServer.Controllers
             _logger = logger;
         }
 
+        private static readonly Dictionary<string, string> _users = new()
+        {
+            {"user1", "password1" },
+            {"user2", "password2" }
+        };
         private short _loginAttempts = 0;
+        // Static dictionary to store logged-in sessions (as an example)
         private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
+        //I believe the route is api/Authenticator/login
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserCredentials credentials)
         {
 
             if (_loginAttempts >= 3)
             {
-                _logger.LogAuthentication(credentials.Username, success: false)
+                _logger.LogAuthentication(credentials.Username, success: false);
                 return Unauthorized("Too many login attempts.");
             }
 
             if (_authenticatedUsers.ContainsKey(credentials.Username))
             {
-                return Ok("Already authenticated.");
-                _logger.LogAuthentication(credentials.Username, success: true)
+                // log that the user is already authenticated
+                _logger.LogAuthentication(credentials.Username, success: true);
+
+                return Ok("Already authenticated");
             }
+            bool usernameExists = _users.ContainsKey(credentials.Username);
+            bool passwordMatches = usernameExists && _users[credentials.Username] == credentials.Password;
             
-            var user = _users.FirstOrDefault(u => u.Username == credentials.Username && u.Password == credentials.Password);
-            if (user != null)
+            if (usernameExists && passwordMatches)
             {
                 _authenticatedUsers[credentials.Username] = true;
                 HttpContext.Session.SetString("username", credentials.Username);
-                _logger.LogAuthentication(credentials.Username, success: true)
-                return Ok("Successfully authenticated.");
-            }
+                
+                // log successful authentication
+                _logger.LogAuthentication(credentials.Username, success: true);
 
-            _loginAttempts++;
-            _logger.LogAuthentication(credentials.Username, success: false)
-            return Unauthorized("Authentication failed, invalid user credentials.");
+                return Ok("Authenticated");
+            }
+            else
+            {
+                //Log failed authentication attempt and determine specific error messages
+                if (!usernameExists && !passwordMatches)
+                {
+                    _logger.LogAuthentication(credentials.Username, success: false, reason: "both username and password are invalid");
+                }
+                else if (!usernameExists)
+                {
+                    _logger.LogAuthentication(credentials.Username, success: false, reason: "username is invalid");
+                }
+                else
+                {
+                    _logger.LogAuthentication(credentials.Username, success: false, reason: "password is invalid");
+                }
+
+                return Unauthorized("Invalid credentials");
+            }
         }
+
 
         [HttpPost("logout")]
         public IActionResult Logout([FromBody] UserCredentials credentials)

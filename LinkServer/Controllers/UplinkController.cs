@@ -61,6 +61,16 @@ namespace LinkServer.Controllers
             return Ok(currentSettingsPacket);
         }
 
+        // Simulated packet reception method for demonstration
+        [HttpPost("receive-packet")]
+        public IActionResult ReceivePacket([FromBody] PacketWrapper packet)
+        {
+            // Log the incoming packet event
+            _logger.LogPacketReceived(packet.JsonData);
+
+            return Ok("Packet received and logged.");
+        }
+
         //  GET api/uplink/request-all-data
         [HttpGet("request-all-data")]
         public IActionResult RequestAllData()
@@ -71,12 +81,14 @@ namespace LinkServer.Controllers
             return Ok(allData);
         }
 
+       
+
         // Put apu/uplink/update-settings
         [HttpPut("update-settings")]
         public IActionResult UpdateSettings()
         {
             _logger.LogMetadata("PUT", "api/uplink/update-settings", 200);
-            return Ok(_confirmationPacketSettings);
+            return Ok(_currentSettings);
         }
     }
 }
