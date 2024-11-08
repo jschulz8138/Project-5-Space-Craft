@@ -15,6 +15,7 @@ namespace Payload_Ops
         public Spaceship() {
             //initalize variables
             this.spaceShipReadings = new List<IReading>();
+            this.spaceShipFunctions = new List<IFunction>();
             //pktWrapper = new PacketWrapper();
 
             DateTime now = DateTime.Now;
@@ -74,17 +75,24 @@ namespace Payload_Ops
             Console.WriteLine(jsonObj);
             var options = new JsonSerializerOptions
             {
-                IncludeFields = true // Allows deserialization to match constructor parameters with private fields
+                PropertyNameCaseInsensitive = true,
+                IncludeFields = true 
             };
             FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj, options);
 
             if (packet == null)
+            {
+                Console.WriteLine("Packet == null");
                 return false;
+            }
 
             IFunction? function = packet.GetFunction();
 
             if (function == null)
+            {
+                Console.WriteLine("(function == null)");
                 return false;
+            }
             this.AddFunction(function);
 
             Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
