@@ -8,7 +8,7 @@ namespace Payload_Ops.Packets
 {
     public class FunctionPacket : IPacket
     {
-        //[JsonIgnore]
+        [JsonIgnore]
         private IFunction function;
         private DateTime dateTime;
         public DateTime DateTime { get { return dateTime; } }

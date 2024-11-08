@@ -69,12 +69,15 @@ namespace Payload_Ops
             }
         }
 
-        public string Receive(string jsonObj)
-        {
-            FunctionPacket packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj);
-            this.AddFunction(packet.GetFunction());
-            return "success";
-        }
+        public bool Receive(string jsonObj) { 
+            FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj);
+            if (packet == null)
+                return false;
+            IFunction? function = packet.GetFunction();
+            if (function == null)
+                return false; this.AddFunction(function);
+            Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
+            return true; }
 
         private void TimedEvent(object? state)
         {

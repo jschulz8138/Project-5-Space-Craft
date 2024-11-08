@@ -15,23 +15,25 @@ namespace LinkServer.Controllers
         private static PacketWrapper _currentSettings = new PacketWrapper("{\"settings\": {\"temperature-setting\": 21.5, \"humidity-setting\": 45.0, \"power-setting\": \"power saving\"}}");
 
         private readonly AppLogger _logger;
-        private Spaceship spaceShip;
+        private Spaceship _spaceship;
 
         // inject AppLogger through constructor
         public UplinkController(AppLogger logger)
         {
             _logger = logger;
-            spaceShip = new Spaceship();
+            _spaceship = new Spaceship();
         }
 
         // POST api/uplink/send
+        // POST api/uplink/send
         [HttpPost("send")]
-        public IActionResult SendUplink([FromBody] string packetJSON)
+        public IActionResult SendUplink([FromBody] string packet)
         {
-            spaceShip.Receive(packetJSON);
             // log metadata about this request
+            // "{\"DateTime\":\"2024-11-07T19:26:34.0177707-05:00\",\"DataType\":\"ReadingsStub\",\"Data\":\"TestingData\",\"Crc\":\"some_crc_value\"}"
+            // send that
             _logger.LogMetadata("POST", "api/uplink/send", 200);
-
+            _spaceship.Receive(packet);
             return Ok(new { Message = "Uplink received and processed" });
         }
 
