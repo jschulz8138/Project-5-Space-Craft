@@ -749,4 +749,45 @@ namespace Payload_Ops_Tests
             Assert.AreEqual(expected, actual);
         }
     }
+    [TestClass]
+    public class SelfDestructTestClass
+    {
+        [TestMethod]
+        public void SD_Authorize()
+        {
+            //Arange
+            string expected = "True";
+            SelfDestructFunction SDTest = new SelfDestructFunction("true");
+            //Act
+            string actual = SDTest.GetCommand();
+            //Assert
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void SD_Unauthorized()
+        {
+            //Arange
+            string expected = "False";
+            SelfDestructFunction SDTest = new SelfDestructFunction("false");
+            //Act
+            string actual = SDTest.GetCommand();
+            //Assert
+            Assert.AreEqual(actual, expected);
+        }
+    }
+    [TestClass]
+    public class IncreaseThrustTests
+    {
+        [TestMethod]
+        public void IncreaseThrustTest()
+        {
+            //Arange
+            string expected = "500";
+            IncreaseThrustFunction increaseThrust = new IncreaseThrustFunction("500");
+            //Act
+            string actual = increaseThrust.GetCommand();
+            //Assert
+            Assert.AreEqual(actual, expected);
+        }
+    }
 }
