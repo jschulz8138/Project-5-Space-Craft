@@ -21,10 +21,24 @@ namespace Uplink_Downlink
             }
 
             _url = url;
-            _client = new RestClient(url);
+            _client = new RestClient(_url);
         }
 
-        // Function requires the type of request being sent (Get, Post, Put, Delete), then it requires the endpoint that its being sent to, then the last paremeter is the arguments (needs to be in dictonary object format)
+        /// <summary>
+        /// Sends an HTTP request of the specified type (GET, POST, PUT, DELETE) to a given endpoint with optional arguments.
+        /// </summary>
+        /// <typeparam name="TResponse">The type of the expected response. Must be a class with a parameterless constructor.</typeparam>
+        /// <param name="type">The type of HTTP request to send (GET, POST, PUT, DELETE).</param>
+        /// <param name="endpoint">The endpoint URL to which the request is sent.</param>
+        /// <param name="args">
+        /// Optional arguments for the request, in the form of key-value pairs, 
+        /// to be sent as parameters in the request.
+        /// </param>
+        /// <returns>
+        /// A <see cref="Task{TResponse}"/> representing the asynchronous operation, which contains 
+        /// the response of type <typeparamref name="TResponse"/> if the request succeeds; otherwise, <c>null</c>.
+        /// </returns>
+        /// <exception cref="ArgumentException">Thrown if an invalid request type is specified.</exception>
         public async Task<TResponse?> SendRequestAsync<TResponse>(ReqType type, string endpoint, Dictionary<string, string>? args = null) where TResponse : class, new()
         {
             var request = new RestRequest(endpoint);
