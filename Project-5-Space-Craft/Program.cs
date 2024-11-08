@@ -1,7 +1,7 @@
 ﻿//Main program that spaceship will be created in.
-using Project_5_Space_Craft;
-using Project_5_Space_Craft.Packets;
-using Project_5_Space_Craft.Readings;
+using Payload_Ops;
+using Payload_Ops.Packets;
+using Payload_Ops.Readings;
 
 
 //Create objects

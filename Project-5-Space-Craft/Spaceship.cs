@@ -1,8 +1,8 @@
 ﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
-using Project_5_Space_Craft.Packets;
-namespace Project_5_Space_Craft
+using Payload_Ops.Packets;
+namespace Payload_Ops
 {
     public class Spaceship
     {
@@ -69,10 +69,11 @@ namespace Project_5_Space_Craft
             }
         }
 
-        public void Receive(string jsonObj)
+        public string Receive(string jsonObj)
         {
             FunctionPacket packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj);
             this.AddFunction(packet.GetFunction());
+            return "success";
         }
 
         private void TimedEvent(object? state)

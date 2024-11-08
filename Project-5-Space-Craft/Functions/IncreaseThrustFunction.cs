@@ -1,6 +1,6 @@
 //PayloadOps
 //Implementation of increasing thrust, inheriting from IFunction
-namespace Project_5_Space_Craft
+namespace Payload_Ops
 {
     public class IncreaseThrustFunction : IFunction
     {

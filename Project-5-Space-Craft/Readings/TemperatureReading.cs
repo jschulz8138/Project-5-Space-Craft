@@ -1,6 +1,6 @@
 ﻿//PayloadOps
 //Implementation of Temperature Readings, inheriting from IReading
-namespace Project_5_Space_Craft
+namespace Payload_Ops
 {
     public class TemperatureReading : IReading
     {

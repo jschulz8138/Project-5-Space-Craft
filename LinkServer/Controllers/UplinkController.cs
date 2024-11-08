@@ -2,6 +2,7 @@ using LinkServer.Filters;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Specialized;
 using Uplink_Downlink;
+using Payload_Ops;
 
 namespace LinkServer.Controllers
 {
@@ -14,21 +15,23 @@ namespace LinkServer.Controllers
         private static PacketWrapper _currentSettings = new PacketWrapper("{\"settings\": {\"temperature-setting\": 21.5, \"humidity-setting\": 45.0, \"power-setting\": \"power saving\"}}");
 
         private readonly AppLogger _logger;
+        private Spaceship spaceShip;
 
         // inject AppLogger through constructor
         public UplinkController(AppLogger logger)
         {
             _logger = logger;
+            spaceShip = new Spaceship();
         }
 
         // POST api/uplink/send
         [HttpPost("send")]
-        public IActionResult SendUplink([FromBody] PacketWrapper packet)
+        public IActionResult SendUplink([FromBody] string packetJSON)
         {
+            spaceShip.Receive(packetJSON);
             // log metadata about this request
             _logger.LogMetadata("POST", "api/uplink/send", 200);
 
-            Console.WriteLine($"Received uplink: {packet.JsonData}");
             return Ok(new { Message = "Uplink received and processed" });
         }
 

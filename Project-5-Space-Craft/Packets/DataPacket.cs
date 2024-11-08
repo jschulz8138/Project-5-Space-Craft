@@ -4,7 +4,7 @@ using System.IO.Hashing;
 using System.Text;
 using System.Text.Json;
 using DocumentFormat.OpenXml.Office2016.Drawing.Command;
-namespace Project_5_Space_Craft.Packets
+namespace Payload_Ops.Packets
 {
     public class DataPacket : IPacket
     {

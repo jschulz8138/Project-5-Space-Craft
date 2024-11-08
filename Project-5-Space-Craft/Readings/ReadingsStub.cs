@@ -1,6 +1,6 @@
 ﻿//PayloadOps TODO:// Remove this stub
 //This is an example stud for an implementation of SpaceshipReadings
-namespace Project_5_Space_Craft.Readings
+namespace Payload_Ops.Readings
 {
     public class ReadingsStub : IReading
     {

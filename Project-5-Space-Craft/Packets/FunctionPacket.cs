@@ -4,7 +4,7 @@ using System.IO.Hashing;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.Json;
-namespace Project_5_Space_Craft.Packets
+namespace Payload_Ops.Packets
 {
     public class FunctionPacket : IPacket
     {
