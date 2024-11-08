@@ -70,13 +70,5 @@ namespace LinkServer.Controllers
             _logger.LogMetadata("GET", "api/uplink/request-all-data", 200);
             return Ok(allData);
         }
-
-        // Put apu/uplink/update-settings
-        [HttpPut("update-settings")]
-        public IActionResult UpdateSettings()
-        {
-            _logger.LogMetadata("PUT", "api/uplink/update-settings", 200);
-            return Ok(_currentSettings);
-        }
     }
 }
