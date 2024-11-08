@@ -41,8 +41,8 @@ namespace LinkServer.Controllers
 
             if(_currentSettings != null)
             {
-                return Ok(_currentSettings);
                 _logger.LogMetadata("PUT", "api/uplink/update-settings", 200);
+                return Ok(_currentSettings);
             }
             else
             {
@@ -76,7 +76,7 @@ namespace LinkServer.Controllers
         public IActionResult UpdateSettings()
         {
             _logger.LogMetadata("PUT", "api/uplink/update-settings", 200);
-            return Ok(_confirmationPacketSettings);
+            return Ok(_currentSettings);
         }
     }
 }
