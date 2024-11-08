@@ -27,7 +27,7 @@ namespace LinkServer.Controllers
             {"user1", "password1" },
             {"user2", "password2" }
         };
-
+        private short _loginAttempts = 0;
         // Static dictionary to store logged-in sessions (as an example)
         private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
@@ -38,7 +38,7 @@ namespace LinkServer.Controllers
 
             if (_loginAttempts >= 3)
             {
-                _logger.LogAuthentication(credentials.Username, success: false)
+                _logger.LogAuthentication(credentials.Username, success: false);
                 return Unauthorized("Too many login attempts.");
             }
 

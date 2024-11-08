@@ -88,7 +88,7 @@ namespace LinkServer.Controllers
         public IActionResult UpdateSettings()
         {
             _logger.LogMetadata("PUT", "api/uplink/update-settings", 200);
-            return Ok(_confirmationPacketSettings);
+            return Ok(_currentSettings);
         }
     }
 }
