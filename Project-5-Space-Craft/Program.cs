@@ -2,6 +2,8 @@
 using Payload_Ops;
 using Payload_Ops.Packets;
 using Payload_Ops.Readings;
+using Payload_Ops.Functions;
+using System.Text.Json;
 
 
 //Create objects
@@ -22,7 +24,13 @@ ReadingsStub stub = new ReadingsStub("TestingData");
 DataPacket pkt = new DataPacket(stub);
 //PacketWrapper pktWrap = new PacketWrapper();
 
-Console.WriteLine(pkt.ToJson());
+FunctionStub fstub = new FunctionStub("TestingData");
+FunctionPacket fpkt = new FunctionPacket(fstub);
+
+Console.WriteLine(fpkt.ToJson());
+Console.WriteLine("""{"Date":"2024-11-07T19:26:34.0177707-05:00","FunctionType":"FunctionStub","Command":"TestingData","PacketCRC":"some_crc_value"}""");
+FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(fpkt.ToJson());
+//ship.Receive("""{"Date":"2024-11-07T19:26:34.0177707-05:00","FunctionType":"FunctionStub","Command":"TestingData","PacketCRC":"some_crc_value"}""");
 
 //Console.WriteLine(pktWrap.ToJsonReadings(stub));
 //Logging.LogPacket("Temperature", "Outbound", "-95c");

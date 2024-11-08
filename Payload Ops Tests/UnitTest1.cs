@@ -36,7 +36,7 @@ namespace Payload_Ops_Tests
         public void FNPKT_0003_Constructor_Variant_1_Data_Correct_DateTime()
         {
             FunctionPacket funcPkt = new FunctionPacket(new FunctionStub("test command"));
-            String actual = funcPkt.DateTime.ToString();
+            String actual = funcPkt.Date.ToString();
             String expected = DateTime.Now.ToString();
             Assert.AreEqual(actual, expected);
         }
@@ -45,7 +45,7 @@ namespace Payload_Ops_Tests
         public void FNPKT_0004_Constructor_Variant_2_Data_Correct_DateTime()
         {
             FunctionPacket funcPkt = new FunctionPacket(new FunctionStub("test command"));
-            String actual = funcPkt.DateTime.ToString();
+            String actual = funcPkt.Date.ToString();
             String expected = DateTime.Now.ToString();
             Assert.AreEqual(actual, expected);
         }
@@ -95,7 +95,7 @@ namespace Payload_Ops_Tests
             FunctionStub stub = new FunctionStub("test command");
             FunctionPacket funcPkt = new FunctionPacket(stub);
             Crc32 crc = new Crc32();
-            crc.Append(funcPkt.ConvertToByteArray(funcPkt.DateTime.ToString()));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.Date.ToString()));
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
             string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
@@ -108,7 +108,7 @@ namespace Payload_Ops_Tests
         {
             FunctionPacket funcPkt = new FunctionPacket(new FunctionStub("test command"));
             Crc32 crc = new Crc32();
-            crc.Append(funcPkt.ConvertToByteArray(funcPkt.DateTime.ToString()));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.Date.ToString()));
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
             string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");
@@ -123,7 +123,7 @@ namespace Payload_Ops_Tests
             FunctionPacket funcPkt = new FunctionPacket(stub);
             funcPkt.CalculateCRC();
             Crc32 crc = new Crc32();
-            crc.Append(funcPkt.ConvertToByteArray(funcPkt.DateTime.ToString()));
+            crc.Append(funcPkt.ConvertToByteArray(funcPkt.Date.ToString()));
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.FunctionType));
             crc.Append(funcPkt.ConvertToByteArray(funcPkt.Command));
             string expected = BitConverter.ToString(crc.GetCurrentHash()).Replace("-", "");

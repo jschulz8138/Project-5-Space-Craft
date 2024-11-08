@@ -30,7 +30,7 @@ namespace LinkServer.Controllers
         public IActionResult SendUplink([FromBody] string packet)
         {
             // log metadata about this request
-            // "{\"DateTime\":\"2024-11-07T19:26:34.0177707-05:00\",\"DataType\":\"ReadingsStub\",\"Data\":\"TestingData\",\"Crc\":\"some_crc_value\"}"
+            // "{\"Date\":\"2024-11-07T19:26:34.0177707-05:00\",\"FunctionType\":\"ReadingsStub\",\"Command\":\"TestingData\",\"PacketCRC\":\"some_crc_value\"}"
             // send that
             _logger.LogMetadata("POST", "api/uplink/send", 200);
             _spaceship.Receive(packet);

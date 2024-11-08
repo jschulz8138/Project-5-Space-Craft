@@ -1,6 +1,7 @@
 ﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Payload_Ops.Packets;
 namespace Payload_Ops
 {
@@ -70,8 +71,12 @@ namespace Payload_Ops
         }
 
         public bool Receive(string jsonObj) { 
-
-            FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj);
+            Console.WriteLine(jsonObj);
+            var options = new JsonSerializerOptions
+            {
+                IncludeFields = true // Allows deserialization to match constructor parameters with private fields
+            };
+            FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj, options);
 
             if (packet == null)
                 return false;
@@ -79,7 +84,8 @@ namespace Payload_Ops
             IFunction? function = packet.GetFunction();
 
             if (function == null)
-                return false; this.AddFunction(function);
+                return false;
+            this.AddFunction(function);
 
             Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
                 return true;
