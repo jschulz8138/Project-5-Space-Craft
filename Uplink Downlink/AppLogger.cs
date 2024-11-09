@@ -19,7 +19,12 @@ namespace Uplink_Downlink
         public abstract void LogMetadata(string method, string endpoint, int statusCode);
         public abstract void LogLogin(string userId);
         public abstract void LogLogout(string userId);
-        public abstract void LogAuthentication(string userId, bool success);
+
+        //// Added reason parameter to log specific failure reasons
+        public abstract void LogAuthentication(string userId, bool success, string reason="");
+
+        //new abstract method to log incoming packets
+        public abstract void LogPacketReceived(string packetData);
 
         protected virtual void WriteToFile(string content)
         {

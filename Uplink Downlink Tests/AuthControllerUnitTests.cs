@@ -9,6 +9,7 @@ using LinkServer.Controllers;
 using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
 
+
 namespace LinkServer.Controllers.Tests
 {
     [TestClass]
@@ -53,7 +54,7 @@ namespace LinkServer.Controllers.Tests
             }
         }
 
-        // LOGIN FUNCITON TESTS
+        // LOGIN FUNCTION TESTS
         // Successful test should be a successful authentication
         [TestMethod]
         public void Login_WithValidCredentials_ShouldAuthenticateUser()
@@ -122,7 +123,6 @@ namespace LinkServer.Controllers.Tests
             Assert.IsNotNull(result);
             Assert.AreEqual("Already authenticated.", result.Value);
         }
-
 
             // LOGOUT FUNCTION TESTS
         // Attempts to logout, should return a successful logged out response

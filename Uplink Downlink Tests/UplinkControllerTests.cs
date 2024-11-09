@@ -70,7 +70,6 @@ namespace LinkServer.Controllers.Tests
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual("Settings not updated.", result.Value);
-
         }
 
         [TestMethod]
