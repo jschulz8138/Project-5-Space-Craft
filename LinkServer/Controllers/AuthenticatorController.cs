@@ -44,10 +44,8 @@ namespace LinkServer.Controllers
 
             if (_authenticatedUsers.ContainsKey(credentials.Username))
             {
-                // log that the user is already authenticated
                 _logger.LogAuthentication(credentials.Username, success: true);
-
-                return Ok("Already authenticated");
+                return Ok("Already authenticated.");
             }
             bool usernameExists = _users.ContainsKey(credentials.Username);
             bool passwordMatches = usernameExists && _users[credentials.Username] == credentials.Password;
@@ -91,11 +89,8 @@ namespace LinkServer.Controllers
                 _authenticatedUsers.TryRemove(credentials.Username, out _);
                 HttpContext.Session.Remove("username");
 
-                // log the logout event
                 _logger.LogLogout(credentials.Username);
-
                 return Ok("Logged out");
-                // Log
             }
 
             return BadRequest("User is not logged in");
