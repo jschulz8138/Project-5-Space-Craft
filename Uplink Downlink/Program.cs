@@ -8,7 +8,7 @@ class Program
     static async Task Main(string[] args)
     {
 
-        var connectionManager = new ConnectionManager("127.0.0.1");//replacing with the server IP or hostname
+        var connectionManager = new ConnectionManager("https://127.0.0.1");//replacing with the server IP or hostname
         //authencticating with the URL
 
         if (await connectionManager.AuthenticateAsync("user", "pass"))
@@ -16,7 +16,7 @@ class Program
             Console.WriteLine("Authentication successful.");
 
             // Initializing the CommunicationHandler for data transmission
-            var communicationHandler = new CommunicationHandler("127.0.0.1");
+            var communicationHandler = new CommunicationHandler("https://127.0.0.1");
             int delayBeforeUpdate = 60; // set to 60 for testing
 
             // Starting periodic data updates to the ground station
