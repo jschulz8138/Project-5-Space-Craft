@@ -13,6 +13,7 @@ using System.IO.Hashing;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 namespace Payload_Ops_Tests
 {
     [TestClass]
@@ -553,6 +554,106 @@ namespace Payload_Ops_Tests
             bool actual = readingPkt.ValidateCRC("probably wrong");
             bool expected = false;
             Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        public void RDPKT_0015_ToJson_Not_Null()
+        {
+            ReadingsStub stub = new ReadingsStub("test data");
+            DataPacket dataPkt = new DataPacket(stub);
+
+            string actual = dataPkt.ToJson();
+
+            Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void RDPKT_0016_ToJson_Correct_Type_String()
+        {
+            ReadingsStub stub = new ReadingsStub("test data");
+            DataPacket dataPkt = new DataPacket(stub);
+
+            string actual = dataPkt.ToJson();
+
+            Assert.IsInstanceOfType(actual, typeof(string));
+        }
+
+        [TestMethod]
+        public void RDPKT_0017_ToJson_Correct_JSON()
+        {
+            ReadingsStub stub = new ReadingsStub("test data");
+            DataPacket dataPkt = new DataPacket(stub);
+
+            string expected = JsonSerializer.Serialize(dataPkt);
+            string actual = dataPkt.ToJson();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RDPKT_0018_GetPacketType_Not_Null()
+        {
+            ReadingsStub stub = new ReadingsStub("test data");
+            DataPacket dataPkt = new DataPacket(stub);
+
+            string actual = dataPkt.GetPacketType();
+
+            Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void RDPKT_0019_GetPacketType_Correct_Type_String()
+        {
+            ReadingsStub stub = new ReadingsStub("test data");
+            DataPacket dataPkt = new DataPacket(stub);
+
+            string actual = dataPkt.GetPacketType();
+
+            Assert.IsInstanceOfType(actual, typeof(string));
+        }
+
+        [TestMethod]
+        public void RDPKT_0020_Correct_PacketType_Stub()
+        {
+            ReadingsStub stub = new ReadingsStub("test data");
+            DataPacket dataPkt = new DataPacket(stub);
+
+            string actual = dataPkt.GetPacketType();
+
+            Assert.AreEqual(actual, stub.GetType().Name);
+        }
+
+        [TestMethod]
+        public void RDPKT_0021_GetPacketData_Not_Null()
+        {
+            ReadingsStub stub = new ReadingsStub("test data");
+            DataPacket dataPkt = new DataPacket(stub);
+
+            string actual = dataPkt.GetPacketData();
+
+            Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void RDPKT_0022_GetPacketData_Correct_Type_String()
+        {
+            ReadingsStub stub = new ReadingsStub("test data");
+            DataPacket dataPkt = new DataPacket(stub);
+
+            string actual = dataPkt.GetPacketData();
+
+            Assert.IsInstanceOfType(actual, typeof(string));
+        }
+
+        [TestMethod]
+        public void RDPKT_0023_GetPacketData_Correct_PacketData_Stub()
+        {
+            ReadingsStub stub = new ReadingsStub("test data");
+            DataPacket dataPkt = new DataPacket(stub);
+
+            string actual = dataPkt.GetPacketData();
+
+            Assert.AreEqual(actual, stub.GetData());
         }
     }
 
