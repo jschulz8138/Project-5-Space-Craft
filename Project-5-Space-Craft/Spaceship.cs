@@ -96,7 +96,7 @@ namespace Payload_Ops
             }
             this.AddFunction(function);
 
-            Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
+            //Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
                 return true;
         }
 
