@@ -1,8 +1,9 @@
 ﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
-using Project_5_Space_Craft.Packets;
-namespace Project_5_Space_Craft
+using DocumentFormat.OpenXml.Wordprocessing;
+using Payload_Ops.Packets;
+namespace Payload_Ops
 {
     public class Spaceship
     {
@@ -14,6 +15,7 @@ namespace Project_5_Space_Craft
         public Spaceship() {
             //initalize variables
             this.spaceShipReadings = new List<IReading>();
+            this.spaceShipFunctions = new List<IFunction>();
             //pktWrapper = new PacketWrapper();
 
             DateTime now = DateTime.Now;
@@ -44,7 +46,8 @@ namespace Project_5_Space_Craft
         //TODO: Connect functionality to uplink / downlink
         public bool Send(IPacket packet)
         {
-            Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
+            //TODO Temporarily removed logging functionality
+            //Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
             //TODO: Send packet
             //!response.IsSuccessStatusCode
             return true;
@@ -69,10 +72,32 @@ namespace Project_5_Space_Craft
             }
         }
 
-        public void Receive(string jsonObj)
-        {
-            FunctionPacket packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj);
-            this.AddFunction(packet.GetFunction());
+        public bool Receive(string jsonObj) { 
+            Console.WriteLine(jsonObj);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                IncludeFields = true 
+            };
+            FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj, options);
+
+            if (packet == null)
+            {
+                Console.WriteLine("Packet == null");
+                return false;
+            }
+
+            IFunction? function = packet.GetFunction();
+
+            if (function == null)
+            {
+                Console.WriteLine("(function == null)");
+                return false;
+            }
+            this.AddFunction(function);
+
+            //Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
+                return true;
         }
 
         private void TimedEvent(object? state)

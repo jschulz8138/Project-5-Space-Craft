@@ -1,6 +1,6 @@
 //PayloadOps
 //This is the interface for all spaceship commands. All commands should inherit and be based off of this.
-namespace Project_5_Space_Craft
+namespace Payload_Ops
 {
     public interface IFunction
     {

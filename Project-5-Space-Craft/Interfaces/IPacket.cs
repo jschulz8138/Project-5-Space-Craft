@@ -1,6 +1,6 @@
 //PayloadOps
 //Packet Interface
-namespace Project_5_Space_Craft
+namespace Payload_Ops
 {
     public interface IPacket
     {
