@@ -14,10 +14,10 @@ namespace LinkServer.Controllers
         private readonly AppLogger _logger;
         private readonly Spaceship _spaceship;
 
-        public UplinkController(AppLogger logger)
+        public UplinkController(AppLogger logger, Spaceship spaceship)
         {
             _logger = logger;
-            _spaceship = new Spaceship();
+            _spaceship = spaceship;
         }
 
         [HttpPost("send")]
