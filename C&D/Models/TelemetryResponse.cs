@@ -6,6 +6,7 @@
         public float Temperature { get; set; }
         public float Radiation { get; set; }
         public float Velocity { get; set; }
+        public DateTime Timestamp { get; set; }
 
         public override string ToString()
         {
