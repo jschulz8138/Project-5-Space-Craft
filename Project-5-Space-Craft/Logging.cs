@@ -9,24 +9,29 @@ namespace Payload_Ops
 {
     public static class Logging
     {
-        private static String filename = "../../../LogFiles.xlsx";
+        private static String filename = "../../../../Project-5-Space-Craft/LogFiles.xlsx";
 
         //Interacts with PacketWrapper
         public static bool LogPacket(String packetType, String direction, String data)
         {
-            logFile(packetType, direction, data, DateTime.Now);
-            logConsole(packetType, direction, data, DateTime.Now);
-            return true;
+            if(logFile(packetType, direction, data, DateTime.Now) &&
+                logConsole(packetType, direction, data, DateTime.Now))
+                return true;
+            return false;
         }
 
         public static bool logFile(String type, String dir, String data, DateTime dt)
         {
-            string time = dt.ToString("yyyy MMMM dd h:mm:ss tt");
-            InsertText(filename, type, "A", GetNextEmptyCell(filename, "Sheet1", "A"));
-            InsertText(filename, time, "B", GetNextEmptyCell(filename, "Sheet1", "B"));
-            InsertText(filename, dir, "C", GetNextEmptyCell(filename, "Sheet1", "C"));
-            InsertText(filename, data, "D", GetNextEmptyCell(filename, "Sheet1", "D"));
-            return true;
+            if (File.Exists(filename))
+            {
+                string time = dt.ToString("yyyy MMMM dd h:mm:ss tt");
+                InsertText(filename, type, "A", GetNextEmptyCell(filename, "Sheet1", "A"));
+                InsertText(filename, time, "B", GetNextEmptyCell(filename, "Sheet1", "B"));
+                InsertText(filename, dir, "C", GetNextEmptyCell(filename, "Sheet1", "C"));
+                InsertText(filename, data, "D", GetNextEmptyCell(filename, "Sheet1", "D"));
+                return true;
+            }
+            return false;
         }
 
         public static bool logConsole(String type, String dir, String data, DateTime dt)
@@ -47,13 +52,9 @@ namespace Payload_Ops
                 WorkbookPart workbookPart = spreadSheet.WorkbookPart ?? spreadSheet.AddWorkbookPart();
                 SharedStringTablePart shareStringPart;
                 if (workbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
-                {
                     shareStringPart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
-                }
                 else
-                {
                     shareStringPart = workbookPart.AddNewPart<SharedStringTablePart>();
-                }
                 int index = InsertSharedStringItem(text, shareStringPart);
                 Cell cell = InsertCellInWorksheet(col, row, workbookPart.WorksheetParts.First());
                 cell.CellValue = new CellValue(index.ToString());
@@ -90,18 +91,14 @@ namespace Payload_Ops
             string cellReference = columnName + rowIndex;
             Row row;
             if (sheetData?.Elements<Row>().Where(r => !(r.RowIndex is null || r.RowIndex != rowIndex)).Count() != 0)
-            {
                 row = sheetData.Elements<Row>().Where(r => !(r.RowIndex is null || r.RowIndex != rowIndex)).First();
-            }
             else
             {
                 row = new Row() { RowIndex = rowIndex };
                 sheetData.Append(row);
             }
             if (row.Elements<Cell>().Where(c => !(c.CellReference is null || c.CellReference.Value != columnName + rowIndex)).Count() > 0)
-            {
                 return row.Elements<Cell>().Where(c => !(c.CellReference is null || c.CellReference.Value != cellReference)).First();
-            }
             else
             {
                 Cell refCell = null;
@@ -109,8 +106,7 @@ namespace Payload_Ops
                 {
                     if (string.Compare(cell.CellReference?.Value, cellReference, true) > 0)
                     {
-                        refCell = cell;
-                        break;
+                        refCell = cell; break;
                     }
                 }
                 Cell newCell = new Cell() { CellReference = cellReference };
@@ -150,39 +146,32 @@ namespace Payload_Ops
             {
                 WorkbookPart wbPart = document.WorkbookPart;
                 Sheet theSheet = wbPart?.Workbook.Descendants<Sheet>().Where(s => s.Name == sheetName).FirstOrDefault();
+
                 if (theSheet is null || theSheet.Id is null)
-                {
                     throw new ArgumentException("sheetName");
-                }
+
                 WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(theSheet.Id);
                 Cell theCell = wsPart.Worksheet?.Descendants<Cell>()?.Where(c => c.CellReference == addressName).FirstOrDefault();
-                if (theCell is null || theCell.InnerText.Length < 0)
-                {
+
+                if (theCell is null)
                     return string.Empty;
-                }
+
                 value = theCell.InnerText;
                 if (theCell.DataType is null)
-                {
                     return value;
-                }
+
                 if (theCell.DataType.Value == CellValues.SharedString)
                 {
                     var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
                     if (!(stringTable is null))
-                    {
                         value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
-                    }
                 }
                 else if (theCell.DataType.Value == CellValues.Boolean)
                 {
                     switch (value)
                     {
-                        case "0":
-                            value = "FALSE";
-                            break;
-                        default:
-                            value = "TRUE";
-                            break;
+                        case "0": value = "FALSE"; break;
+                        default: value = "TRUE"; break;
                     }
                 }
                 return value;
