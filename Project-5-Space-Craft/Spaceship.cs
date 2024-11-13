@@ -10,13 +10,11 @@ namespace Payload_Ops
         private List<IReading> spaceShipReadings;
         private List<IFunction> spaceShipFunctions;
         private Timer timer;
-        //private PacketWrapper pktWrapper;
 
         public Spaceship() {
             //initalize variables
             this.spaceShipReadings = new List<IReading>();
             this.spaceShipFunctions = new List<IFunction>();
-            //pktWrapper = new PacketWrapper();
 
             DateTime now = DateTime.Now;
 
