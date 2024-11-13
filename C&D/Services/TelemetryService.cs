@@ -7,31 +7,44 @@ namespace CAndD.Services
 {
     public class TelemetryService
     {
+        private readonly Random _random = new Random();
+        private double _lastX = 1000.0;
+        private double _lastY = 2000.0;
+        private double _lastZ = 3000.0;
+
         public TelemetryResponse CollectTelemetry()
         {
+            // Generate small random variations for position to simulate movement
+            double x = _lastX + (_random.NextDouble() * 2 - 1);  // Variations between -1 and 1
+            double y = _lastY + (_random.NextDouble() * 2 - 1);
+            double z = _lastZ + (_random.NextDouble() * 2 - 1);
+
+            // Update last known position
+            _lastX = x;
+            _lastY = y;
+            _lastZ = z;
+
+            // Generate realistic data within specified ranges
             return new TelemetryResponse
             {
-                Position = "X:0, Y:1, Z:3",
-                Temperature = 28.5f,
-                Radiation = 1.2f,
-                Velocity = 3.4f,
+                Position = $"X:{x:F2}, Y:{y:F2}, Z:{z:F2}",
+                Temperature = (float)(_random.NextDouble() * (146 - (-129)) + (-129)), // Range -129 to 146
+                Radiation = (float)(_random.NextDouble() + 1), // Range 1 to 2 mSv
+                Velocity = (float)(_random.NextDouble() * (11 - 8) + 8), // Range 8 to 11 km/h
                 Timestamp = DateTime.Now
             };
         }
 
         public void SaveTelemetryDataAsJson(TelemetryResponse telemetryData)
         {
-            // Get the solution root directory and build the path
             string solutionRootPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
             string filePath = Path.Combine(solutionRootPath, "TelemetryData.json");
 
             try
             {
-                // Serialize and save the data
                 string jsonString = JsonSerializer.Serialize(telemetryData, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(filePath, jsonString);
-
-                Console.WriteLine($"Telemetry data created successfully .");  // Testing to check file path
+                Console.WriteLine($"Telemetry data saved successfully to: {filePath}");
             }
             catch (Exception ex)
             {

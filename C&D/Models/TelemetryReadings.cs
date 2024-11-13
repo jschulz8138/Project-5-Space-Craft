@@ -10,7 +10,7 @@
         public override string ToString()
         {
             return $"Position: {Position}, Temperature: {Temperature}°C, " +
-                   $"Radiation: {Radiation} mSv, Velocity: {Velocity} m/s";
+                   $"Radiation: {Radiation} mSv, Velocity: {Velocity} km/s";
         }
     }
 }
