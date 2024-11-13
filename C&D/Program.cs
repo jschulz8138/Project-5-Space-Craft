@@ -1,6 +1,8 @@
 ﻿using CAndD.Controllers;
 using CAndD.Models;
 using CAndD.Services;
+using C_D.Readings;
+using Payload_Ops;
 
 namespace CAndD
 {
@@ -26,6 +28,26 @@ namespace CAndD
 
             // Log telemetry data to Excel using the instance of LogService
             logService.LogTelemetryData(telemetryData);
+
+            // Demonstrate usage of ReadingStub and other readings
+            var positionReading = new PositionReading("Initial Position Data");
+            var temperatureReading = new TemperatureReading("Initial Temperature Data");
+            var readingStub = new ReadingStub("Initial Stub Data");
+
+            // Simulate collecting data from various readings
+            Console.WriteLine("Position Reading: " + positionReading.GetData());
+            Console.WriteLine("Temperature Reading: " + temperatureReading.GetData());
+            Console.WriteLine("Reading Stub: " + readingStub.GetData());
+
+            // Modify the data in each reading
+            positionReading.SetData("Updated Position Data");
+            temperatureReading.SetData("Updated Temperature Data");
+            readingStub.SetData("Updated Stub Data");
+
+            // Display updated data
+            Console.WriteLine("Updated Position Reading: " + positionReading.GetData());
+            Console.WriteLine("Updated Temperature Reading: " + temperatureReading.GetData());
+            Console.WriteLine("Updated Reading Stub: " + readingStub.GetData());
         }
     }
 }
