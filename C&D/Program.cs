@@ -1,8 +1,8 @@
 ﻿using CAndD.Controllers;
-using CAndD.Models;
 using CAndD.Services;
-using C_D.Readings;
+using C_D.Readings;  // Assuming other readings are in this namespace
 using Payload_Ops;
+using CAndD.Models;
 
 namespace CAndD
 {
@@ -12,42 +12,34 @@ namespace CAndD
         {
             var controller = new CAndDController();
             var telemetryService = new TelemetryService();
-            var logService = new LogService(); // Instance of LogService
+            var logService = new LogService();
 
             // Simulate a command input
             controller.ProcessCommand("AdjustPower 50%");
 
             // Collect telemetry data
-            TelemetryResponse telemetryData = telemetryService.CollectTelemetry();
+            var telemetryData = telemetryService.CollectTelemetry();
 
             // Display telemetry data and save it to JSON
             telemetryService.SaveTelemetryDataAsJson(telemetryData);
-
-            // Display telemetry data
             controller.DisplayTelemetryData();
 
-            // Log telemetry data to Excel using the instance of LogService
+            // Log telemetry data to Excel
             logService.LogTelemetryData(telemetryData);
 
-            // Demonstrate usage of ReadingStub and other readings
-            var positionReading = new PositionReading("Initial Position Data");
-            var temperatureReading = new TemperatureReading("Initial Temperature Data");
-            var readingStub = new ReadingStub("Initial Stub Data");
+            // Create and display individual readings using fully qualified names
+            var positionReading = new C_D.Readings.PositionReading("Initial Position Data");
+            var temperatureReading = new C_D.Readings.TemperatureReading("Initial Temperature Data");
 
-            // Simulate collecting data from various readings
             Console.WriteLine("Position Reading: " + positionReading.GetData());
             Console.WriteLine("Temperature Reading: " + temperatureReading.GetData());
-            Console.WriteLine("Reading Stub: " + readingStub.GetData());
 
-            // Modify the data in each reading
+            // Update and display modified readings
             positionReading.SetData("Updated Position Data");
             temperatureReading.SetData("Updated Temperature Data");
-            readingStub.SetData("Updated Stub Data");
 
-            // Display updated data
             Console.WriteLine("Updated Position Reading: " + positionReading.GetData());
             Console.WriteLine("Updated Temperature Reading: " + temperatureReading.GetData());
-            Console.WriteLine("Updated Reading Stub: " + readingStub.GetData());
         }
     }
 }

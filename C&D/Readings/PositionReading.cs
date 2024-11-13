@@ -1,24 +1,24 @@
-﻿using C_D.Interface;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Payload_Ops
+using C_D.Interface;
+
+namespace C_D.Readings
 {
     public class PositionReading : IReading
     {
         private string data;
 
-        public PositionReading(string data)
+        public PositionReading(string initialData)
         {
-            this.data = data;
+            data = initialData;
         }
 
-        public string GetData()
-        {
-            return data;
-        }
+        public string GetData() => data;
 
-        public void SetData(string newData)
-        {
-            data = newData;
-        }
+        public void SetData(string newData) => data = newData;
     }
 }

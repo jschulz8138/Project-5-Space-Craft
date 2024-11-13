@@ -15,12 +15,14 @@ namespace CAndD.Services
 
         public LogService()
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             string solutionRootPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
             _logFilePath = Path.Combine(solutionRootPath, "TelemetryLog.xlsx");
 
             // Initialize the log file if it doesn't exist
             if (!File.Exists(_logFilePath))
             {
+
                 using var package = new ExcelPackage();
                 var worksheet = package.Workbook.Worksheets.Add("TelemetryLog");
 

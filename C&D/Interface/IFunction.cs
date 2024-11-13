@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace C_D.Interface
 {
-    internal class IFunction
+    internal interface IFunction
     {
         void Execute();
     }

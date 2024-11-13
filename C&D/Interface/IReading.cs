@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace C_D.Interface
 {
-    internal class IReading
+    public interface IReading
     {
+        string GetData();
+        void SetData(string data);
     }
 }
