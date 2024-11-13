@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "C&D", "C&D\C&D.csproj", "{E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payload Ops Tests", "Payload Ops Tests\Payload Ops Tests.csproj", "{41F2CF56-E0F4-4074-A50E-DD8A460E190D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkServer", "LinkServer\LinkServer.csproj", "{A7E8BE6A-5774-439F-9C0A-B81811A877DF}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CnD_Test", "CnD_Test\CnD_Test.csproj", "{B0DE3CA4-947C-4957-997B-E1F8BC7AC316}"
 EndProject
 Global
@@ -35,10 +37,10 @@ Global
 		{41F2CF56-E0F4-4074-A50E-DD8A460E190D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41F2CF56-E0F4-4074-A50E-DD8A460E190D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41F2CF56-E0F4-4074-A50E-DD8A460E190D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0DE3CA4-947C-4957-997B-E1F8BC7AC316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0DE3CA4-947C-4957-997B-E1F8BC7AC316}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0DE3CA4-947C-4957-997B-E1F8BC7AC316}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0DE3CA4-947C-4957-997B-E1F8BC7AC316}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7E8BE6A-5774-439F-9C0A-B81811A877DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7E8BE6A-5774-439F-9C0A-B81811A877DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7E8BE6A-5774-439F-9C0A-B81811A877DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7E8BE6A-5774-439F-9C0A-B81811A877DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

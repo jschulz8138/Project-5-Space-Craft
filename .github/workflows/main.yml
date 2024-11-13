@@ -1,0 +1,31 @@
+name: .NET Tests with MSTest
+
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build the solution
+      run: dotnet build --no-restore
+
+    - name: Run all tests in UnitTest1 class
+      run: dotnet test "Payload Ops Tests/Payload Ops Tests.csproj"  --collect:"XPlat Code Coverage" --results-directory ./TestResults
+    - name: Run Uplink Downlink Tests
+      run: dotnet test "Uplink Downlink Tests/Uplink Downlink Tests.csproj" --collect:"XPlat Code Coverage" --results-directory ./TestResults
