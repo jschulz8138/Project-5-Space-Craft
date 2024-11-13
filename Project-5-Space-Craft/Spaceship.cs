@@ -79,7 +79,17 @@ namespace Payload_Ops
                 PropertyNameCaseInsensitive = true,
                 IncludeFields = true 
             };
-            FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj, options);
+            FunctionPacket? packet = null;
+            try
+            {
+                packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj, options);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Function packet was not deserialized properly due to mismatching json data");
+                Console.WriteLine(e);
+                return false;
+            }
 
             if (packet == null)
             {
@@ -97,7 +107,7 @@ namespace Payload_Ops
             this.AddFunction(function);
 
             //Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
-                return true;
+            return true;
         }
 
         private void TimedEvent(object? state)
