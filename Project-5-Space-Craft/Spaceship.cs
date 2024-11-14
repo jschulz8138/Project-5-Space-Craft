@@ -44,8 +44,7 @@ namespace Payload_Ops
         //TODO: Connect functionality to uplink / downlink
         public bool Send(IPacket packet)
         {
-            //TODO Temporarily removed logging functionality
-            //Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
+            Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
             //TODO: Send packet
             //!response.IsSuccessStatusCode
             return true;
@@ -104,7 +103,7 @@ namespace Payload_Ops
             }
             this.AddFunction(function);
 
-            //Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
+            Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
             return true;
         }
 

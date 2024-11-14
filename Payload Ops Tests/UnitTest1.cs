@@ -165,6 +165,8 @@ namespace Payload_Ops_Tests
     [TestClass]
     public class LoggingTests
     {
+        const string ExcelTestsFilePath = "../../../ExcelTests.xlsx";
+        const string ExcelLogFilesPath = "../../../LogFiles.xlsx";
         [TestMethod]
         public void LOGGING_0001_LogConsole()
         {
@@ -175,28 +177,28 @@ namespace Payload_Ops_Tests
         public void LOGGING_0002_GetCellValue_B12()
         {
             string expected = "B12 Value";
-            string actual = Logging.GetCellValue("../../../ExcelTests.xlsx", "Sheet1", "B12");
+            string actual = Logging.GetCellValue(ExcelTestsFilePath, "Sheet1", "B12");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0003_GetCellValue_D7()
         {
             string expected = "D7 Value";
-            string actual = Logging.GetCellValue("../../../ExcelTests.xlsx", "Sheet1", "D7");
+            string actual = Logging.GetCellValue(ExcelTestsFilePath, "Sheet1", "D7");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0004_GetNextEmptyCell_F_Empty()
         {
             uint expected = 1;
-            uint actual = Logging.GetNextEmptyCell("../../../ExcelTests.xlsx", "Sheet1", "F");
+            uint actual = Logging.GetNextEmptyCell(ExcelTestsFilePath, "Sheet1", "F");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0005_GetNextEmptyCell_H_Seven()
         {
             uint expected = 8;
-            uint actual = Logging.GetNextEmptyCell("../../../ExcelTests.xlsx", "Sheet1", "G");
+            uint actual = Logging.GetNextEmptyCell(ExcelTestsFilePath, "Sheet1", "G");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
@@ -204,18 +206,18 @@ namespace Payload_Ops_Tests
         {
             Random rnd = new Random();
             int expected = rnd.Next(1,10000);
-            Logging.InsertText("../../../ExcelTests.xlsx", expected.ToString(), "A", 6);
-            int actual = Int32.Parse(Logging.GetCellValue("../../../ExcelTests.xlsx", "Sheet1", "A6"));
+            Logging.InsertText(ExcelTestsFilePath, expected.ToString(), "A", 6);
+            int actual = Int32.Parse(Logging.GetCellValue(ExcelTestsFilePath, "Sheet1", "A6"));
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0007_logFile_PacketType()
         {
             //clear data
-            Logging.InsertText("../../../LogFiles.xlsx", "", "A", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "B", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "C", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
@@ -223,33 +225,33 @@ namespace Payload_Ops_Tests
             DateTime dt = DateTime.Now;
             Logging.logFile(rndNum.ToString(), "dir", "data", dt);
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "A1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "A1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0008_logFile_Time()
         {
             //clear data
-            Logging.InsertText("../../../LogFiles.xlsx", "", "A", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "B", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "C", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             DateTime dt = DateTime.Now;
             string expected = dt.ToString("yyyy MMMM dd h:mm:ss tt");
             Logging.logFile("type", "dir", "data", dt);
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "B1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "B1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0009_logFile_Direction()
         {
             //clear data
-            Logging.InsertText("../../../LogFiles.xlsx", "", "A", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "B", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "C", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
@@ -257,17 +259,17 @@ namespace Payload_Ops_Tests
             DateTime dt = DateTime.Now;
             Logging.logFile("type", rndNum.ToString(), "data", dt);
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "C1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "C1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0010_logFile_Data()
         {
             //clear data
-            Logging.InsertText("../../../LogFiles.xlsx", "", "A", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "B", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "C", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
@@ -275,81 +277,81 @@ namespace Payload_Ops_Tests
             DateTime dt = DateTime.Now;
             Logging.logFile("type", "dir", rndNum.ToString(), dt);
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "D1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0011_LogPacket_PacketType()
         {
             //clear data
-            Logging.InsertText("../../../LogFiles.xlsx", "", "A", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "B", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "C", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
             int rndNum = rnd.Next(1, 10000);
             Logging.LogPacket(rndNum.ToString(), "dir", "data");
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "A1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "A1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0012_LogPacket_Time()
         {
             //clear data
-            Logging.InsertText("../../../LogFiles.xlsx", "", "A", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "B", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "C", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             DateTime dt = DateTime.Now;
             string expected = dt.ToString("yyyy MMMM dd h:mm:ss tt");
             Logging.LogPacket("type", "dir", "data");
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "B1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "B1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0013_LogPacket_Direction()
         {
             //clear data
-            Logging.InsertText("../../../LogFiles.xlsx", "", "A", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "B", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "C", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
             int rndNum = rnd.Next(1, 10000);
             Logging.LogPacket("type", rndNum.ToString(), "data");
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "C1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "C1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0014_LogPacket_Data()
         {
             //clear data
-            Logging.InsertText("../../../LogFiles.xlsx", "", "A", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "B", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "C", 1);
-            Logging.InsertText("../../../LogFiles.xlsx", "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
             int rndNum = rnd.Next(1, 10000);
             Logging.LogPacket("type", "dir", rndNum.ToString());
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "D1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath  , "Sheet1", "D1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0015_InsertSharedStringItem()
         {
             int actual;
-            using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open("../../../ExcelTests.xlsx", true))
+            using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(ExcelTestsFilePath, true))
             {
                 WorkbookPart workbookPart = spreadSheet.WorkbookPart ?? spreadSheet.AddWorkbookPart();
                 SharedStringTablePart shareStringPart;
@@ -370,7 +372,7 @@ namespace Payload_Ops_Tests
         public void LOGGING_0016_InsertCellInWorksheet()
         {
             string expected;
-            using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open("../../../ExcelTests.xlsx", true))
+            using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(ExcelTestsFilePath, true))
             {
                 WorkbookPart workbookPart = spreadSheet.WorkbookPart ?? spreadSheet.AddWorkbookPart();
                 SharedStringTablePart shareStringPart;
@@ -391,8 +393,21 @@ namespace Payload_Ops_Tests
                 cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
                 workbookPart.WorksheetParts.First().Worksheet.Save();
             }
-            string actual = Logging.GetCellValue("../../../ExcelTests.xlsx", "Sheet1", "K1");
+            string actual = Logging.GetCellValue(ExcelTestsFilePath, "Sheet1", "K1");
             Assert.AreEqual(expected, actual);
+        }
+        [TestMethod]
+        public void LOGGING_0017_CheckAndCreateExcelFile_Exists()
+        {
+            bool expected = Logging.CheckAndCreateExcelFile(ExcelTestsFilePath);
+            Assert.IsTrue(expected);
+        }
+        [TestMethod]
+        public void LOGGING_0018_CheckAndCreateExcelFile_DoesNotExist()
+        {
+            System.IO.File.Delete("../../../DeleteFile.xlsx");
+            bool expected = Logging.CheckAndCreateExcelFile("../../../DeleteFile.xlsx");
+            Assert.IsFalse(expected);
         }
     }
 
