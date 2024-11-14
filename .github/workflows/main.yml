@@ -25,7 +25,16 @@ jobs:
     - name: Build the solution
       run: dotnet build --no-restore
 
-    - name: Run all tests in UnitTest1 class
-      run: dotnet test "Payload Ops Tests/Payload Ops Tests.csproj"  --collect:"XPlat Code Coverage" --results-directory ./TestResults
+    - name: Run Payload Ops Tests
+      run: dotnet test "Payload Ops Tests/Payload Ops Tests.csproj" --collect:"XPlat Code Coverage" --results-directory ./TestResults/PayloadOps
+    
     - name: Run Uplink Downlink Tests
-      run: dotnet test "Uplink Downlink Tests/Uplink Downlink Tests.csproj" --collect:"XPlat Code Coverage" --results-directory ./TestResults
+      run: dotnet test "Uplink Downlink Tests/Uplink Downlink Tests.csproj" --collect:"XPlat Code Coverage" --results-directory ./TestResults/UplinkDownlink
+    
+    - name: Display Payload Ops Tests Coverage
+      run: |
+        grep "linerate=" ./TestResults/PayloadOps/**/coverage.cobertura.xml
+
+    - name: Display Uplink Downlink Tests Coverage
+      run: |
+        grep "linerate=" ./TestResults/UplinkDownlink/**/coverage.cobertura.xml
