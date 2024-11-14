@@ -16,8 +16,9 @@ ship.AddReading(velReading);
 ship.AddReading(tempReading);
 ship.AddReading(radReading);
 
+ship.SendAll();
 
 //Example Functions
-IncreaseThrustFunction incThrustFunc = new IncreaseThrustFunction("Increase Thrusters 27%");
-SelfDestructFunction selfDesFunc = new SelfDestructFunction("Self Destruct");
+IncreaseThrustFunction incThrustFunc = new IncreaseThrustFunction("27");
+SelfDestructFunction selfDesFunc = new SelfDestructFunction(true);
 FunctionPacket fpkt = new FunctionPacket(incThrustFunc);
