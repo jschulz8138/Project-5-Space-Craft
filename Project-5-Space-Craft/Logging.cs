@@ -7,7 +7,7 @@ namespace Payload_Ops
 {
     public static class Logging
     {
-        private static String filename = "../../../LogFiles.xlsx";
+        private static String filename = "../../../../Project-5-Space-Craft/LogFiles.xlsx";
 
         //Interacts with spaceship
         public static bool LogPacket(String packetType, String direction, String data)
