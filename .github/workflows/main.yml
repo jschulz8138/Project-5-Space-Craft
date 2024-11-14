@@ -32,13 +32,17 @@ jobs:
       run: | 
        find ./TestResults/PayloadOps/
        
-    - name: Display first 20 lines of PayloadOps coverage
+    - name: Extract PayloadOps coverage using xmllint
       run: |
-       head ./TestResults/PayloadOps/**/coverage.cobertura.xml
+        xmllint --xpath "//*[local-name()='class']/@linerate" ./TestResults/PayloadOps/**/coverage.cobertura.xml
+
+    - name: Display Payload Ops Tests Coverage
+      run: |
+        grep -r "linerate=" ./TestResults/PayloadOps/
        
     - name: Display Payload Ops Tests Coverage
       run: |
-        grep -r "linerate=" ./TestResults/PayloadOps/**/coverage.cobertura.xml
+        grep "linerate=" ./TestResults/PayloadOps/**/coverage.cobertura.xml
     
     - name: Run Uplink Downlink Tests
       run: dotnet test "Uplink Downlink Tests/Uplink Downlink Tests.csproj" --collect:"XPlat Code Coverage" --results-directory ./TestResults/UplinkDownlink
