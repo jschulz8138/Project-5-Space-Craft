@@ -1,42 +1,23 @@
 ﻿//Main program that spaceship will be created in.
 using Payload_Ops;
 using Payload_Ops.Packets;
-using Payload_Ops.Readings;
-using Payload_Ops.Functions;
-using System.Text.Json;
 
 
-//Create objects
+//Example Readings
 Spaceship ship = new Spaceship();
-ReadingsStub testReading0 = new ReadingsStub("Test Data");
-ReadingsStub testReading1 = new ReadingsStub("Test 1");
-ReadingsStub testReading2 = new ReadingsStub("Test 2");
+VelocityReading velReading = new VelocityReading("9823m/s");
+TemperatureReading tempReading = new TemperatureReading("-270.45c");
+RadiationReading radReading = new RadiationReading("0.15mSv");
+PositionReading stub = new PositionReading("-47.36999493 151.738540034");
+DataPacket pkt = new DataPacket(stub);
 
 //Add a reading
-ship.AddReading(testReading0);
-ship.AddReading(testReading1);
-ship.AddReading(testReading2);
+ship.AddReading(velReading);
+ship.AddReading(tempReading);
+ship.AddReading(radReading);
 
-//Send a reading
-//ship.SendReading(testReading);
 
-ReadingsStub stub = new ReadingsStub("TestingData");
-DataPacket pkt = new DataPacket(stub);
-//PacketWrapper pktWrap = new PacketWrapper();
-
-FunctionStub fstub = new FunctionStub("TestingData");
-FunctionPacket fpkt = new FunctionPacket(fstub);
-
-Console.WriteLine(fpkt.ToJson());
-Console.WriteLine("""{"Date":"2024-11-07T19:26:34.0177707-05:00","FunctionType":"FunctionStub","Command":"TestingData","PacketCRC":"some_crc_value"}""");
-FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(fpkt.ToJson());
-//ship.Receive("""{"Date":"2024-11-07T19:26:34.0177707-05:00","FunctionType":"FunctionStub","Command":"TestingData","PacketCRC":"some_crc_value"}""");
-
-//Console.WriteLine(pktWrap.ToJsonReadings(stub));
-//Logging.LogPacket("Temperature", "Outbound", "-95c");
-//Logging.LogPacket("Radiation", "Outbound", "Extreme");
-//Logging.LogPacket("Position", "Inbound", "Move Up");
-//Logging.LogPacket("Velocity", "Outbound", "8232m/s");
-
-//string keepSpaceshipRunning = Console.ReadLine();
-
+//Example Functions
+IncreaseThrustFunction incThrustFunc = new IncreaseThrustFunction("Increase Thrusters 27%");
+SelfDestructFunction selfDesFunc = new SelfDestructFunction("Self Destruct");
+FunctionPacket fpkt = new FunctionPacket(incThrustFunc);

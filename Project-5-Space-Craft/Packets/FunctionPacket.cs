@@ -5,7 +5,6 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Payload_Ops.Functions;
 namespace Payload_Ops.Packets
 {
     //public class FunctionPacket : IPacket
@@ -159,7 +158,6 @@ namespace Payload_Ops.Packets
             {
                 case "selfdestructfunction": return new SelfDestructFunction(Command);
                 case "increasethrustfunction": return new IncreaseThrustFunction(Command);
-                case "functionstub": return new FunctionStub(Command);
                 default: return null;
             }
         }

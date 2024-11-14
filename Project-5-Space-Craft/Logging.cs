@@ -11,7 +11,7 @@ namespace Payload_Ops
     {
         private static String filename = "../../../LogFiles.xlsx";
 
-        //Interacts with PacketWrapper
+        //Interacts with spaceship
         public static bool LogPacket(String packetType, String direction, String data)
         {
             logFile(packetType, direction, data, DateTime.Now);
