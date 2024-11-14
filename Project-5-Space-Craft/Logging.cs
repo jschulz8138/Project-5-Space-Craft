@@ -12,9 +12,9 @@ namespace Payload_Ops
         //Interacts with spaceship
         public static bool LogPacket(String packetType, String direction, String data)
         {
-            if (logFile(packetType, direction, data, DateTime.Now) && logConsole(packetType, direction, data, DateTime.Now))
-                return true;
-            return false;
+            logFile(packetType, direction, data, DateTime.Now);
+            logConsole(packetType, direction, data, DateTime.Now);
+            return true;
         }
 
         public static bool logFile(String type, String dir, String data, DateTime dt)
@@ -78,10 +78,8 @@ namespace Payload_Ops
             using (var spreadSheet = SpreadsheetDocument.Open(docName, true))
             {
                 var workbookPart = spreadSheet.WorkbookPart;
-                if (workbookPart == null)
-                    workbookPart = spreadSheet.AddWorkbookPart();
 
-                var shareStringPart = workbookPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault() ?? workbookPart.AddNewPart<SharedStringTablePart>();
+                var shareStringPart = workbookPart?.GetPartsOfType<SharedStringTablePart>().FirstOrDefault() ?? workbookPart.AddNewPart<SharedStringTablePart>();
 
                 int index = InsertSharedStringItem(text, shareStringPart);
                 var worksheetPart = workbookPart.WorksheetParts.First();
@@ -116,10 +114,10 @@ namespace Payload_Ops
             var sheetData = worksheet.GetFirstChild<SheetData>();
             string cellReference = columnName + rowIndex;
 
-            Row row = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex == rowIndex) ?? new Row() { RowIndex = rowIndex };
+            Row row = sheetData?.Elements<Row>().FirstOrDefault(r => r.RowIndex == rowIndex) ?? new Row() { RowIndex = rowIndex };
 
             if (row.RowIndex != rowIndex)
-                sheetData.Append(row);
+                sheetData?.Append(row);
 
             var existingCell = row.Elements<Cell>().FirstOrDefault(c => c.CellReference == cellReference);
             if (existingCell != null)
