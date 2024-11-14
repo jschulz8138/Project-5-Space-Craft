@@ -1,15 +1,14 @@
 ﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Payload_Ops.Packets;
 namespace Payload_Ops
 {
     public class Spaceship
     {
-        private List<IReading> spaceShipReadings;
-        private List<IFunction> spaceShipFunctions;
-        private Timer timer;
+        public List<IReading> spaceShipReadings;
+        public List<IFunction> spaceShipFunctions;
+        public Timer timer;
 
         public Spaceship() {
             //initalize variables
@@ -107,7 +106,7 @@ namespace Payload_Ops
             return true;
         }
 
-        private void TimedEvent(object? state)
+        public void TimedEvent(object? state)
         {
             Console.WriteLine("Readings sent at: " + DateTime.Now);
             SendAll();

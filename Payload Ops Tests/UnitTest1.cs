@@ -509,6 +509,63 @@ namespace Payload_Ops_Tests
             Spaceship spaceShip = new Spaceship();
             Assert.IsNotNull(spaceShip);
         }
+        [TestMethod]
+        public void SPACESHIP_0002_AddReading()
+        {
+            Spaceship spaceShip = new Spaceship();
+            VelocityReading reading = new VelocityReading("30");
+            spaceShip.AddReading(reading);
+            Assert.IsTrue(spaceShip.spaceShipReadings.Contains(reading));
+        }
+        [TestMethod]
+        public void SPACESHIP_0003_AddFunction()
+        {
+            Spaceship spaceShip = new Spaceship();
+            IncreaseThrustFunction function = new IncreaseThrustFunction("30");
+            spaceShip.AddFunction(function);
+            Assert.IsTrue(spaceShip.spaceShipFunctions.Contains(function));
+        }
+        [TestMethod]
+        public void SPACESHIP_0004_Send()
+        {
+            Spaceship spaceShip = new Spaceship();
+            VelocityReading reading = new VelocityReading("30");
+            DataPacket pkt = new DataPacket(reading);
+            spaceShip.Send(pkt);
+        }
+        [TestMethod]
+        public void SPACESHIP_0005_SendAll()
+        {
+            Spaceship spaceShip = new Spaceship();
+            VelocityReading reading = new VelocityReading("30");
+            VelocityReading reading2 = new VelocityReading("70");
+            spaceShip.AddReading(reading);
+            spaceShip.AddReading(reading2);
+            spaceShip.SendAll();
+        }
+        [TestMethod]
+        public void SPACESHIP_0006_RunAll()
+        {
+            Spaceship spaceShip = new Spaceship();
+            IncreaseThrustFunction func = new IncreaseThrustFunction("30");
+            spaceShip.AddFunction(func);
+            spaceShip.RunAll();
+        }
+        [TestMethod]
+        public void SPACESHIP_0007_Recieve_Invalid()
+        {
+            Spaceship spaceShip = new Spaceship();
+            bool actual = spaceShip.Receive("string is wrong");
+            Assert.IsFalse(actual);
+        }
+
+        [TestMethod]
+        public void SPACESHIP_0008_TimedEvent()
+        {
+            Spaceship spaceShip = new Spaceship();
+            spaceShip.TimedEvent("");
+            Assert.IsNotNull(spaceShip);
+        }
     }
     [TestClass]
     public class DataPacketTests
