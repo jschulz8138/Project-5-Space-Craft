@@ -162,6 +162,94 @@ namespace Payload_Ops_Tests
             bool expected = false;
             Assert.AreEqual(actual, expected);
         }
+
+        [TestMethod]
+        public void FNPKT_0015_PacketCRC()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("7");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            string actual = funcPkt.PacketCRC;
+            Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void FNPKT_0016_GetFunction()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("7");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            Assert.AreSame(stub, funcPkt.GetFunction());
+        }
+        [TestMethod]
+        public void FNPKT_0017_ToJson()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("7");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            Assert.IsNotNull(funcPkt.ToJson());
+        }
+        [TestMethod]
+        public void FNPKT_0018_GetPacketType()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("7");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            string actual = funcPkt.GetPacketType();
+            string expected = "IncreaseThrustFunction";
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void FNPKT_0019_GetPacketData()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("7");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            string actual = funcPkt.GetPacketData();
+            string expected = "7";
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void FNPKT_0020_Constructor_Variant_2_Good()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("date", "type", "command", "crc");
+            Assert.IsNotNull(funcPkt);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FNPKT_0021_Constructor_Variant_2_Date_Exception()
+        {
+            FunctionPacket funcPkt = new FunctionPacket(" ", "type", "command", "crc");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FNPKT_0022_Constructor_Variant_2_Type_Exception()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("date", " ", "command", "crc");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FNPKT_0023_Constructor_Variant_2_Command_Exception()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("date", "type", " ", "crc");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FNPKT_0024_Constructor_Variant_2_Crc_Exception()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("date", "type", "command", " ");
+        }
+        [TestMethod]
+        public void FNPKT_0025_CreateFunction_SelfDestruct()
+        {
+            SelfDestructFunction stub = new SelfDestructFunction(true);
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            funcPkt.createFunction();
+            Assert.IsNotNull(funcPkt);
+        }
+        [TestMethod]
+        public void FNPKT_0025_CreateFunction_IncreaseThrust()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("3");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            funcPkt.createFunction();
+            Assert.IsNotNull(funcPkt);
+        }
     }
     [TestClass]
     public class LoggingTests
