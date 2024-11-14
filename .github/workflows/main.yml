@@ -27,10 +27,15 @@ jobs:
 
     - name: Run Payload Ops Tests
       run: dotnet test "Payload Ops Tests/Payload Ops Tests.csproj" --collect:"XPlat Code Coverage" --results-directory ./TestResults/PayloadOps
+      
     - name: List files in PayloadOps test results
       run: | 
        find ./TestResults/PayloadOps/
-    
+       
+    - name: Display first 20 lines of PayloadOps coverage
+      run: |
+       head -n 20 ./TestResults/PayloadOps/**/coverage.cobertura.xml
+       
     - name: Display Payload Ops Tests Coverage
       run: |
         grep "linerate=" ./TestResults/PayloadOps/**/coverage.cobertura.xml
