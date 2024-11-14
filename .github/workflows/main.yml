@@ -34,11 +34,11 @@ jobs:
        
     - name: Display first 20 lines of PayloadOps coverage
       run: |
-       head -n 20 ./TestResults/PayloadOps/**/coverage.cobertura.xml
+       head ./TestResults/PayloadOps/**/coverage.cobertura.xml
        
     - name: Display Payload Ops Tests Coverage
       run: |
-        grep "linerate=" ./TestResults/PayloadOps/**/coverage.cobertura.xml
+        grep -r "linerate=" ./TestResults/PayloadOps/**/coverage.cobertura.xml
     
     - name: Run Uplink Downlink Tests
       run: dotnet test "Uplink Downlink Tests/Uplink Downlink Tests.csproj" --collect:"XPlat Code Coverage" --results-directory ./TestResults/UplinkDownlink
