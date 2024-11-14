@@ -121,6 +121,14 @@ namespace Payload_Ops.Packets
         [JsonConstructor]
         public FunctionPacket(string Date, string FunctionType, string Command, string PacketCRC)
         {
+            if (string.IsNullOrWhiteSpace(Date))
+                throw new ArgumentException("Date cannot be null or empty.", nameof(Date));
+            if (string.IsNullOrWhiteSpace(FunctionType))
+                throw new ArgumentException("FunctionType cannot be null or empty.", nameof(FunctionType));
+            if (string.IsNullOrWhiteSpace(Command))
+                throw new ArgumentException("Command cannot be null or empty.", nameof(Command));
+            if (string.IsNullOrWhiteSpace(PacketCRC))
+                throw new ArgumentException("PacketCRC cannot be null or empty.", nameof(PacketCRC));
             this.Date = Date;
             this.FunctionType = FunctionType;
             this.Command = Command;
