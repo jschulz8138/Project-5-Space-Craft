@@ -794,7 +794,29 @@ namespace Payload_Ops_Tests
     public class SelfDestructTestClass
     {
         [TestMethod]
-        public void SD_Authorize()
+        public void SD_0001_Contructor_Variant_1_Authorized()
+        {
+            //Arange
+            string expected = "True";
+            SelfDestructFunction SDTest = new SelfDestructFunction(true);
+            //Act
+            string actual = SDTest.GetCommand();
+            //Assert
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void SD_0002_Contructor_Variant_1_Unauthorized()
+        {
+            //Arange
+            string expected = "False";
+            SelfDestructFunction SDTest = new SelfDestructFunction(false);
+            //Act
+            string actual = SDTest.GetCommand();
+            //Assert
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void SD_0003_Contructor_Variant_2_Authorized()
         {
             //Arange
             string expected = "True";
@@ -805,7 +827,7 @@ namespace Payload_Ops_Tests
             Assert.AreEqual(actual, expected);
         }
         [TestMethod]
-        public void SD_Unauthorized()
+        public void SD_0004_Contructor_Variant_2_Unauthorized()
         {
             //Arange
             string expected = "False";
@@ -815,20 +837,44 @@ namespace Payload_Ops_Tests
             //Assert
             Assert.AreEqual(actual, expected);
         }
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void SD_0005_RunCommand_Authorized()
+        {
+            SelfDestructFunction SDTest = new SelfDestructFunction(true);
+            SDTest.RunCommand();
+        }
+        [TestMethod]
+        public void SD_0006_RunCommand_Unauthorized()
+        {
+            SelfDestructFunction SDTest = new SelfDestructFunction(false);
+            SDTest.RunCommand();
+        }
     }
     [TestClass]
     public class IncreaseThrustTests
     {
         [TestMethod]
-        public void IncreaseThrustTest()
+        public void THRUST_0001_Constructor_Variant_1()
         {
-            //Arange
             string expected = "500";
             IncreaseThrustFunction increaseThrust = new IncreaseThrustFunction("500");
-            //Act
             string actual = increaseThrust.GetCommand();
-            //Assert
             Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void THRUST_0002_Constructor_Variant_2()
+        {
+            string expected = "500";
+            IncreaseThrustFunction increaseThrust = new IncreaseThrustFunction(500);
+            string actual = increaseThrust.GetCommand();
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void THRUST_0003_Run_Command()
+        {
+            IncreaseThrustFunction increaseThrust = new IncreaseThrustFunction(500);
+            increaseThrust.RunCommand();
         }
     }
 }
