@@ -1,15 +1,14 @@
 ﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Payload_Ops.Packets;
 namespace Payload_Ops
 {
     public class Spaceship
     {
-        private List<IReading> spaceShipReadings;
-        private List<IFunction> spaceShipFunctions;
-        private Timer timer;
+        public List<IReading> spaceShipReadings;
+        public List<IFunction> spaceShipFunctions;
+        public Timer timer;
 
         public Spaceship() {
             //initalize variables
@@ -44,8 +43,7 @@ namespace Payload_Ops
         //TODO: Connect functionality to uplink / downlink
         public bool Send(IPacket packet)
         {
-            //TODO Temporarily removed logging functionality
-            //Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
+            Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
             //TODO: Send packet
             //!response.IsSuccessStatusCode
             return true;
@@ -104,11 +102,11 @@ namespace Payload_Ops
             }
             this.AddFunction(function);
 
-            //Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
+            Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
             return true;
         }
 
-        private void TimedEvent(object? state)
+        public void TimedEvent(object? state)
         {
             Console.WriteLine("Readings sent at: " + DateTime.Now);
             SendAll();
