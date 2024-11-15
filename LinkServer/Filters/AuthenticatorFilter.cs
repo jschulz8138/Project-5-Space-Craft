@@ -20,6 +20,7 @@ namespace LinkServer.Filters
         public void OnActionExecuted(ActionExecutedContext context)
         {
             // Do nothing after the action executes
+            // Must be here to use IActionFilter
         }
     }
 }
