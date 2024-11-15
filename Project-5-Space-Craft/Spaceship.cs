@@ -3,12 +3,16 @@
 using System.Text.Json;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Payload_Ops.Packets;
+using Uplink_Downlink;
 namespace Payload_Ops
 {
     public class Spaceship
     {
+        private static readonly string GroundStationURI = "http://localhost:5014"; // will change
         private List<IReading> spaceShipReadings;
         private List<IFunction> spaceShipFunctions;
+        private ConnectionManager _connectionManager = new ConnectionManager(GroundStationURI);
+        private CommunicationHandler _communicationHandler = new CommunicationHandler(GroundStationURI);
         private Timer timer;
 
         public Spaceship() {
@@ -42,13 +46,21 @@ namespace Payload_Ops
         }
 
         //TODO: Connect functionality to uplink / downlink
-        public bool Send(IPacket packet)
+        public bool Send(IPacket packet) 
         {
+            bool result = false;
             //TODO Temporarily removed logging functionality
             //Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
-            //TODO: Send packet
+            if (!_connectionManager.IsAuthenticated)
+            {
+                // result = await _connectionManager.AuthenticateAsync(packet);
+            }
+            else // I have them commented out because packet isn't in string format in this current version of the code
+            {
+                // result = await _communicationHandler.UpdateGroundStationAsync(packet);
+            }
             //!response.IsSuccessStatusCode
-            return true;
+            return result;
         }
 
         public void SendAll()
