@@ -1,5 +1,6 @@
 ﻿//Payload Ops
 //File that handles logging to both the console and writing to an excel file
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
@@ -75,103 +76,124 @@ namespace Payload_Ops
 
         public static void InsertText(string docName, string text, string col, uint row)
         {
-            using (var spreadSheet = SpreadsheetDocument.Open(docName, true))
+            using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(docName, true))
             {
-                var workbookPart = spreadSheet.WorkbookPart;
-
-                var shareStringPart = workbookPart?.GetPartsOfType<SharedStringTablePart>().FirstOrDefault() ?? workbookPart.AddNewPart<SharedStringTablePart>();
-
+                WorkbookPart workbookPart = spreadSheet.WorkbookPart ?? spreadSheet.AddWorkbookPart();
+                SharedStringTablePart shareStringPart;
+                if (workbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
+                    shareStringPart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
+                else
+                    shareStringPart = workbookPart.AddNewPart<SharedStringTablePart>();
                 int index = InsertSharedStringItem(text, shareStringPart);
-                var worksheetPart = workbookPart.WorksheetParts.First();
-                var cell = InsertCellInWorksheet(col, row, worksheetPart);
-
+                Cell cell = InsertCellInWorksheet(col, row, workbookPart.WorksheetParts.First());
                 cell.CellValue = new CellValue(index.ToString());
-                cell.DataType = CellValues.SharedString;
-
-                worksheetPart.Worksheet.Save();
+                cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
+                workbookPart.WorksheetParts.First().Worksheet.Save();
             }
         }
 
         public static int InsertSharedStringItem(string text, SharedStringTablePart shareStringPart)
         {
-            shareStringPart.SharedStringTable ??= new SharedStringTable();
-
-            var existingItem = shareStringPart.SharedStringTable.Elements<SharedStringItem>().FirstOrDefault(item => item.InnerText == text);
-
-            if (existingItem != null)
-                return shareStringPart.SharedStringTable.Elements<SharedStringItem>().ToList().IndexOf(existingItem);
-
-            var newItem = new SharedStringItem(new DocumentFormat.OpenXml.Spreadsheet.Text(text));
-            shareStringPart.SharedStringTable.AppendChild(newItem);
+            if (shareStringPart.SharedStringTable is null)
+                shareStringPart.SharedStringTable = new SharedStringTable();
+            int i = 0;
+            foreach (SharedStringItem item in shareStringPart.SharedStringTable.Elements<SharedStringItem>())
+            {
+                if (item.InnerText == text)
+                    return i;
+                i++;
+            }
+            shareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new DocumentFormat.OpenXml.Spreadsheet.Text(text)));
             shareStringPart.SharedStringTable.Save();
-
-            return shareStringPart.SharedStringTable.Elements<SharedStringItem>().Count() - 1;
+            return i;
         }
 
         public static Cell InsertCellInWorksheet(string columnName, uint rowIndex, WorksheetPart worksheetPart)
         {
-            var worksheet = worksheetPart.Worksheet;
+            Worksheet worksheet = worksheetPart.Worksheet;
             var sheetData = worksheet.GetFirstChild<SheetData>();
             string cellReference = columnName + rowIndex;
-
-            Row row = sheetData?.Elements<Row>().FirstOrDefault(r => r.RowIndex == rowIndex) ?? new Row() { RowIndex = rowIndex };
-
-            if (row.RowIndex != rowIndex)
-                sheetData?.Append(row);
-
-            var existingCell = row.Elements<Cell>().FirstOrDefault(c => c.CellReference == cellReference);
-            if (existingCell != null)
-                return existingCell;
-
-            Cell refCell = row.Elements<Cell>().FirstOrDefault(c => string.Compare(c.CellReference?.Value, cellReference, true) > 0);
-
-            var newCell = new Cell() { CellReference = cellReference };
-            row.InsertBefore(newCell, refCell);
-            worksheet.Save();
-
-            return newCell;
+            Row row;
+            if (sheetData?.Elements<Row>().Where(r => !(r.RowIndex is null || r.RowIndex != rowIndex)).Count() != 0)
+                row = sheetData.Elements<Row>().Where(r => !(r.RowIndex is null || r.RowIndex != rowIndex)).First();
+            else
+            {
+                row = new Row() { RowIndex = rowIndex };
+                sheetData.Append(row);
+            }
+            if (row.Elements<Cell>().Where(c => !(c.CellReference is null || c.CellReference.Value != columnName + rowIndex)).Count() > 0)
+                return row.Elements<Cell>().Where(c => !(c.CellReference is null || c.CellReference.Value != cellReference)).First();
+            else
+            {
+                Cell refCell = null;
+                foreach (Cell cell in row.Elements<Cell>())
+                {
+                    if (string.Compare(cell.CellReference?.Value, cellReference, true) > 0)
+                    {
+                        refCell = cell;
+                        break;
+                    }
+                }
+                Cell newCell = new Cell() { CellReference = cellReference };
+                row.InsertBefore(newCell, refCell);
+                worksheet.Save();
+                return newCell;
+            }
         }
 
 
-        public static uint GetNextEmptyCell(string fileName, string sheetName, string col)
+        public static uint GetNextEmptyCell(string FileName, string sheetName, string col)
         {
+            bool inLoop = true;
             uint rowIndex = 1;
-            while (GetCellValue(fileName, sheetName, col + rowIndex) != string.Empty)
-                rowIndex++;
+            string cellReference;
+            do
+            {
+                cellReference = col + rowIndex;
+                if (GetCellValue(FileName, sheetName, cellReference) != string.Empty)
+                    rowIndex++;
+                else
+                    inLoop = false;
+            }
+            while (inLoop);
             return rowIndex;
         }
 
 
         public static string GetCellValue(string fileName, string sheetName, string addressName)
         {
+            string value = null;
             using (SpreadsheetDocument document = SpreadsheetDocument.Open(fileName, false))
             {
-                var wbPart = document.WorkbookPart;
-                var theSheet = wbPart?.Workbook.Descendants<Sheet>().FirstOrDefault(s => s.Name == sheetName);
-
-                if (theSheet?.Id == null)
-                    throw new ArgumentException($"Sheet '{sheetName}' not found.");
-
-                var wsPart = (WorksheetPart)wbPart.GetPartById(theSheet.Id);
-                var theCell = wsPart.Worksheet?.Descendants<Cell>().FirstOrDefault(c => c.CellReference == addressName);
-
-                if (theCell == null || string.IsNullOrEmpty(theCell.InnerText))
+                WorkbookPart wbPart = document.WorkbookPart;
+                Sheet theSheet = wbPart?.Workbook.Descendants<Sheet>().Where(s => s.Name == sheetName).FirstOrDefault();
+                if (theSheet is null || theSheet.Id is null)
+                    throw new ArgumentException("sheetName");
+                WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(theSheet.Id);
+                Cell theCell = wsPart.Worksheet?.Descendants<Cell>()?.Where(c => c.CellReference == addressName).FirstOrDefault();
+                if (theCell is null)
                     return string.Empty;
-
-                string value = theCell.InnerText;
-
-                if (theCell.DataType == null)
+                value = theCell.InnerText;
+                if (theCell.DataType is null)
                     return value;
-
                 if (theCell.DataType.Value == CellValues.SharedString)
                 {
                     var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
-                    if (stringTable != null && int.TryParse(value, out int index))
-                        value = stringTable.SharedStringTable.ElementAt(index).InnerText;
+                    if (!(stringTable is null))
+                        value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
                 }
                 else if (theCell.DataType.Value == CellValues.Boolean)
-                    value = value == "0" ? "FALSE" : "TRUE";
-
+                {
+                    switch (value)
+                    {
+                        case "0":
+                            value = "FALSE";
+                            break;
+                        default:
+                            value = "TRUE";
+                            break;
+                    }
+                }
                 return value;
             }
         }
