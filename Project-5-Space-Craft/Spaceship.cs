@@ -1,22 +1,32 @@
-﻿using System;
+﻿//Payload Ops
+//Implementation of Spaceship that runs the overall program. 
+using System.Text.Json;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Payload_Ops.Packets;
 
-namespace Project_5_Space_Craft
+namespace Payload_Ops
 {
-    class Spaceship
+    public class Spaceship
     {
-        private List<SpaceshipReadings> data;
+        private List<IReading> spaceShipReadings;
+        private List<IFunction> spaceShipFunctions;
         private Timer timer;
+        //private PacketWrapper pktWrapper;
+
         public Spaceship() {
-            this.data = new List<SpaceshipReadings>();
+            //initalize variables
+            this.spaceShipReadings = new List<IReading>();
+            this.spaceShipFunctions = new List<IFunction>();
+            //pktWrapper = new PacketWrapper();
 
             DateTime now = DateTime.Now;
-#if DEBUG
-            // For DEBUG: Set to trigger every minute
+
+#if DEBUG   // For DEBUG: Set to trigger every minute
             DateTime nextEvent = now.AddMinutes(1).AddSeconds(-now.Second).AddMilliseconds(-now.Millisecond);
             Console.WriteLine($"Timer set to trigger every minute in DEBUG mode.");
             TimeSpan eventLength = TimeSpan.FromMinutes(1);
-#else
-            // For RELEASE: Set to trigger every hour
+
+#else       // For RELEASE: Set to trigger every hour
             DateTime nextEvent = now.AddHours(1).AddMinutes(-now.Minute).AddSeconds(-now.Second).AddMilliseconds(-now.Millisecond);
             Console.WriteLine($"Timer set to trigger every hour in RELEASE mode.");
             TimeSpan eventLength = TimeSpan.FromHours(1);
@@ -24,40 +34,77 @@ namespace Project_5_Space_Craft
             this.timer = new Timer(this.TimedEvent, null, nextEvent - now, eventLength);
         }
 
-        public Spaceship Add(SpaceshipReadings data)
+        public void AddReading(IReading reading)
         {
-            this.data.Add(data);
-            return this;
+            this.spaceShipReadings.Add(reading);
+        }
+
+        public void AddFunction(IFunction function)
+        {
+            this.spaceShipFunctions.Add(function);
+        }
+
+        //TODO: Connect functionality to uplink / downlink
+        public bool Send(IPacket packet)
+        {
+            //TODO Temporarily removed logging functionality
+            //Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
+            //TODO: Send packet
+            //!response.IsSuccessStatusCode
+            return true;
+        }
+
+        public void SendAll()
+        {
+            while (this.spaceShipReadings.Count() != 0)
+            {
+                if (Send(new DataPacket(this.spaceShipReadings[0])) == true)
+                    this.spaceShipReadings.RemoveAt(0);
+            }
+        }
+
+        public void RunAll()
+        {
+            while (this.spaceShipFunctions.Count() != 0)
+            {
+                //if (Send(DataPacket(this.spaceShipReadings[0])) == true)
+                this.spaceShipFunctions[0].RunCommand();
+                this.spaceShipFunctions.RemoveAt(0);
+            }
+        }
+
+        public bool Receive(string jsonObj) { 
+            Console.WriteLine(jsonObj);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                IncludeFields = true 
+            };
+            FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj, options);
+
+            if (packet == null)
+            {
+                Console.WriteLine("Packet == null");
+                return false;
+            }
+
+            IFunction? function = packet.GetFunction();
+
+            if (function == null)
+            {
+                Console.WriteLine("(function == null)");
+                return false;
+            }
+            this.AddFunction(function);
+
+            //Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
+                return true;
         }
 
         private void TimedEvent(object? state)
         {
-            Console.WriteLine("Event triggered at: " + DateTime.Now);
-            //Need to spin up some packet wrappers \o/
-            foreach (SpaceshipReadings singleData in this.data)
-            {
-                int num = Send(new PacketWrapper(singleData));
-            }
-
-        }
-
-        private int Send(PacketWrapper packet)
-        {
-
-            //This function is blocked by uplink downlink
-            //return uplink.downlink.send(packet)
-            foreach (KeyValuePair<string, string> entry in packet.ToJson())
-            {
-                // do something with entry.Value or entry.Key
-                Console.WriteLine(entry.Key + " : " + entry.Value + ",");
-            }
-            return 1;
-        }
-
-        private void UnpackMessage()
-        {
-            //This function is blocked by uplink downlink
-            //switch per type of message and handle
+            Console.WriteLine("Readings sent at: " + DateTime.Now);
+            SendAll();
         }
     }
 }

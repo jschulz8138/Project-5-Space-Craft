@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payload Ops Tests", "Payloa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkServer", "LinkServer\LinkServer.csproj", "{A7E8BE6A-5774-439F-9C0A-B81811A877DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uplink Downlink Tests", "Uplink Downlink Tests\Uplink Downlink Tests.csproj", "{7F2A5E31-8E94-4E02-8D87-60B1AD42797F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uplink Downlink Tests", "Uplink Downlink Tests\Uplink Downlink Tests.csproj", "{24716C03-2F45-44E2-B402-8B7A716E06A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{A7E8BE6A-5774-439F-9C0A-B81811A877DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7E8BE6A-5774-439F-9C0A-B81811A877DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7E8BE6A-5774-439F-9C0A-B81811A877DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F2A5E31-8E94-4E02-8D87-60B1AD42797F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F2A5E31-8E94-4E02-8D87-60B1AD42797F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F2A5E31-8E94-4E02-8D87-60B1AD42797F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F2A5E31-8E94-4E02-8D87-60B1AD42797F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24716C03-2F45-44E2-B402-8B7A716E06A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24716C03-2F45-44E2-B402-8B7A716E06A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24716C03-2F45-44E2-B402-8B7A716E06A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24716C03-2F45-44E2-B402-8B7A716E06A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
