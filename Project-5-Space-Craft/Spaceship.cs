@@ -1,23 +1,20 @@
 ﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Payload_Ops.Packets;
 
 namespace Payload_Ops
 {
     public class Spaceship
     {
-        private List<IReading> spaceShipReadings;
-        private List<IFunction> spaceShipFunctions;
-        private Timer timer;
-        //private PacketWrapper pktWrapper;
+        public List<IReading> spaceShipReadings;
+        public List<IFunction> spaceShipFunctions;
+        public Timer timer;
 
         public Spaceship() {
             //initalize variables
             this.spaceShipReadings = new List<IReading>();
             this.spaceShipFunctions = new List<IFunction>();
-            //pktWrapper = new PacketWrapper();
 
             DateTime now = DateTime.Now;
 
@@ -47,8 +44,7 @@ namespace Payload_Ops
         //TODO: Connect functionality to uplink / downlink
         public bool Send(IPacket packet)
         {
-            //TODO Temporarily removed logging functionality
-            //Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
+            Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
             //TODO: Send packet
             //!response.IsSuccessStatusCode
             return true;
@@ -80,7 +76,17 @@ namespace Payload_Ops
                 PropertyNameCaseInsensitive = true,
                 IncludeFields = true 
             };
-            FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj, options);
+            FunctionPacket? packet = null;
+            try
+            {
+                packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj, options);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Function packet was not deserialized properly due to mismatching json data");
+                Console.WriteLine(e);
+                return false;
+            }
 
             if (packet == null)
             {
@@ -97,11 +103,11 @@ namespace Payload_Ops
             }
             this.AddFunction(function);
 
-            //Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
-                return true;
+            Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
+            return true;
         }
 
-        private void TimedEvent(object? state)
+        public void TimedEvent(object? state)
         {
             Console.WriteLine("Readings sent at: " + DateTime.Now);
             SendAll();
