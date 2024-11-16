@@ -1,15 +1,11 @@
 //Payload Ops
 //Unit and Integration Tests
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Payload_Ops;
 using Payload_Ops.Packets;
-using System;
 using System.IO.Hashing;
-using System.Linq;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 
