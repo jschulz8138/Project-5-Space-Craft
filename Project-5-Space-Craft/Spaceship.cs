@@ -46,28 +46,29 @@ namespace Payload_Ops
         }
 
         //TODO: Connect functionality to uplink / downlink
-        public bool Send(IPacket packet) 
+        public async Task<bool> Send(IPacket packet) 
         {
             bool result = false;
+            string jsonPacket = packet.ToJson();
             //TODO Temporarily removed logging functionality
             //Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
             if (!_connectionManager.IsAuthenticated)
             {
-                // result = await _connectionManager.AuthenticateAsync(packet);
+                result = await _connectionManager.AuthenticateAsync(jsonPacket);
             }
             else // I have them commented out because packet isn't in string format in this current version of the code
             {
-                // result = await _communicationHandler.UpdateGroundStationAsync(packet);
+                result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
             }
             //!response.IsSuccessStatusCode
             return result;
         }
 
-        public void SendAll()
+        public async Task SendAll()
         {
             while (this.spaceShipReadings.Count() != 0)
             {
-                if (Send(new DataPacket(this.spaceShipReadings[0])) == true)
+                if (await Send(new DataPacket(this.spaceShipReadings[0])) == true)
                     this.spaceShipReadings.RemoveAt(0);
             }
         }
