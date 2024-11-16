@@ -1,7 +1,6 @@
 ﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Payload_Ops.Packets;
 using Uplink_Downlink;
 namespace Payload_Ops
@@ -14,7 +13,6 @@ namespace Payload_Ops
         private ConnectionManager _connectionManager = new ConnectionManager(GroundStationURI);
         private CommunicationHandler _communicationHandler = new CommunicationHandler(GroundStationURI);
         private Timer timer;
-
         public Spaceship() {
             //initalize variables
             this.spaceShipReadings = new List<IReading>();
@@ -60,6 +58,7 @@ namespace Payload_Ops
             {
                 result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
             }
+            //TODO: Send packet
             //!response.IsSuccessStatusCode
             return result;
         }
@@ -117,11 +116,11 @@ namespace Payload_Ops
             }
             this.AddFunction(function);
 
-            //Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
+            Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
             return true;
         }
 
-        private void TimedEvent(object? state)
+        public void TimedEvent(object? state)
         {
             Console.WriteLine("Readings sent at: " + DateTime.Now);
             SendAll();
