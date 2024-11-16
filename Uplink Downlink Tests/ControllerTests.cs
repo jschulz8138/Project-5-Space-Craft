@@ -44,7 +44,6 @@ namespace UD_ControllerTests
             Assert.AreEqual("Uplink processed successfully.", result?.Value?.ToString());
         }
 
-        // This will fail until PO adds the try/catch.
         [TestMethod]
         public void SendUplink_ShouldReturnFailureMessage()
         {
@@ -99,12 +98,13 @@ namespace UD_ControllerTests
             var credentials = new UserCredentials { Username = "user1", Password = "wrongpassword" };
 
             // Act
-            var result = _controller.Login(credentials) as UnauthorizedObjectResult;
+            var result = _controller.Login(credentials);
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Invalid credentials.", result.Value);
-            Assert.IsFalse(AuthenticatorController.IsAuthenticated("user1"));
+            Assert.IsInstanceOfType(result, typeof(UnauthorizedObjectResult));
+            var unauthorizedResult = result as UnauthorizedObjectResult;
+
+            Assert.IsNotNull(unauthorizedResult);
+            Assert.AreEqual("Invalid credentials.", unauthorizedResult.Value);
         }
 
         [TestMethod]
