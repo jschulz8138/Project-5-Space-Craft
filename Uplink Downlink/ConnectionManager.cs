@@ -10,8 +10,7 @@ namespace Uplink_Downlink
     public class ConnectionManager
     {
         private readonly Link _link;
-        private const string GroundStationUri = "/api/Authentication";
-        private const string DataRoute = "/login";
+        private const string DataRoute = "/api/Authentication/login";
 
         public bool IsAuthenticated { get; private set; }
         public ConnectionManager(string baseUrl)
@@ -35,7 +34,7 @@ namespace Uplink_Downlink
         /// </returns>
         public async Task<bool> AuthenticateAsync(string AuthPacket)
         {
-            return await _link.SendRequestAsync<bool>(ReqType.POST, GroundStationUri + DataRoute, AuthPacket);
+            return await _link.SendRequestAsync<bool>(ReqType.POST, DataRoute, AuthPacket);
         }
     }
-}
+}   

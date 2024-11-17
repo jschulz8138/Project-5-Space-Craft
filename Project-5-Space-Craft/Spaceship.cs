@@ -44,7 +44,6 @@ namespace Payload_Ops
             this.spaceShipFunctions.Add(function);
         }
 
-        //TODO: Connect functionality to uplink / downlink
         public async Task<bool> Send(IPacket packet) 
         {
             bool result = false;
@@ -54,11 +53,10 @@ namespace Payload_Ops
             {
                 result = await _connectionManager.AuthenticateAsync(jsonPacket);
             }
-            else // I have them commented out because packet isn't in string format in this current version of the code
+            else
             {
                 result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
             }
-            //!response.IsSuccessStatusCode
             return result;
         }
 
@@ -75,7 +73,6 @@ namespace Payload_Ops
         {
             while (this.spaceShipFunctions.Count() != 0)
             {
-                //if (Send(DataPacket(this.spaceShipReadings[0])) == true)
                 this.spaceShipFunctions[0].RunCommand();
                 this.spaceShipFunctions.RemoveAt(0);
             }
