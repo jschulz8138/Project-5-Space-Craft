@@ -53,10 +53,11 @@ namespace Payload_Ops
             {
                 result = await _connectionManager.AuthenticateAsync(jsonPacket);
             }
-            else
+            else 
             {
                 result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
             }
+            //!response.IsSuccessStatusCode
             return result;
         }
 
@@ -73,6 +74,7 @@ namespace Payload_Ops
         {
             while (this.spaceShipFunctions.Count() != 0)
             {
+                //if (Send(DataPacket(this.spaceShipReadings[0])) == true)
                 this.spaceShipFunctions[0].RunCommand();
                 this.spaceShipFunctions.RemoveAt(0);
             }
