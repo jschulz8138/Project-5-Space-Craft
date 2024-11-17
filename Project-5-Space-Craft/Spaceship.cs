@@ -1,7 +1,6 @@
 ﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Payload_Ops.Packets;
 using Uplink_Downlink;
 namespace Payload_Ops
@@ -9,8 +8,8 @@ namespace Payload_Ops
     public class Spaceship
     {
         private static readonly string GroundStationURI = "http://localhost:5014"; // will change
-        private List<IReading> spaceShipReadings;
-        private List<IFunction> spaceShipFunctions;
+        public List<IReading> spaceShipReadings;
+        public List<IFunction> spaceShipFunctions;
         private ConnectionManager _connectionManager = new ConnectionManager(GroundStationURI);
         private CommunicationHandler _communicationHandler = new CommunicationHandler(GroundStationURI);
         private Timer timer;
@@ -50,8 +49,7 @@ namespace Payload_Ops
         {
             bool result = false;
             string jsonPacket = packet.ToJson();
-            //TODO Temporarily removed logging functionality
-            //Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
+            Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
             if (!_connectionManager.IsAuthenticated)
             {
                 result = await _connectionManager.AuthenticateAsync(jsonPacket);
@@ -117,11 +115,11 @@ namespace Payload_Ops
             }
             this.AddFunction(function);
 
-            //Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
+            Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
             return true;
         }
 
-        private void TimedEvent(object? state)
+        public void TimedEvent(object? state)
         {
             Console.WriteLine("Readings sent at: " + DateTime.Now);
             SendAll();

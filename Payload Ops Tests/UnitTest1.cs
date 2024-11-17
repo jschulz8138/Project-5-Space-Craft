@@ -1,15 +1,11 @@
 //Payload Ops
 //Unit and Integration Tests
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Payload_Ops;
 using Payload_Ops.Packets;
-using System;
 using System.IO.Hashing;
-using System.Linq;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 
@@ -162,13 +158,100 @@ namespace Payload_Ops_Tests
             bool expected = false;
             Assert.AreEqual(actual, expected);
         }
+
+        [TestMethod]
+        public void FNPKT_0015_PacketCRC()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("7");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            string actual = funcPkt.PacketCRC;
+            Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void FNPKT_0016_GetFunction()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("7");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            Assert.AreSame(stub, funcPkt.GetFunction());
+        }
+        [TestMethod]
+        public void FNPKT_0017_ToJson()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("7");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            Assert.IsNotNull(funcPkt.ToJson());
+        }
+        [TestMethod]
+        public void FNPKT_0018_GetPacketType()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("7");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            string actual = funcPkt.GetPacketType();
+            string expected = "IncreaseThrustFunction";
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void FNPKT_0019_GetPacketData()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("7");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            string actual = funcPkt.GetPacketData();
+            string expected = "7";
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void FNPKT_0020_Constructor_Variant_2_Good()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("date", "type", "command", "crc");
+            Assert.IsNotNull(funcPkt);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FNPKT_0021_Constructor_Variant_2_Date_Exception()
+        {
+            FunctionPacket funcPkt = new FunctionPacket(" ", "type", "command", "crc");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FNPKT_0022_Constructor_Variant_2_Type_Exception()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("date", " ", "command", "crc");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FNPKT_0023_Constructor_Variant_2_Command_Exception()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("date", "type", " ", "crc");
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FNPKT_0024_Constructor_Variant_2_Crc_Exception()
+        {
+            FunctionPacket funcPkt = new FunctionPacket("date", "type", "command", " ");
+        }
+        [TestMethod]
+        public void FNPKT_0025_CreateFunction_SelfDestruct()
+        {
+            SelfDestructFunction stub = new SelfDestructFunction(true);
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            funcPkt.createFunction();
+            Assert.IsNotNull(funcPkt);
+        }
+        [TestMethod]
+        public void FNPKT_0025_CreateFunction_IncreaseThrust()
+        {
+            IncreaseThrustFunction stub = new IncreaseThrustFunction("3");
+            FunctionPacket funcPkt = new FunctionPacket(stub);
+            funcPkt.createFunction();
+            Assert.IsNotNull(funcPkt);
+        }
     }
     [TestClass]
     public class LoggingTests
     {
-        const string TEST_FILE = "../../../../Payload Ops Tests/ExcelTests.xlsx";
-        const string LOG_FILE = "../../../../Payload Ops Tests/LogFiles.xlsx";
-
+        const string ExcelTestsFilePath = "../../../ExcelTests.xlsx";
+        const string ExcelLogFilesPath = "../../../LogFiles.xlsx";
         [TestMethod]
         public void LOGGING_0001_LogConsole()
         {
@@ -179,28 +262,28 @@ namespace Payload_Ops_Tests
         public void LOGGING_0002_GetCellValue_B12()
         {
             string expected = "B12 Value";
-            string actual = Logging.GetCellValue(TEST_FILE, "Sheet1", "B12");
+            string actual = Logging.GetCellValue(ExcelTestsFilePath, "Sheet1", "B12");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0003_GetCellValue_D7()
         {
             string expected = "D7 Value";
-            string actual = Logging.GetCellValue(TEST_FILE, "Sheet1", "D7");
+            string actual = Logging.GetCellValue(ExcelTestsFilePath, "Sheet1", "D7");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0004_GetNextEmptyCell_F_Empty()
         {
             uint expected = 1;
-            uint actual = Logging.GetNextEmptyCell(TEST_FILE, "Sheet1", "F");
+            uint actual = Logging.GetNextEmptyCell(ExcelTestsFilePath, "Sheet1", "F");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0005_GetNextEmptyCell_H_Seven()
         {
             uint expected = 8;
-            uint actual = Logging.GetNextEmptyCell(TEST_FILE, "Sheet1", "G");
+            uint actual = Logging.GetNextEmptyCell(ExcelTestsFilePath, "Sheet1", "G");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
@@ -208,18 +291,18 @@ namespace Payload_Ops_Tests
         {
             Random rnd = new Random();
             int expected = rnd.Next(1,10000);
-            Logging.InsertText(TEST_FILE, expected.ToString(), "A", 6);
-            int actual = Int32.Parse(Logging.GetCellValue(TEST_FILE, "Sheet1", "A6"));
+            Logging.InsertText(ExcelTestsFilePath, expected.ToString(), "A", 6);
+            int actual = Int32.Parse(Logging.GetCellValue(ExcelTestsFilePath, "Sheet1", "A6"));
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0007_logFile_PacketType()
         {
             //clear data
-            Logging.InsertText(LOG_FILE, "", "A", 1);
-            Logging.InsertText(LOG_FILE, "", "B", 1);
-            Logging.InsertText(LOG_FILE, "", "C", 1);
-            Logging.InsertText(LOG_FILE, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
@@ -227,33 +310,33 @@ namespace Payload_Ops_Tests
             DateTime dt = DateTime.Now;
             Logging.logFile(rndNum.ToString(), "dir", "data", dt);
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue(LOG_FILE, "Sheet1", "A1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "A1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0008_logFile_Time()
         {
             //clear data
-            Logging.InsertText(LOG_FILE, "", "A", 1);
-            Logging.InsertText(LOG_FILE, "", "B", 1);
-            Logging.InsertText(LOG_FILE, "", "C", 1);
-            Logging.InsertText(LOG_FILE, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             DateTime dt = DateTime.Now;
             string expected = dt.ToString("yyyy MMMM dd h:mm:ss tt");
             Logging.logFile("type", "dir", "data", dt);
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "B1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "B1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0009_logFile_Direction()
         {
             //clear data
-            Logging.InsertText(LOG_FILE, "", "A", 1);
-            Logging.InsertText(LOG_FILE, "", "B", 1);
-            Logging.InsertText(LOG_FILE, "", "C", 1);
-            Logging.InsertText(LOG_FILE, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
@@ -261,17 +344,17 @@ namespace Payload_Ops_Tests
             DateTime dt = DateTime.Now;
             Logging.logFile("type", rndNum.ToString(), "data", dt);
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "C1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "C1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0010_logFile_Data()
         {
             //clear data
-            Logging.InsertText(LOG_FILE, "", "A", 1);
-            Logging.InsertText(LOG_FILE, "", "B", 1);
-            Logging.InsertText(LOG_FILE, "", "C", 1);
-            Logging.InsertText(LOG_FILE, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
@@ -279,81 +362,81 @@ namespace Payload_Ops_Tests
             DateTime dt = DateTime.Now;
             Logging.logFile("type", "dir", rndNum.ToString(), dt);
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "D1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0011_LogPacket_PacketType()
         {
             //clear data
-            Logging.InsertText(LOG_FILE, "", "A", 1);
-            Logging.InsertText( LOG_FILE, "", "B", 1);
-            Logging.InsertText(LOG_FILE, "", "C", 1);
-            Logging.InsertText(LOG_FILE, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
             int rndNum = rnd.Next(1, 10000);
             Logging.LogPacket(rndNum.ToString(), "dir", "data");
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "A1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "A1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0012_LogPacket_Time()
         {
             //clear data
-            Logging.InsertText(LOG_FILE, "", "A", 1);
-            Logging.InsertText(LOG_FILE, "", "B", 1);
-            Logging.InsertText(LOG_FILE, "", "C", 1);
-            Logging.InsertText(LOG_FILE, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             DateTime dt = DateTime.Now;
             string expected = dt.ToString("yyyy MMMM dd h:mm:ss tt");
             Logging.LogPacket("type", "dir", "data");
-            string actual = Logging.GetCellValue("../../../LogFiles.xlsx", "Sheet1", "B1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "B1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0013_LogPacket_Direction()
         {
             //clear data
-            Logging.InsertText(LOG_FILE, "", "A", 1);
-            Logging.InsertText(LOG_FILE, "", "B", 1);
-            Logging.InsertText(LOG_FILE, "", "C", 1);
-            Logging.InsertText(LOG_FILE, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
             int rndNum = rnd.Next(1, 10000);
             Logging.LogPacket("type", rndNum.ToString(), "data");
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue(LOG_FILE, "Sheet1", "C1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "C1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0014_LogPacket_Data()
         {
             //clear data
-            Logging.InsertText(LOG_FILE, "", "A", 1);
-            Logging.InsertText(LOG_FILE, "", "B", 1);
-            Logging.InsertText(LOG_FILE, "", "C", 1);
-            Logging.InsertText(LOG_FILE, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
 
             //write data
             Random rnd = new Random();
             int rndNum = rnd.Next(1, 10000);
             Logging.LogPacket("type", "dir", rndNum.ToString());
             string expected = rndNum.ToString();
-            string actual = Logging.GetCellValue(LOG_FILE, "Sheet1", "D1");
+            string actual = Logging.GetCellValue(ExcelLogFilesPath  , "Sheet1", "D1");
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void LOGGING_0015_InsertSharedStringItem()
         {
             int actual;
-            using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(TEST_FILE, true))
+            using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(ExcelTestsFilePath, true))
             {
                 WorkbookPart workbookPart = spreadSheet.WorkbookPart ?? spreadSheet.AddWorkbookPart();
                 SharedStringTablePart shareStringPart;
@@ -374,7 +457,7 @@ namespace Payload_Ops_Tests
         public void LOGGING_0016_InsertCellInWorksheet()
         {
             string expected;
-            using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(TEST_FILE, true))
+            using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(ExcelTestsFilePath, true))
             {
                 WorkbookPart workbookPart = spreadSheet.WorkbookPart ?? spreadSheet.AddWorkbookPart();
                 SharedStringTablePart shareStringPart;
@@ -395,19 +478,240 @@ namespace Payload_Ops_Tests
                 cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
                 workbookPart.WorksheetParts.First().Worksheet.Save();
             }
-            string actual = Logging.GetCellValue(TEST_FILE, "Sheet1", "K1");
+            string actual = Logging.GetCellValue(ExcelTestsFilePath, "Sheet1", "K1");
             Assert.AreEqual(expected, actual);
+        }
+        [TestMethod]
+        public void LOGGING_0017_CheckAndCreateExcelFile_Exists()
+        {
+            bool expected = Logging.CheckAndCreateExcelFile(ExcelTestsFilePath);
+            Assert.IsTrue(expected);
+        }
+        [TestMethod]
+        public void LOGGING_0018_CheckAndCreateExcelFile_DoesNotExist()
+        {
+            System.IO.File.Delete("../../../DeleteFile.xlsx");
+            bool expected = Logging.CheckAndCreateExcelFile("../../../DeleteFile.xlsx");
+            Assert.IsFalse(expected);
+        }
+        [TestMethod]
+        public void LOGGING_0019_LogPacketStressTest()
+        {
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 3);
+            VelocityReading velReading = new VelocityReading("30");
+            RadiationReading radReading = new RadiationReading("40");
+            PositionReading posReading = new PositionReading("30, 20");
+            DataPacket pkt1 = new DataPacket(velReading);
+            DataPacket pkt2 = new DataPacket(radReading);
+            DataPacket pkt3 = new DataPacket(posReading);
+            Logging.LogPacket(pkt1.GetPacketType(), "Outbound", pkt1.GetPacketData());
+            Logging.LogPacket(pkt2.GetPacketType(), "Outbound", pkt2.GetPacketData());
+            Logging.LogPacket(pkt3.GetPacketType(), "Outbound", pkt3.GetPacketData());
+            string actual1 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D1");
+            string actual2 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D2");
+            string actual3 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D3");
+            string expected1 = "30";
+            string expected2 = "40";
+            string expected3 = "30, 20";
+            Assert.AreEqual(actual1, expected1);
+            Assert.AreEqual(actual2, expected2);
+            Assert.AreEqual(actual3, expected3);
         }
     }
 
     [TestClass]
     public class SpaceshipTests
     {
+        const string ExcelLogFilesPath = "../../../LogFiles.xlsx";
         [TestMethod]
         public void SPACESHIP_0001_Constructor_Variant_Not_Null()
         {
             Spaceship spaceShip = new Spaceship();
             Assert.IsNotNull(spaceShip);
+        }
+        [TestMethod]
+        public void SPACESHIP_0002_AddReading()
+        {
+            Spaceship spaceShip = new Spaceship();
+            VelocityReading reading = new VelocityReading("30");
+            spaceShip.AddReading(reading);
+            Assert.IsTrue(spaceShip.spaceShipReadings.Contains(reading));
+        }
+        [TestMethod]
+        public void SPACESHIP_0003_AddFunction()
+        {
+            Spaceship spaceShip = new Spaceship();
+            IncreaseThrustFunction function = new IncreaseThrustFunction("30");
+            spaceShip.AddFunction(function);
+            Assert.IsTrue(spaceShip.spaceShipFunctions.Contains(function));
+        }
+        [TestMethod]
+        public void SPACESHIP_0004_Send()
+        {
+            Spaceship spaceShip = new Spaceship();
+            VelocityReading reading = new VelocityReading("30");
+            DataPacket pkt = new DataPacket(reading);
+            spaceShip.Send(pkt);
+        }
+        [TestMethod]
+        public void SPACESHIP_0005_SendAll()
+        {
+            Spaceship spaceShip = new Spaceship();
+            VelocityReading reading = new VelocityReading("30");
+            VelocityReading reading2 = new VelocityReading("70");
+            spaceShip.AddReading(reading);
+            spaceShip.AddReading(reading2);
+            spaceShip.SendAll();
+        }
+        [TestMethod]
+        public void SPACESHIP_0006_RunAll()
+        {
+            Spaceship spaceShip = new Spaceship();
+            IncreaseThrustFunction func = new IncreaseThrustFunction("30");
+            spaceShip.AddFunction(func);
+            spaceShip.RunAll();
+        }
+        [TestMethod]
+        public void SPACESHIP_0007_Recieve_Invalid()
+        {
+            Spaceship spaceShip = new Spaceship();
+            bool actual = spaceShip.Receive("string is wrong");
+            Assert.IsFalse(actual);
+        }
+
+        [TestMethod]
+        public void SPACESHIP_0008_TimedEvent()
+        {
+            Spaceship spaceShip = new Spaceship();
+            spaceShip.TimedEvent("");
+            Assert.IsNotNull(spaceShip);
+        }
+        [TestMethod]
+        public void SPACESHIP_0009_VerifyLoggingSendAllData()
+        {
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 3);
+            VelocityReading velReading = new VelocityReading("30");
+            RadiationReading radReading = new RadiationReading("40");
+            PositionReading posReading = new PositionReading("30, 20");
+            Spaceship spaceShip = new Spaceship();
+            spaceShip.AddReading(velReading);
+            spaceShip.AddReading(radReading);
+            spaceShip.AddReading(posReading);
+            spaceShip.SendAll();
+            string actual1 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D1");
+            string actual2 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D2");
+            string actual3 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D3");
+            string expected1 = "30";
+            string expected2 = "40";
+            string expected3 = "30, 20";
+            Assert.AreEqual(actual1, expected1);
+            Assert.AreEqual(actual2, expected2);
+            Assert.AreEqual(actual3, expected3);
+        }
+        [TestMethod]
+        public void SPACESHIP_0010_VerifyLoggingSendData()
+        {
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
+            VelocityReading velReading = new VelocityReading("30");
+            DataPacket pkt = new DataPacket(velReading);
+            Spaceship spaceShip = new Spaceship();
+            spaceShip.Send(pkt);
+            string actual1 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D1");
+            string expected1 = "30";
+            Assert.AreEqual(actual1, expected1);
+        }
+        [TestMethod]
+        public void SPACESHIP_0011_VerifyLoggingSendFunc()
+        {
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
+            IncreaseThrustFunction thrustFunc = new IncreaseThrustFunction("30");
+            FunctionPacket pkt = new FunctionPacket(thrustFunc);
+            Spaceship spaceShip = new Spaceship();
+            spaceShip.Send(pkt);
+            string actual1 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D1");
+            string expected1 = "30";
+            Assert.AreEqual(actual1, expected1);
+        }
+        [TestMethod]
+        public void SPACESHIP_0012_VerifyAllAdded()
+        {
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 3);
+            VelocityReading velReading = new VelocityReading("30");
+            RadiationReading radReading = new RadiationReading("40");
+            PositionReading posReading = new PositionReading("30, 20");
+            Spaceship spaceShip = new Spaceship();
+            spaceShip.AddReading(velReading);
+            spaceShip.AddReading(radReading);
+            spaceShip.AddReading(posReading);
+            int actual = spaceShip.spaceShipReadings.Count;
+            int expected = 3;
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void SPACESHIP_0012_VerifyAllSent()
+        {
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 2);
+            Logging.InsertText(ExcelLogFilesPath, "", "A", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "B", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "C", 3);
+            Logging.InsertText(ExcelLogFilesPath, "", "D", 3);
+            VelocityReading velReading = new VelocityReading("30");
+            RadiationReading radReading = new RadiationReading("40");
+            PositionReading posReading = new PositionReading("30, 20");
+            Spaceship spaceShip = new Spaceship();
+            spaceShip.AddReading(velReading);
+            spaceShip.AddReading(radReading);
+            spaceShip.AddReading(posReading);
+            spaceShip.SendAll();
+            int actual = spaceShip.spaceShipReadings.Count;
+            int expected = 0;
+            Assert.AreEqual(actual, expected);
         }
     }
     [TestClass]
@@ -782,7 +1086,29 @@ namespace Payload_Ops_Tests
     public class SelfDestructTestClass
     {
         [TestMethod]
-        public void SD_Authorize()
+        public void SD_0001_Contructor_Variant_1_Authorized()
+        {
+            //Arange
+            string expected = "True";
+            SelfDestructFunction SDTest = new SelfDestructFunction(true);
+            //Act
+            string actual = SDTest.GetCommand();
+            //Assert
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void SD_0002_Contructor_Variant_1_Unauthorized()
+        {
+            //Arange
+            string expected = "False";
+            SelfDestructFunction SDTest = new SelfDestructFunction(false);
+            //Act
+            string actual = SDTest.GetCommand();
+            //Assert
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void SD_0003_Contructor_Variant_2_Authorized()
         {
             //Arange
             string expected = "True";
@@ -793,7 +1119,7 @@ namespace Payload_Ops_Tests
             Assert.AreEqual(actual, expected);
         }
         [TestMethod]
-        public void SD_Unauthorized()
+        public void SD_0004_Contructor_Variant_2_Unauthorized()
         {
             //Arange
             string expected = "False";
@@ -803,20 +1129,44 @@ namespace Payload_Ops_Tests
             //Assert
             Assert.AreEqual(actual, expected);
         }
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void SD_0005_RunCommand_Authorized()
+        {
+            SelfDestructFunction SDTest = new SelfDestructFunction(true);
+            SDTest.RunCommand();
+        }
+        [TestMethod]
+        public void SD_0006_RunCommand_Unauthorized()
+        {
+            SelfDestructFunction SDTest = new SelfDestructFunction(false);
+            SDTest.RunCommand();
+        }
     }
     [TestClass]
     public class IncreaseThrustTests
     {
         [TestMethod]
-        public void IncreaseThrustTest()
+        public void THRUST_0001_Constructor_Variant_1()
         {
-            //Arange
             string expected = "500";
             IncreaseThrustFunction increaseThrust = new IncreaseThrustFunction("500");
-            //Act
             string actual = increaseThrust.GetCommand();
-            //Assert
             Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void THRUST_0002_Constructor_Variant_2()
+        {
+            string expected = "500";
+            IncreaseThrustFunction increaseThrust = new IncreaseThrustFunction(500);
+            string actual = increaseThrust.GetCommand();
+            Assert.AreEqual(actual, expected);
+        }
+        [TestMethod]
+        public void THRUST_0003_Run_Command()
+        {
+            IncreaseThrustFunction increaseThrust = new IncreaseThrustFunction(500);
+            increaseThrust.RunCommand();
         }
     }
 }

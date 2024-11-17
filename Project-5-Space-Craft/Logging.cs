@@ -1,37 +1,32 @@
 ﻿//Payload Ops
 //File that handles logging to both the console and writing to an excel file
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml;
-using System.Data;
 
 namespace Payload_Ops
 {
     public static class Logging
     {
-        private static String filename = "../../../../Project-5-Space-Craft/LogFiles.xlsx";
+        private static String filename = "../../../LogFiles.xlsx";
 
         //Interacts with spaceship
         public static bool LogPacket(String packetType, String direction, String data)
         {
-            if(logFile(packetType, direction, data, DateTime.Now) &&
-                logConsole(packetType, direction, data, DateTime.Now))
-                return true;
-            return false;
+            logFile(packetType, direction, data, DateTime.Now);
+            logConsole(packetType, direction, data, DateTime.Now);
+            return true;
         }
 
         public static bool logFile(String type, String dir, String data, DateTime dt)
         {
-            if (File.Exists(filename))
-            {
-                string time = dt.ToString("yyyy MMMM dd h:mm:ss tt");
-                InsertText(filename, type, "A", GetNextEmptyCell(filename, "Sheet1", "A"));
-                InsertText(filename, time, "B", GetNextEmptyCell(filename, "Sheet1", "B"));
-                InsertText(filename, dir, "C", GetNextEmptyCell(filename, "Sheet1", "C"));
-                InsertText(filename, data, "D", GetNextEmptyCell(filename, "Sheet1", "D"));
-                return true;
-            }
-            return false;
+            CheckAndCreateExcelFile(filename);
+            string time = dt.ToString("yyyy MMMM dd h:mm:ss tt");
+            InsertText(filename, type, "A", GetNextEmptyCell(filename, "Sheet1", "A"));
+            InsertText(filename, time, "B", GetNextEmptyCell(filename, "Sheet1", "B"));
+            InsertText(filename, dir, "C", GetNextEmptyCell(filename, "Sheet1", "C"));
+            InsertText(filename, data, "D", GetNextEmptyCell(filename, "Sheet1", "D"));
+            return true;
         }
 
         public static bool logConsole(String type, String dir, String data, DateTime dt)
@@ -45,6 +40,40 @@ namespace Payload_Ops
         }
 
         //Excel Helper Functions
+        public static bool CheckAndCreateExcelFile(string filePath)
+        {
+            if (File.Exists(filePath))
+                return true;
+            else
+            {
+                CreateNewExcelFile(filePath);
+                return false;
+            }
+        }
+
+        private static void CreateNewExcelFile(string filePath)
+        {
+            using (SpreadsheetDocument document = SpreadsheetDocument.Create(filePath, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook))
+            {
+                WorkbookPart workbookPart = document.AddWorkbookPart();
+                workbookPart.Workbook = new Workbook();
+
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+                Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                Sheet sheet = new Sheet
+                {
+                    Id = workbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = 1,
+                    Name = "Sheet1"
+                };
+                sheets.Append(sheet);
+
+                workbookPart.Workbook.Save();
+            }
+        }
+
         public static void InsertText(string docName, string text, string col, uint row)
         {
             using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(docName, true))
@@ -66,17 +95,12 @@ namespace Payload_Ops
         public static int InsertSharedStringItem(string text, SharedStringTablePart shareStringPart)
         {
             if (shareStringPart.SharedStringTable is null)
-            {
                 shareStringPart.SharedStringTable = new SharedStringTable();
-            }
             int i = 0;
             foreach (SharedStringItem item in shareStringPart.SharedStringTable.Elements<SharedStringItem>())
             {
                 if (item.InnerText == text)
-                {
                     return i;
-                }
-
                 i++;
             }
             shareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new DocumentFormat.OpenXml.Spreadsheet.Text(text)));
@@ -106,7 +130,8 @@ namespace Payload_Ops
                 {
                     if (string.Compare(cell.CellReference?.Value, cellReference, true) > 0)
                     {
-                        refCell = cell; break;
+                        refCell = cell;
+                        break;
                     }
                 }
                 Cell newCell = new Cell() { CellReference = cellReference };
@@ -126,13 +151,9 @@ namespace Payload_Ops
             {
                 cellReference = col + rowIndex;
                 if (GetCellValue(FileName, sheetName, cellReference) != string.Empty)
-                {
                     rowIndex++;
-                }
                 else
-                {
                     inLoop = false;
-                }
             }
             while (inLoop);
             return rowIndex;
@@ -146,20 +167,15 @@ namespace Payload_Ops
             {
                 WorkbookPart wbPart = document.WorkbookPart;
                 Sheet theSheet = wbPart?.Workbook.Descendants<Sheet>().Where(s => s.Name == sheetName).FirstOrDefault();
-
                 if (theSheet is null || theSheet.Id is null)
                     throw new ArgumentException("sheetName");
-
                 WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(theSheet.Id);
                 Cell theCell = wsPart.Worksheet?.Descendants<Cell>()?.Where(c => c.CellReference == addressName).FirstOrDefault();
-
                 if (theCell is null)
                     return string.Empty;
-
                 value = theCell.InnerText;
                 if (theCell.DataType is null)
                     return value;
-
                 if (theCell.DataType.Value == CellValues.SharedString)
                 {
                     var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
@@ -170,8 +186,12 @@ namespace Payload_Ops
                 {
                     switch (value)
                     {
-                        case "0": value = "FALSE"; break;
-                        default: value = "TRUE"; break;
+                        case "0":
+                            value = "FALSE";
+                            break;
+                        default:
+                            value = "TRUE";
+                            break;
                     }
                 }
                 return value;
