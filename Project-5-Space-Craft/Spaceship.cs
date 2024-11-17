@@ -2,13 +2,17 @@
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
 using Payload_Ops.Packets;
+using Uplink_Downlink;
 namespace Payload_Ops
 {
     public class Spaceship
     {
+        private static readonly string GroundStationURI = "http://localhost:5014"; // will change
         public List<IReading> spaceShipReadings;
         public List<IFunction> spaceShipFunctions;
-        public Timer timer;
+        private ConnectionManager _connectionManager = new ConnectionManager(GroundStationURI);
+        private CommunicationHandler _communicationHandler = new CommunicationHandler(GroundStationURI);
+        private Timer timer;
 
         public Spaceship() {
             //initalize variables
@@ -40,20 +44,28 @@ namespace Payload_Ops
             this.spaceShipFunctions.Add(function);
         }
 
-        //TODO: Connect functionality to uplink / downlink
-        public bool Send(IPacket packet)
+        public async Task<bool> Send(IPacket packet) 
         {
+            bool result = false;
+            string jsonPacket = packet.ToJson();
             Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
-            //TODO: Send packet
+            if (!_connectionManager.IsAuthenticated)
+            {
+                result = await _connectionManager.AuthenticateAsync(jsonPacket);
+            }
+            else 
+            {
+                result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
+            }
             //!response.IsSuccessStatusCode
-            return true;
+            return result;
         }
 
-        public void SendAll()
+        public async Task SendAll()
         {
             while (this.spaceShipReadings.Count() != 0)
             {
-                if (Send(new DataPacket(this.spaceShipReadings[0])) == true)
+                if (await Send(new DataPacket(this.spaceShipReadings[0])) == true)
                     this.spaceShipReadings.RemoveAt(0);
             }
         }
