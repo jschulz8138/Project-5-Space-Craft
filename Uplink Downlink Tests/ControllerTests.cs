@@ -105,6 +105,19 @@ namespace UD_ControllerTests
         }
 
         [TestMethod]
+        public void TestLogin_InvalidUsername()
+        {
+            // Arrange
+            var credentials = new UserCredentials { Username = "user", Password = "password1" };
+
+            // Act
+            var result = _controller.Login(credentials) as UnauthorizedObjectResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Invalid credentials.", result?.Value?.ToString());
+        }
+
+        [TestMethod]
         public void TestLogin_TooManyAttempts()
         {
             // Arrange
