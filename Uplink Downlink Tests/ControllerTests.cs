@@ -51,7 +51,7 @@ namespace UD_ControllerTests
             string packet = "{\"Date\":,\"FunctionType\":\"FunctionStub\",\"Command\":\"TestingData\",\"PacketCRC\":\"some_crc_value\"}";
 
             // Act
-            var result = _uplinkController.SendUplink(packet) as OkObjectResult;
+            var result = _uplinkController.SendUplink(packet) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(result);
