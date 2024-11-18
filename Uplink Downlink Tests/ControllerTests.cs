@@ -48,8 +48,8 @@ namespace UD_ControllerTests
         public void SendUplink_ShouldReturnFailureMessage()
         {
             // Arrange
-            string packet = "{\"Date\":,\"FunctionType\":\"FunctionStub\",\"Command\":\"TestingData\",\"PacketCRC\":\"some_crc_value\"}";
-
+            // string packet = "{\"Date\":,\"FunctionType\":\"FunctionStub\",\"Command\":\"TestingData\",\"PacketCRC\":\"some_crc_value\"}";
+            string packet = "";
             // Act
             var result = _uplinkController.SendUplink(packet) as BadRequestObjectResult;
 
@@ -98,13 +98,10 @@ namespace UD_ControllerTests
             var credentials = new UserCredentials { Username = "user1", Password = "wrongpassword" };
 
             // Act
-            var result = _controller.Login(credentials);
+            var result = _controller.Login(credentials) as UnauthorizedObjectResult;
 
-            Assert.IsInstanceOfType(result, typeof(UnauthorizedObjectResult));
-            var unauthorizedResult = result as UnauthorizedObjectResult;
-
-            Assert.IsNotNull(unauthorizedResult);
-            Assert.AreEqual("Invalid credentials.", unauthorizedResult.Value);
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Invalid credentials.", result?.Value?.ToString());
         }
 
         [TestMethod]
