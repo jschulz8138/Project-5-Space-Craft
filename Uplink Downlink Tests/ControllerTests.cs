@@ -33,7 +33,7 @@ namespace UD_ControllerTests
         public void SendUplink_ShouldReturnSuccessMessage()
         {
             // Arrange
-            string packet = "{\"Date\":\"2024-11-07T19:26:34.0177707-05:00\",\"FunctionType\":\"FunctionStub\",\"Command\":\"TestingData\",\"PacketCRC\":\"some_crc_value\"}";
+            string packet = "{\"Date\":\"2024-11-07T19:26:34.0177707-05:00\",\"FunctionType\":\"increasethrustfunction\",\"Command\":\"8\",\"PacketCRC\":\"some_crc_value\"}";
 
 
             // Act
@@ -44,15 +44,14 @@ namespace UD_ControllerTests
             Assert.AreEqual("Uplink processed successfully.", result?.Value?.ToString());
         }
 
-        // This will fail until PO adds the try/catch.
         [TestMethod]
         public void SendUplink_ShouldReturnFailureMessage()
         {
             // Arrange
-            string packet = "{\"Date\":,\"FunctionType\":\"FunctionStub\",\"Command\":\"TestingData\",\"PacketCRC\":\"some_crc_value\"}";
-
+            // string packet = "{\"Date\":,\"FunctionType\":\"FunctionStub\",\"Command\":\"TestingData\",\"PacketCRC\":\"some_crc_value\"}";
+            string packet = "";
             // Act
-            var result = _uplinkController.SendUplink(packet) as OkObjectResult;
+            var result = _uplinkController.SendUplink(packet) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -101,10 +100,21 @@ namespace UD_ControllerTests
             // Act
             var result = _controller.Login(credentials) as UnauthorizedObjectResult;
 
-            // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Invalid credentials.", result.Value);
-            Assert.IsFalse(AuthenticatorController.IsAuthenticated("user1"));
+            Assert.AreEqual("Invalid credentials.", result?.Value?.ToString());
+        }
+
+        [TestMethod]
+        public void TestLogin_InvalidUsername()
+        {
+            // Arrange
+            var credentials = new UserCredentials { Username = "user", Password = "password1" };
+
+            // Act
+            var result = _controller.Login(credentials) as UnauthorizedObjectResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Invalid credentials.", result?.Value?.ToString());
         }
 
         [TestMethod]

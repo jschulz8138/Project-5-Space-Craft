@@ -10,11 +10,11 @@ using Uplink_Downlink;
 
 namespace LinkServer.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController] // Uncovered line
+    [Route("api/[controller]")] // Uncovered line
     public class AuthenticatorController : ControllerBase
     {
-        private readonly AppLogger _logger;
+        private readonly AppLogger _logger; // Uncovered line
         private static readonly ConcurrentDictionary<string, short> _loginAttempts = new();
         private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
@@ -32,7 +32,6 @@ namespace LinkServer.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserCredentials credentials)
         {
-
             if (_loginAttempts.TryGetValue(credentials.Username, out var attempts) && attempts >= 3)
             {
                 _logger.LogAuthentication(credentials.Username, success: false);

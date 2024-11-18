@@ -19,8 +19,10 @@ namespace LinkServer.Filters
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            // Do nothing after the action executes
-            // Must be here to use IActionFilter
+            // Do nothing after the action executes.
+            // Must be here to use IActionFilter.
+            // Throw bad request object result since this shouldn't be used.
+            context.Result = new BadRequestObjectResult("Something went wrong, OnActionExecuted() should not be called.");
         }
     }
 }
