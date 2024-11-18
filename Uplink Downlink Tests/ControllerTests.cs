@@ -33,7 +33,7 @@ namespace UD_ControllerTests
         public void SendUplink_ShouldReturnSuccessMessage()
         {
             // Arrange
-            string packet = "{\"Date\":\"2024-11-07T19:26:34.0177707-05:00\",\"FunctionType\":\"FunctionStub\",\"Command\":\"TestingData\",\"PacketCRC\":\"some_crc_value\"}";
+            string packet = "{\"Date\":\"2024-11-07T19:26:34.0177707-05:00\",\"FunctionType\":\"increasethrustfunction\",\"Command\":\"8\",\"PacketCRC\":\"some_crc_value\"}";
 
 
             // Act
