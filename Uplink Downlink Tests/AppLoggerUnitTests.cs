@@ -92,7 +92,9 @@ namespace Uplink_Downlink_Tests
             public override void LogMetadata(string method, string endpoint, int statusCode) { }
             public override void LogLogin(string userId) { }
             public override void LogLogout(string userId) { }
-            public override void LogAuthentication(string userId, bool success) { }
+            public override void LogAuthentication(string userId, bool success, string reason) { }
+
+            public override void LogPacketReceived(string packetData){ }
 
             // Expose WriteToFile specifically for testing purposes
             public void TestWriteToFile(string content)
