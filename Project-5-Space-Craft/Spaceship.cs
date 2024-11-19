@@ -1,22 +1,23 @@
 ﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Payload_Ops.Packets;
+using Uplink_Downlink;
 namespace Payload_Ops
 {
     public class Spaceship
     {
-        private List<IReading> spaceShipReadings;
-        private List<IFunction> spaceShipFunctions;
+        private static readonly string GroundStationURI = "http://localhost:5014"; // will change
+        public List<IReading> spaceShipReadings;
+        public List<IFunction> spaceShipFunctions;
+        private ConnectionManager _connectionManager = new ConnectionManager(GroundStationURI);
+        private CommunicationHandler _communicationHandler = new CommunicationHandler(GroundStationURI);
         private Timer timer;
-        //private PacketWrapper pktWrapper;
 
         public Spaceship() {
             //initalize variables
             this.spaceShipReadings = new List<IReading>();
             this.spaceShipFunctions = new List<IFunction>();
-            //pktWrapper = new PacketWrapper();
 
             DateTime now = DateTime.Now;
 
@@ -43,21 +44,28 @@ namespace Payload_Ops
             this.spaceShipFunctions.Add(function);
         }
 
-        //TODO: Connect functionality to uplink / downlink
-        public bool Send(IPacket packet)
+        public async Task<bool> Send(IPacket packet) 
         {
-            //TODO Temporarily removed logging functionality
-            //Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
-            //TODO: Send packet
+            bool result = false;
+            string jsonPacket = packet.ToJson();
+            Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
+            if (!_connectionManager.IsAuthenticated)
+            {
+                result = await _connectionManager.AuthenticateAsync(jsonPacket);
+            }
+            else 
+            {
+                result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
+            }
             //!response.IsSuccessStatusCode
-            return true;
+            return result;
         }
 
-        public void SendAll()
+        public async Task SendAll()
         {
             while (this.spaceShipReadings.Count() != 0)
             {
-                if (Send(new DataPacket(this.spaceShipReadings[0])) == true)
+                if (await Send(new DataPacket(this.spaceShipReadings[0])) == true)
                     this.spaceShipReadings.RemoveAt(0);
             }
         }
@@ -79,7 +87,17 @@ namespace Payload_Ops
                 PropertyNameCaseInsensitive = true,
                 IncludeFields = true 
             };
-            FunctionPacket? packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj, options);
+            FunctionPacket? packet = null;
+            try
+            {
+                packet = JsonSerializer.Deserialize<FunctionPacket>(jsonObj, options);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Function packet was not deserialized properly due to mismatching json data");
+                Console.WriteLine(e);
+                return false;
+            }
 
             if (packet == null)
             {
@@ -96,11 +114,11 @@ namespace Payload_Ops
             }
             this.AddFunction(function);
 
-            //Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
-                return true;
+            Logging.LogPacket(packet.GetPacketType(), "Incoming", packet.GetPacketData());
+            return true;
         }
 
-        private void TimedEvent(object? state)
+        public void TimedEvent(object? state)
         {
             Console.WriteLine("Readings sent at: " + DateTime.Now);
             SendAll();
