@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payload Ops Tests", "Payloa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkServer", "LinkServer\LinkServer.csproj", "{A7E8BE6A-5774-439F-9C0A-B81811A877DF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CnD_Test", "CnD_Test\CnD_Test.csproj", "{B0DE3CA4-947C-4957-997B-E1F8BC7AC316}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
