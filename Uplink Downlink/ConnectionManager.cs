@@ -34,7 +34,8 @@ namespace Uplink_Downlink
         /// </returns>
         public async Task<bool> AuthenticateAsync(string AuthPacket)
         {
-            return await _link.SendRequestAsync<bool>(ReqType.POST, DataRoute, AuthPacket);
+            IsAuthenticated = await _link.SendRequestAsync<bool>(ReqType.POST, DataRoute, AuthPacket);
+            return IsAuthenticated;
         }
     }
 }   
