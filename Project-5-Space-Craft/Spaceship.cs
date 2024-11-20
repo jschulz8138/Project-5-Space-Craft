@@ -10,7 +10,6 @@ namespace Payload_Ops
         private static readonly string GroundStationURI = "http://localhost:5014"; // will change
         public List<IReading> spaceShipReadings;
         public List<IFunction> spaceShipFunctions;
-        private ConnectionManager _connectionManager = new ConnectionManager(GroundStationURI);
         private CommunicationHandler _communicationHandler = new CommunicationHandler(GroundStationURI);
         private Timer timer;
 
@@ -49,14 +48,7 @@ namespace Payload_Ops
             bool result = false;
             string jsonPacket = packet.ToJson();
             Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
-            if (!_connectionManager.IsAuthenticated)
-            {
-                result = await _connectionManager.AuthenticateAsync(jsonPacket);
-            }
-            else 
-            {
-                result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
-            }
+            result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
             //!response.IsSuccessStatusCode
             return result;
         }
