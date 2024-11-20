@@ -1,19 +1,27 @@
-﻿//Payload Ops
+﻿﻿//Payload Ops
 //Implementation of Spaceship that runs the overall program. 
 using System.Text.Json;
 using Payload_Ops.Packets;
 using Uplink_Downlink;
-namespace Payload_Ops
+using CAndD.Services;
+using Payload_Ops;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using CAndD.Models;
+
+namespace Proj5Spaceship
 {
     public class Spaceship
     {
         private static readonly string GroundStationURI = "http://localhost:5014"; // will change
         public List<IReading> spaceShipReadings;
         public List<IFunction> spaceShipFunctions;
+        private ConnectionManager _connectionManager = new ConnectionManager(GroundStationURI);
         private CommunicationHandler _communicationHandler = new CommunicationHandler(GroundStationURI);
         private Timer timer;
+        private bool readyForNextSend = true;
 
-        public Spaceship() {
+        public Spaceship()
+        {
             //initalize variables
             this.spaceShipReadings = new List<IReading>();
             this.spaceShipFunctions = new List<IFunction>();
@@ -43,41 +51,42 @@ namespace Payload_Ops
             this.spaceShipFunctions.Add(function);
         }
 
-        public async Task<bool> Send(IPacket packet) 
+        public async Task<bool> Send(IPacket packet)
         {
             bool result = false;
             string jsonPacket = packet.ToJson();
             Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
-            result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
-            //!response.IsSuccessStatusCode
+            result = await _connectionManager.AuthenticateAsync(jsonPacket);
             return result;
         }
 
         public async Task SendAll()
         {
+            this.readyForNextSend = false;
             while (this.spaceShipReadings.Count() != 0)
             {
                 if (await Send(new DataPacket(this.spaceShipReadings[0])) == true)
                     this.spaceShipReadings.RemoveAt(0);
             }
+            this.readyForNextSend = true;
         }
 
         public void RunAll()
         {
             while (this.spaceShipFunctions.Count() != 0)
             {
-                //if (Send(DataPacket(this.spaceShipReadings[0])) == true)
                 this.spaceShipFunctions[0].RunCommand();
                 this.spaceShipFunctions.RemoveAt(0);
             }
         }
 
-        public bool Receive(string jsonObj) { 
+        public bool Receive(string jsonObj)
+        {
             Console.WriteLine(jsonObj);
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
-                IncludeFields = true 
+                IncludeFields = true
             };
             FunctionPacket? packet = null;
             try
@@ -112,8 +121,17 @@ namespace Payload_Ops
 
         public void TimedEvent(object? state)
         {
-            Console.WriteLine("Readings sent at: " + DateTime.Now);
-            SendAll();
+            Console.WriteLine("Readings sent at: " + DateTime.Now + (this.readyForNextSend ? " - Ready to Send...Sending" : " - Not ready to send"));
+            if (this.readyForNextSend)
+            {
+                TelemetryService ts = new TelemetryService();
+                TelemetryResponse tsTelem = ts.CollectTelemetry();
+                this.AddReading(new PositionReading(tsTelem.Position));
+                this.AddReading(new TemperatureReading(tsTelem.Temperature.ToString()));
+                this.AddReading(new RadiationReading(tsTelem.Radiation.ToString()));
+                this.AddReading(new VelocityReading(tsTelem.Velocity.ToString()));
+                SendAll();
+            }
         }
     }
 }
