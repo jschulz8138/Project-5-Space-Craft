@@ -10,7 +10,6 @@
   <ItemGroup>
     <ProjectReference Include="..\C&amp;D\C&amp;D.csproj" />
     <ProjectReference Include="..\Project-5-Space-Craft\Payload Ops.csproj" />
-    <ProjectReference Include="..\Uplink Downlink\Uplink Downlink.csproj" />
   </ItemGroup>
 
 </Project>
