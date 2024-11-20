@@ -56,15 +56,7 @@ namespace Proj5Spaceship
             bool result = false;
             string jsonPacket = packet.ToJson();
             Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
-            if (!_connectionManager.IsAuthenticated)
-            {
-                result = await _connectionManager.AuthenticateAsync(jsonPacket);
-            }
-            else
-            {
-                result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
-            }
-            //!response.IsSuccessStatusCode
+            result = await _connectionManager.AuthenticateAsync(jsonPacket);
             return result;
         }
 
@@ -83,7 +75,6 @@ namespace Proj5Spaceship
         {
             while (this.spaceShipFunctions.Count() != 0)
             {
-                //if (Send(DataPacket(this.spaceShipReadings[0])) == true)
                 this.spaceShipFunctions[0].RunCommand();
                 this.spaceShipFunctions.RemoveAt(0);
             }
