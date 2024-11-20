@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\C&amp;D\C&amp;D.csproj" />
     <ProjectReference Include="..\Project-5-Space-Craft\Payload Ops.csproj" />
     <ProjectReference Include="..\Uplink Downlink\Uplink Downlink.csproj" />

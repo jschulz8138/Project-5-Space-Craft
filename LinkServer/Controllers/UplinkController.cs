@@ -9,7 +9,7 @@ namespace LinkServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [ServiceFilter(typeof(AuthenticateFilter))]
+    [ServiceFilter(typeof(LinkServer.Filters.AuthenticateFilter))]
     public class UplinkController : ControllerBase
     {
         private static PacketWrapper _allData = new PacketWrapper("{\"sensorData\": {\"temperature\": 22.5, \"humidity\": 55.0, \"status\": \"operational\"}}");
