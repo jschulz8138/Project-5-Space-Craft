@@ -10,12 +10,12 @@ namespace Proj5Spaceship
 {
     public class UDLogicHandler
     {
-        private static Spaceship? _spaceship;
-        UDLogicHandler(ref Spaceship? spaceship)
+        private Spaceship? _spaceship;
+        public UDLogicHandler(Spaceship? spaceship)
         {
             _spaceship = spaceship;
         }
-        public static void StartServer(string[]? args)
+        public void StartServer(string[]? args)
         {
             args ??= Array.Empty<string>();
 
@@ -50,7 +50,7 @@ namespace Proj5Spaceship
             });
             app.Run();
         }
-        public static async Task StartClient(string HostAndPort)
+        public async Task StartClient(string HostAndPort)
         {
             var connectionManager = new ConnectionManager(HostAndPort);
 
@@ -75,7 +75,7 @@ namespace Proj5Spaceship
                 }
             }
         }
-        private static string SetUpAuth()
+        private string SetUpAuth()
         {
             var authPacket = new AuthPacket
             {

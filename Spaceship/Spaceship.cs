@@ -12,7 +12,7 @@ namespace Proj5Spaceship
 {
     public class Spaceship
     {
-        private static readonly string GroundStationURI = "http://localhost:5014"; // will change
+        public static readonly string GroundStationURI = "http://localhost:5014"; // will change
         public List<IReading> spaceShipReadings;
         public List<IFunction> spaceShipFunctions;
         private ConnectionManager _connectionManager = new ConnectionManager(GroundStationURI);
