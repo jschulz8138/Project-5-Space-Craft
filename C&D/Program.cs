@@ -1,6 +1,6 @@
 ﻿using CAndD.Controllers;
 using CAndD.Services;
-using C_D.Readings;  // Assuming other readings are in this namespace
+//using C_D.Readings;  // Assuming other readings are in this namespace
 using Payload_Ops;
 using CAndD.Models;
 
@@ -28,8 +28,8 @@ namespace CAndD
             logService.LogTelemetryData(telemetryData);
 
             // Create and display individual readings using fully qualified names
-            var positionReading = new C_D.Readings.PositionReading("Initial Position Data");
-            var temperatureReading = new C_D.Readings.TemperatureReading("Initial Temperature Data");
+            var positionReading = new PositionReading("Initial Position Data");
+            var temperatureReading = new TemperatureReading("Initial Temperature Data");
 
             Console.WriteLine("Position Reading: " + positionReading.GetData());
             Console.WriteLine("Temperature Reading: " + temperatureReading.GetData());

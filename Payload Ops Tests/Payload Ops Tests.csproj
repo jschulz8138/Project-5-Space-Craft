@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Project-5-Space-Craft\Payload Ops.csproj" />
+    <ProjectReference Include="..\Spaceship\Spaceship.csproj" />
   </ItemGroup>
 
   <ItemGroup>
