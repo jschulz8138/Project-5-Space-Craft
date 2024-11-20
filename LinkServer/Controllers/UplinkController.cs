@@ -1,15 +1,14 @@
-using LinkServer.Filters;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Specialized;
 using Uplink_Downlink;
-using Payload_Ops;
 using Proj5Spaceship;
+using Proj5Spaceship.Filters;
 
 namespace LinkServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [ServiceFilter(typeof(LinkServer.Filters.AuthenticateFilter))]
+    [ServiceFilter(typeof(AuthenticateFilter))]
     public class UplinkController : ControllerBase
     {
         private static PacketWrapper _allData = new PacketWrapper("{\"sensorData\": {\"temperature\": 22.5, \"humidity\": 55.0, \"status\": \"operational\"}}");

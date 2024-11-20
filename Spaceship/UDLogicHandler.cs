@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Payload_Ops;
 using Uplink_Downlink;
 using System.Text.Json;
+using Proj5Spaceship.Filters;
 
 
 namespace Proj5Spaceship
@@ -15,7 +16,7 @@ namespace Proj5Spaceship
         {
             _spaceship = spaceship;
         }
-        public void StartServer(string[]? args)
+        public async Task StartServerAsync(string[]? args)
         {
             args ??= Array.Empty<string>();
 
@@ -48,21 +49,15 @@ namespace Proj5Spaceship
             {
                 endpoints?.MapControllers();
             });
-            app.Run();
+            await app.RunAsync();
         }
-        public async Task StartClient(string HostAndPort)
+        public async Task StartClientAsync(string HostAndPort)
         {
             var connectionManager = new ConnectionManager(HostAndPort);
 
             while (true)
             {
-                if (connectionManager.IsAuthenticated)
-                {
-                    int delayBeforeUpdate = 3; // in seconds
-                    await Task.Delay(delayBeforeUpdate * 1000);
-                    await _spaceship!.SendAll();
-                }
-                else
+                if (!connectionManager.IsAuthenticated)
                 {
                     if (await connectionManager.AuthenticateAsync(SetUpAuth()))
                     {
