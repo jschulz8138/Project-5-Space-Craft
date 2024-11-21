@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RestSharp;
-
-namespace Uplink_Downlink
+﻿namespace Uplink_Downlink
 {
     public class ConnectionManager
     {
@@ -34,7 +27,8 @@ namespace Uplink_Downlink
         /// </returns>
         public async Task<bool> AuthenticateAsync(string AuthPacket)
         {
-            return await _link.SendRequestAsync<bool>(ReqType.POST, DataRoute, AuthPacket);
+            IsAuthenticated = await _link.SendRequestAsync<bool>(ReqType.POST, DataRoute, AuthPacket);
+            return IsAuthenticated;
         }
     }
 }   

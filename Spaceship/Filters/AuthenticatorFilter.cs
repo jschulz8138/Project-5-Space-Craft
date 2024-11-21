@@ -1,8 +1,8 @@
-using LinkServer.Controllers;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace LinkServer.Filters
+namespace Proj5Spaceship.Filters
 {
     public class AuthenticateFilter : IActionFilter
     {
