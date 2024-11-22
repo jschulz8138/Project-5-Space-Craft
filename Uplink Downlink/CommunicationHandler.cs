@@ -1,17 +1,9 @@
-﻿using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Uplink_Downlink
+﻿namespace Uplink_Downlink
 {
     public class CommunicationHandler
     {
         private readonly Link _link;
-        private const string GroundStationUri = "/api";
-        private const string DataRoute = "/Downlink";
+        private const string DataRoute = "/api/downlink/receive";
         public CommunicationHandler(string baseUrl)
         {
             _link = new Link(baseUrl);
@@ -20,17 +12,16 @@ namespace Uplink_Downlink
         //method to ground station
 
         /// <summary>
-        /// Sends data to the ground station and returns whether the data was received properly.
+        /// Sends a data packet to the ground station and returns whether the data was successfully received.
         /// </summary>
-        /// <param name="generalData">The data to be sent as key-value pairs.</param>
+        /// <param name="DataPacket">The data packet to be sent as a string in JSON format.</param>
         /// <returns>
         /// A <see cref="Task{Boolean}"/> representing the asynchronous operation, with a value of 
-        /// <c>true</c> if the data was received successfully; otherwise, <c>false</c>.
+        /// <c>true</c> if the data was successfully received by the ground station; otherwise, <c>false</c>.
         /// </returns>
-        public async Task<bool> UpdateGroundStationAsync(Dictionary<string, string> generalData)
+        public async Task<bool> UpdateGroundStationAsync(string DataPacket) 
         {
-            var response = await _link.SendRequestAsync<RestResponse>(ReqType.POST, GroundStationUri + DataRoute, generalData);
-            return response != null && response.IsSuccessful;
+            return await _link.SendRequestAsync<bool>(ReqType.POST, DataRoute, DataPacket);
         }
     }
 }

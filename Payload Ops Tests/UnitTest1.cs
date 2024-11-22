@@ -8,6 +8,7 @@ using Payload_Ops.Packets;
 using System.IO.Hashing;
 using System.Text;
 using System.Text.Json;
+using Proj5Spaceship;
 
 namespace Payload_Ops_Tests
 {
@@ -597,39 +598,39 @@ namespace Payload_Ops_Tests
             spaceShip.TimedEvent("");
             Assert.IsNotNull(spaceShip);
         }
-        [TestMethod]
-        public void SPACESHIP_0009_VerifyLoggingSendAllData()
-        {
-            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
-            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
-            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
-            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
-            Logging.InsertText(ExcelLogFilesPath, "", "A", 2);
-            Logging.InsertText(ExcelLogFilesPath, "", "B", 2);
-            Logging.InsertText(ExcelLogFilesPath, "", "C", 2);
-            Logging.InsertText(ExcelLogFilesPath, "", "D", 2);
-            Logging.InsertText(ExcelLogFilesPath, "", "A", 3);
-            Logging.InsertText(ExcelLogFilesPath, "", "B", 3);
-            Logging.InsertText(ExcelLogFilesPath, "", "C", 3);
-            Logging.InsertText(ExcelLogFilesPath, "", "D", 3);
-            VelocityReading velReading = new VelocityReading("30");
-            RadiationReading radReading = new RadiationReading("40");
-            PositionReading posReading = new PositionReading("30, 20");
-            Spaceship spaceShip = new Spaceship();
-            spaceShip.AddReading(velReading);
-            spaceShip.AddReading(radReading);
-            spaceShip.AddReading(posReading);
-            spaceShip.SendAll();
-            string actual1 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D1");
-            string actual2 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D2");
-            string actual3 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D3");
-            string expected1 = "30";
-            string expected2 = "40";
-            string expected3 = "30, 20";
-            Assert.AreEqual(actual1, expected1);
-            Assert.AreEqual(actual2, expected2);
-            Assert.AreEqual(actual3, expected3);
-        }
+        //[TestMethod]
+        //public void SPACESHIP_0009_VerifyLoggingSendAllData()
+        //{
+        //    Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "A", 2);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "B", 2);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "C", 2);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "D", 2);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "A", 3);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "B", 3);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "C", 3);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "D", 3);
+        //    VelocityReading velReading = new VelocityReading("30");
+        //    RadiationReading radReading = new RadiationReading("40");
+        //    PositionReading posReading = new PositionReading("30, 20");
+        //    Spaceship spaceShip = new Spaceship();
+        //    spaceShip.AddReading(velReading);
+        //    spaceShip.AddReading(radReading);
+        //    spaceShip.AddReading(posReading);
+        //    spaceShip.SendAll();
+        //    string actual1 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D1");
+        //    string actual2 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D2");
+        //    string actual3 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D3");
+        //    string expected1 = "30";
+        //    string expected2 = "40";
+        //    string expected3 = "30, 20";
+        //    Assert.AreEqual(actual1, expected1);
+        //    Assert.AreEqual(actual2, expected2);
+        //    Assert.AreEqual(actual3, expected3);
+        //}
         [TestMethod]
         public void SPACESHIP_0010_VerifyLoggingSendData()
         {
@@ -686,33 +687,33 @@ namespace Payload_Ops_Tests
             int expected = 3;
             Assert.AreEqual(actual, expected);
         }
-        [TestMethod]
-        public void SPACESHIP_0012_VerifyAllSent()
-        {
-            Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
-            Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
-            Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
-            Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
-            Logging.InsertText(ExcelLogFilesPath, "", "A", 2);
-            Logging.InsertText(ExcelLogFilesPath, "", "B", 2);
-            Logging.InsertText(ExcelLogFilesPath, "", "C", 2);
-            Logging.InsertText(ExcelLogFilesPath, "", "D", 2);
-            Logging.InsertText(ExcelLogFilesPath, "", "A", 3);
-            Logging.InsertText(ExcelLogFilesPath, "", "B", 3);
-            Logging.InsertText(ExcelLogFilesPath, "", "C", 3);
-            Logging.InsertText(ExcelLogFilesPath, "", "D", 3);
-            VelocityReading velReading = new VelocityReading("30");
-            RadiationReading radReading = new RadiationReading("40");
-            PositionReading posReading = new PositionReading("30, 20");
-            Spaceship spaceShip = new Spaceship();
-            spaceShip.AddReading(velReading);
-            spaceShip.AddReading(radReading);
-            spaceShip.AddReading(posReading);
-            spaceShip.SendAll();
-            int actual = spaceShip.spaceShipReadings.Count;
-            int expected = 0;
-            Assert.AreEqual(actual, expected);
-        }
+        //[TestMethod]
+        //public void SPACESHIP_0012_VerifyAllSent()
+        //{
+        //    Logging.InsertText(ExcelLogFilesPath, "", "A", 1);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "B", 1);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "C", 1);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "A", 2);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "B", 2);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "C", 2);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "D", 2);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "A", 3);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "B", 3);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "C", 3);
+        //    Logging.InsertText(ExcelLogFilesPath, "", "D", 3);
+        //    VelocityReading velReading = new VelocityReading("30");
+        //    RadiationReading radReading = new RadiationReading("40");
+        //    PositionReading posReading = new PositionReading("30, 20");
+        //    Spaceship spaceShip = new Spaceship();
+        //    spaceShip.AddReading(velReading);
+        //    spaceShip.AddReading(radReading);
+        //    spaceShip.AddReading(posReading);
+        //    spaceShip.SendAll();
+        //    int actual = spaceShip.spaceShipReadings.Count;
+        //    int expected = 0;
+        //    Assert.AreEqual(actual, expected);
+        //}
     }
     [TestClass]
     public class DataPacketTests

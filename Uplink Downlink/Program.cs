@@ -1,22 +1,34 @@
 ﻿using Uplink_Downlink;
 using System;
-using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 class Program
 {
     static async Task Main(string[] args)
     {
+        Console.WriteLine("Waiting for the server to start...");
+        await Task.Delay(1000);
+        var authPacket = new AuthPacket
+        {
+            Username = "user",
+            Password = "pass"
+        };
 
-        var connectionManager = new ConnectionManager("https://127.0.0.1");//replacing with the server IP or hostname
-        //authencticating with the URL
+        // Serialize the AuthPacket to JSON string
+        string jsonPacket = JsonSerializer.Serialize(authPacket);
 
-        if (await connectionManager.AuthenticateAsync("user", "pass"))
+
+        var connectionManager = new ConnectionManager("http://localhost:5014");
+
+
+
+        if (await connectionManager.AuthenticateAsync(jsonPacket))
         {
             Console.WriteLine("Authentication successful.");
 
             // Initializing the CommunicationHandler for data transmission
-            var communicationHandler = new CommunicationHandler("https://127.0.0.1");
+            var communicationHandler = new CommunicationHandler("http://localhost:5014");
             int delayBeforeUpdate = 60; // set to 60 for testing
 
             // Starting periodic data updates to the ground station
@@ -27,12 +39,14 @@ class Program
         {
             Console.WriteLine("Authentication failed.");
         }
-
-
-
     }
 }
 
+internal class AuthPacket
+{
+    public string Username { get; set; }
+    public string Password { get; set; }
+}
 
 public class DataUpdater
 {
@@ -49,8 +63,14 @@ public class DataUpdater
     {
         while (true)
         {
-            var generalData = new Dictionary<string, string> { { "status", "active" } };
-            await _handler.UpdateGroundStationAsync(generalData);
+            // Creating a data packet object
+            var dataPacket = new { status = "active" };
+            string packet = JsonSerializer.Serialize(dataPacket);
+
+            // Debugging: Print the packet to verify
+            Console.WriteLine($"Sending data packet: {packet}");
+
+            await _handler.UpdateGroundStationAsync(packet);
             Console.WriteLine("Updated ground station with general data.");
             await Task.Delay(_intervalInSeconds * 1000); // Wait for the specified interval before next update
         }
