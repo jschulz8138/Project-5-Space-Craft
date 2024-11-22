@@ -1,71 +1,94 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using RestSharp;
 using Uplink_Downlink;
 
-namespace UnitTest_UplinkDownlink
+namespace Uplink_Downlink_Tests
 {
     [TestClass]
-    public class LinkTest
+    public class LinkTests
     {
-        //LinkTest_01:Testing for initializing the url and rest client
-        [TestMethod]
-        public void ShouldInitialize_UrlandRestClient()
+        private Mock<RestClient>?_mockClient;
+        private Link?_link;
+
+        [TestInitialize]
+        public void Setup()
         {
-            String testUrl = "https://exampletest.com";
-
-            Link link = new Link(testUrl);
-
-            //using the reflection to access the private fields
-            var urlField = typeof(Link).GetField("_url", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var clientField = typeof(Link).GetField("_client", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            Assert.AreEqual(testUrl, urlField.GetValue(link));  // Ensuring that the _url field is set correctly
-            Assert.IsNotNull(clientField.GetValue(link));  // Ensure that the _client (RestClient) is initialized
+            _mockClient = new Mock<RestClient>();
+            _link = new Link("https://example.com", _mockClient.Object);
         }
 
-        //Testing whether the -url is stored correctly
-
         [TestMethod]
-        public void URL_shouldBeStoredInField()
+        public void Constructor_ValidUrl_ShouldInitialize()
         {
-            string testUrl = "https://exampletest.com";
-            Link link = new Link(testUrl);
-
-            var urlField = typeof(Link).GetField("_url", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            Assert.AreEqual(testUrl, urlField.GetValue(link));
+            Assert.IsNotNull(_link);
         }
 
-        //Testing that RestCLient is  initiallized correctly with the provide URL
         [TestMethod]
-        public void Should_initializeRestClientwithURL()
+        [ExpectedException(typeof(UriFormatException))]
+        public void Constructor_InvalidUrl_ShouldThrowUriFormatException()
         {
-            string testUrl = "https://exampletest.com/";
-            Link link = new Link(testUrl);
-
-            var clientField = typeof(Link).GetField("_client", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var restClient = clientField.GetValue(link) as RestClient;
-
-            // Ensuring that the RestClient is initialized
-            Assert.IsNotNull(restClient);
-
-            // Checking if the RestClient's BaseUrl is the correct URL
-            Assert.AreEqual(testUrl, restClient.Options.BaseUrl.ToString());
+            new Link("invalid-url");
         }
 
-        ////Handlingthe Url which are not valid
+        [TestMethod]
+        [DataRow(ReqType.GET, true)]
+        [DataRow(ReqType.POST, true)]
+        [DataRow(ReqType.PUT, false)]
+        [DataRow(ReqType.DELETE, false)]
+        public async Task SendRequestAsync_ValidRequest_ShouldReturnExpectedResult(ReqType reqType, bool expectedResult)
+        {
+            // Arrange
+            SetupMockClientResponse(reqType, expectedResult);
 
-        //[TestMethod]
-        //[ExpectedException(typeof(UriFormatException))]
-        //public void _ShouldThrowExceptionForInvalidUrl()
-        //{
-        //    string invalidUrl = "invalid-url";
-        //    Link link = new Link(invalidUrl);
+            // Act
+            var result = await _link!.SendRequestAsync<object>(reqType, "/endpoint", "{}");
+
+            // Assert
+            Assert.AreEqual(expectedResult, result);
+        }
 
 
-        //}
+        [TestMethod]
+        public async Task SendRequestAsync_UnsuccessfulResponse_ShouldReturnFalse()
+        {
+            // Arrange
+            SetupMockClientResponse(ReqType.GET, false);
+
+            // Act
+            var result = await _link!.SendRequestAsync<object>(ReqType.GET, "/endpoint", "{}");
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task SendRequestAsync_InvalidReqType_ShouldThrowArgumentException()
+        {
+            await _link!.SendRequestAsync<object>((ReqType)999, "/endpoint", "{}");
+        }
+
+        private void SetupMockClientResponse(ReqType reqType, bool isSuccessful)
+        {
+            var mockResponse = new Mock<RestResponse>();
+            mockResponse.SetupGet(r => r.IsSuccessful).Returns(isSuccessful);
+
+            switch (reqType)
+            {
+                case ReqType.GET:
+                    _mockClient?.Setup(c => c.GetAsync(It.IsAny<RestRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockResponse.Object);
+                    break;
+                case ReqType.POST:
+                    _mockClient?.Setup(c => c.PostAsync(It.IsAny<RestRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockResponse.Object);
+                    break;
+                case ReqType.PUT:
+                    _mockClient?.Setup(c => c.PutAsync(It.IsAny<RestRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockResponse.Object);
+                    break;
+                case ReqType.DELETE:
+                    _mockClient?.Setup(c => c.DeleteAsync(It.IsAny<RestRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockResponse.Object);
+                    break;
+            }
+        }
     }
-
-
-
 }

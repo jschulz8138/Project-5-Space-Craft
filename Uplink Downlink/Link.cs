@@ -7,20 +7,16 @@ namespace Uplink_Downlink
         GET, POST, PUT, DELETE
     };
 
-    internal class Link
+    public class Link
     {
         private readonly RestClient _client;
-        private readonly string _url;
-        public Link(string url)
+        public Link(string url, RestClient? client = null)
         {
-            // Validates the URL for throwing exception
             if (!Uri.TryCreate(url, UriKind.Absolute, out _))
             {
                 throw new UriFormatException("Invalid URL format.");
             }
-
-            _url = url;
-            _client = new RestClient(_url);
+            _client = client ?? new RestClient(url);
         }
 
         /// <summary>
@@ -38,7 +34,7 @@ namespace Uplink_Downlink
         /// A <see cref="Task{Boolean}"/> representing the asynchronous operation, which contains <c>true</c> if the request was successful; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentException">Thrown if an invalid request type is specified.</exception>
-        internal async Task<bool> SendRequestAsync<TResponse>(ReqType type, string endpoint, string serializedPacket)
+        public async Task<bool> SendRequestAsync<TResponse>(ReqType type, string endpoint, string serializedPacket)
         {
             var request = new RestRequest(endpoint);
 
