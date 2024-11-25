@@ -3,7 +3,6 @@
 using System.IO.Hashing;
 using System.Text;
 using System.Text.Json;
-using DocumentFormat.OpenXml.Office2016.Drawing.Command;
 namespace Payload_Ops.Packets
 {
     public class DataPacket : IPacket
@@ -17,16 +16,6 @@ namespace Payload_Ops.Packets
         public string Data { get { return data; } }
         private string crc;
         public string Crc { get { return crc; } }
-
-        //public DataPacket(string dataType, string data)
-        //{
-        //    this.
-        //    dateTime = DateTime.Now;
-        //    this.dataType = dataType;
-        //    this.data = data;
-        //    crc = CalculateCRC();
-        //}
-
         public DataPacket(IReading reading)
         {
             this.reading = reading;
