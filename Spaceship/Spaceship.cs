@@ -5,7 +5,6 @@ using Payload_Ops.Packets;
 using Uplink_Downlink;
 using CAndD.Services;
 using Payload_Ops;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using CAndD.Models;
 
 namespace Proj5Spaceship
@@ -15,7 +14,6 @@ namespace Proj5Spaceship
         public static readonly string GroundStationURI = "http://localhost:5014"; // will change
         public List<IReading> spaceShipReadings;
         public List<IFunction> spaceShipFunctions;
-        private ConnectionManager _connectionManager = new ConnectionManager(GroundStationURI);
         private CommunicationHandler _communicationHandler = new CommunicationHandler(GroundStationURI);
         private Timer timer;
         private bool readyForNextSend = true;
@@ -56,7 +54,7 @@ namespace Proj5Spaceship
             bool result = false;
             string jsonPacket = packet.ToJson();
             Logging.LogPacket(packet.GetPacketType(), "Outbound", packet.GetPacketData());
-            result = await _connectionManager.AuthenticateAsync(jsonPacket);
+            result = await _communicationHandler.UpdateGroundStationAsync(jsonPacket);
             return result;
         }
 
