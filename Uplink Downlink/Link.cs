@@ -24,7 +24,7 @@ namespace Uplink_Downlink
             }
             _client = client ?? new RestClient(url);
         }
-
+        
         /// <summary>
         /// Sends an HTTP request of the specified type (GET, POST, PUT, DELETE) to a given endpoint with optional arguments.
         /// </summary>
