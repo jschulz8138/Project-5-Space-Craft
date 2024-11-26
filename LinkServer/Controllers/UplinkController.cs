@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Specialized;
 using Uplink_Downlink;
-using Proj5Spaceship;
-using Proj5Spaceship.Filters;
+using Spaceship;
+using Spaceship.Filters;
 
 namespace LinkServer.Controllers
 {

@@ -3,15 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Uplink_Downlink;
 using System.Text.Json;
-using Proj5Spaceship.Filters;
+using Spaceship.Filters;
 
 
-namespace Proj5Spaceship
+namespace Spaceship
 {
     public class UDLogicHandler
     {
-        private Spaceship? _spaceship;
-        public UDLogicHandler(Spaceship? spaceship)
+        private Ship? _spaceship;
+        public UDLogicHandler(Ship? spaceship)
         {
             _spaceship = spaceship;
         }

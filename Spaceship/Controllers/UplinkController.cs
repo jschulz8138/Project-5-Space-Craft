@@ -1,9 +1,7 @@
-using LinkServer.Filters;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Specialized;
 using Uplink_Downlink;
-using Payload_Ops;
-using Proj5Spaceship.Filters;
+using Spaceship.Filters;
+using Spaceship;
 
 namespace LinkServer.Controllers
 {
@@ -13,9 +11,9 @@ namespace LinkServer.Controllers
     public class UplinkController : ControllerBase
     {
         private readonly AppLogger _logger;
-        private readonly Spaceship _spaceship;
+        private readonly Ship _spaceship;
 
-        public UplinkController(AppLogger logger, Spaceship spaceship)
+        public UplinkController(AppLogger logger, Ship spaceship)
         {
             _logger = logger;
             _spaceship = spaceship;

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Proj5Spaceship.Filters
+namespace Spaceship.Filters
 {
     public class AuthenticateFilter : IActionFilter
     {

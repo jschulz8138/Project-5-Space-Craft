@@ -8,7 +8,7 @@ using Payload_Ops.Packets;
 using System.IO.Hashing;
 using System.Text;
 using System.Text.Json;
-using Proj5Spaceship;
+using Spaceship;
 
 namespace Payload_Ops_Tests
 {

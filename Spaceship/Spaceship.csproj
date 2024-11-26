@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\C&amp;D\C&amp;D.csproj" />
-    <ProjectReference Include="..\Project-5-Space-Craft\Payload Ops.csproj" />
   </ItemGroup>
 
 </Project>
