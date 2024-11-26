@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Specialized;
 using Uplink_Downlink;
-using Spaceship;
 using Spaceship.Filters;
+using Spaceship;
 
 namespace LinkServer.Controllers
 {
@@ -13,6 +12,7 @@ namespace LinkServer.Controllers
     {
         private readonly AppLogger _logger;
         private readonly Ship _spaceship;
+
         public UplinkController(AppLogger logger, Ship spaceship)
         {
             _logger = logger;

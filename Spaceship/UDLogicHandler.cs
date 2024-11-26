@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Payload_Ops;
 using Uplink_Downlink;
 using System.Text.Json;
-using Proj5Spaceship.Filters;
+using Spaceship.Filters;
 
 
-namespace Proj5Spaceship
+namespace Spaceship
 {
     public class UDLogicHandler
     {
-        private Spaceship? _spaceship;
-        public UDLogicHandler(Spaceship? spaceship)
+        private Ship? _spaceship;
+        public UDLogicHandler(Ship? spaceship)
         {
             _spaceship = spaceship;
         }
@@ -49,11 +48,11 @@ namespace Proj5Spaceship
             {
                 endpoints?.MapControllers();
             });
-            await app.RunAsync();
+            await app.RunAsync("http://localhost:5001");
         }
-        public async Task StartClientAsync(string HostAndPort)
+        public async Task StartClientAsync(string hostAndPort)
         {
-            var connectionManager = new ConnectionManager(HostAndPort);
+            var connectionManager = new ConnectionManager(hostAndPort);
 
             while (true)
             {

@@ -7,18 +7,18 @@ using CAndD.Services;
 using Payload_Ops;
 using CAndD.Models;
 
-namespace Proj5Spaceship
+namespace Spaceship
 {
-    public class Spaceship
+    public class Ship
     {
-        public static readonly string GroundStationURI = "http://localhost:5014"; // will change
+        public static readonly string GroundStationURI = "http://localhost:9000"; // will change
         public List<IReading> spaceShipReadings;
         public List<IFunction> spaceShipFunctions;
         private CommunicationHandler _communicationHandler = new CommunicationHandler(GroundStationURI);
         private Timer timer;
         private bool readyForNextSend = true;
 
-        public Spaceship()
+        public Ship()
         {
             //initalize variables
             this.spaceShipReadings = new List<IReading>();
