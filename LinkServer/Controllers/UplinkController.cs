@@ -12,8 +12,8 @@ namespace LinkServer.Controllers
     public class UplinkController : ControllerBase
     {
         private readonly AppLogger _logger;
-        private readonly Spaceship _spaceship;
-        public UplinkController(AppLogger logger, Spaceship spaceship)
+        private readonly Ship _spaceship;
+        public UplinkController(AppLogger logger, Ship spaceship)
         {
             _logger = logger;
             _spaceship = spaceship;
@@ -38,3 +38,4 @@ namespace LinkServer.Controllers
             }
         }
     }
+}

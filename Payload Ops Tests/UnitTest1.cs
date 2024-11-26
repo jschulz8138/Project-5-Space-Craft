@@ -538,13 +538,13 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void SPACESHIP_0001_Constructor_Variant_Not_Null()
         {
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             Assert.IsNotNull(spaceShip);
         }
         [TestMethod]
         public void SPACESHIP_0002_AddReading()
         {
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             VelocityReading reading = new VelocityReading("30");
             spaceShip.AddReading(reading);
             Assert.IsTrue(spaceShip.spaceShipReadings.Contains(reading));
@@ -552,7 +552,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void SPACESHIP_0003_AddFunction()
         {
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             IncreaseThrustFunction function = new IncreaseThrustFunction("30");
             spaceShip.AddFunction(function);
             Assert.IsTrue(spaceShip.spaceShipFunctions.Contains(function));
@@ -560,7 +560,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void SPACESHIP_0004_Send()
         {
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             VelocityReading reading = new VelocityReading("30");
             DataPacket pkt = new DataPacket(reading);
             spaceShip.Send(pkt);
@@ -568,7 +568,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void SPACESHIP_0005_SendAll()
         {
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             VelocityReading reading = new VelocityReading("30");
             VelocityReading reading2 = new VelocityReading("70");
             spaceShip.AddReading(reading);
@@ -578,7 +578,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void SPACESHIP_0006_RunAll()
         {
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             IncreaseThrustFunction func = new IncreaseThrustFunction("30");
             spaceShip.AddFunction(func);
             spaceShip.RunAll();
@@ -586,7 +586,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void SPACESHIP_0007_Recieve_Invalid()
         {
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             bool actual = spaceShip.Receive("string is wrong");
             Assert.IsFalse(actual);
         }
@@ -594,7 +594,7 @@ namespace Payload_Ops_Tests
         [TestMethod]
         public void SPACESHIP_0008_TimedEvent()
         {
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             spaceShip.TimedEvent("");
             Assert.IsNotNull(spaceShip);
         }
@@ -616,7 +616,7 @@ namespace Payload_Ops_Tests
             VelocityReading velReading = new VelocityReading("30");
             RadiationReading radReading = new RadiationReading("40");
             PositionReading posReading = new PositionReading("30, 20");
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             spaceShip.Send(new DataPacket(velReading));
             spaceShip.Send(new DataPacket(radReading));
             spaceShip.Send(new DataPacket(posReading));
@@ -639,7 +639,7 @@ namespace Payload_Ops_Tests
             Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
             VelocityReading velReading = new VelocityReading("30");
             DataPacket pkt = new DataPacket(velReading);
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             spaceShip.Send(pkt);
             string actual1 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D1");
             string expected1 = "30";
@@ -654,7 +654,7 @@ namespace Payload_Ops_Tests
             Logging.InsertText(ExcelLogFilesPath, "", "D", 1);
             IncreaseThrustFunction thrustFunc = new IncreaseThrustFunction("30");
             FunctionPacket pkt = new FunctionPacket(thrustFunc);
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             spaceShip.Send(pkt);
             string actual1 = Logging.GetCellValue(ExcelLogFilesPath, "Sheet1", "D1");
             string expected1 = "30";
@@ -678,7 +678,7 @@ namespace Payload_Ops_Tests
             VelocityReading velReading = new VelocityReading("30");
             RadiationReading radReading = new RadiationReading("40");
             PositionReading posReading = new PositionReading("30, 20");
-            Spaceship spaceShip = new Spaceship();
+            Ship spaceShip = new Ship();
             spaceShip.AddReading(velReading);
             spaceShip.AddReading(radReading);
             spaceShip.AddReading(posReading);
