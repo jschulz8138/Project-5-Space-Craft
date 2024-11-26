@@ -2,13 +2,18 @@
 {
     public class CommunicationHandler
     {
-        private readonly Link _link;
+        private readonly ILink _link;
         private const string DataRoute = "/api/downlink/receive";
         public CommunicationHandler(string baseUrl)
         {
             _link = new Link(baseUrl);
         }
 
+        public CommunicationHandler(ILink link)
+        {
+            _link = link;
+        }
+        
         //method to ground station
 
         /// <summary>
@@ -19,9 +24,24 @@
         /// A <see cref="Task{Boolean}"/> representing the asynchronous operation, with a value of 
         /// <c>true</c> if the data was successfully received by the ground station; otherwise, <c>false</c>.
         /// </returns>
-        public async Task<bool> UpdateGroundStationAsync(string DataPacket) 
+        public async Task<bool> UpdateGroundStationAsync(string dataPacket)
         {
-            return await _link.SendRequestAsync<bool>(ReqType.POST, DataRoute, DataPacket);
+            if (string.IsNullOrEmpty(dataPacket))
+            {
+                throw new ArgumentException("Invalid data packet.");
+            }
+
+            try
+            {
+                return await _link.SendRequestAsync<bool>(ReqType.POST, DataRoute, dataPacket);
+            }
+            catch (HttpRequestException ex)
+            {
+                // Handle specific HTTP exceptions if needed
+                // You can throw a more specific exception or log it
+                throw new Exception("There was an error with the request.", ex);
+            }
         }
+
     }
 }

@@ -7,7 +7,13 @@ namespace Uplink_Downlink
         GET, POST, PUT, DELETE
     };
 
-    public class Link
+    // Create an interface to allow mocking
+    public interface ILink
+    {
+        Task<bool> SendRequestAsync<TResponse>(ReqType type, string endpoint, string serializedPacket);
+    }
+
+    public class Link : ILink
     {
         private readonly RestClient _client;
         public Link(string url, RestClient? client = null)
@@ -18,9 +24,7 @@ namespace Uplink_Downlink
             }
             _client = client ?? new RestClient(url);
         }
-
-        /// <summary>
-        /// Sends an HTTP request of the specified type (GET, POST, PUT, DELETE) to a given endpoint with optional arguments.
+        
         /// <summary>
         /// Sends an HTTP request of the specified type (GET, POST, PUT, DELETE) to a given endpoint with optional arguments.
         /// </summary>
@@ -34,24 +38,39 @@ namespace Uplink_Downlink
         /// A <see cref="Task{Boolean}"/> representing the asynchronous operation, which contains <c>true</c> if the request was successful; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentException">Thrown if an invalid request type is specified.</exception>
-        public async Task<bool> SendRequestAsync<TResponse>(ReqType type, string endpoint, string serializedPacket)
+        public virtual async Task<bool> SendRequestAsync<TResponse>(ReqType type, string endpoint, string serializedPacket)
         {
             var request = new RestRequest(endpoint);
-
             request.AddHeader("Content-Type", "application/json");
             request.AddQueryParameter("packet", serializedPacket);
 
-            // Determine request type
-            RestResponse response = type switch
+            try
             {
-                ReqType.GET => await _client.GetAsync(request),
-                ReqType.POST => await _client.PostAsync(request),
-                ReqType.PUT => await _client.PutAsync(request),
-                ReqType.DELETE => await _client.DeleteAsync(request),
-                _ => throw new ArgumentException("Invalid request type")
-            };
+                // Determine request type
+                RestResponse response = type switch
+                {
+                    ReqType.GET => await _client.GetAsync(request),
+                    ReqType.POST => await _client.PostAsync(request),
+                    ReqType.PUT => await _client.PutAsync(request),
+                    ReqType.DELETE => await _client.DeleteAsync(request),
+                    _ => throw new ArgumentException("Invalid request type")
+                };
 
-            return response.IsSuccessful;
+                // Return true if the response is successful
+                return response.IsSuccessful;
+            }
+            catch (HttpRequestException ex)
+            {
+                // Handle specific HTTP request exceptions, such as network issues, timeouts, etc.
+                Console.WriteLine($"Request failed: {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // Catch any other exceptions (e.g., argument exceptions, serialization issues, etc.)
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                return false;
+            }
         }
     }
 }

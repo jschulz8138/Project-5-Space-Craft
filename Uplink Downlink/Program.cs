@@ -28,12 +28,12 @@ class Program
             Console.WriteLine("Authentication successful.");
 
             // Initializing the CommunicationHandler for data transmission
-            var communicationHandler = new CommunicationHandler("http://localhost:5014");
+            //var communicationHandler = new CommunicationHandler("http://localhost:5014");
             int delayBeforeUpdate = 60; // set to 60 for testing
 
             // Starting periodic data updates to the ground station
-            var dataUpdater = new DataUpdater(communicationHandler, delayBeforeUpdate); // Updating every 60 seconds
-            await dataUpdater.StartAsync();
+            //var dataUpdater = new DataUpdater(communicationHandler, delayBeforeUpdate); // Updating every 60 seconds
+            //await dataUpdater.StartAsync();
         }
         else
         {
