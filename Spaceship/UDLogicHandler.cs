@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Payload_Ops;
 using Uplink_Downlink;
 using System.Text.Json;
 using Proj5Spaceship.Filters;
@@ -51,9 +50,9 @@ namespace Proj5Spaceship
             });
             await app.RunAsync();
         }
-        public async Task StartClientAsync(string HostAndPort)
+        public async Task StartClientAsync(string hostAndPort)
         {
-            var connectionManager = new ConnectionManager(HostAndPort);
+            var connectionManager = new ConnectionManager(hostAndPort);
 
             while (true)
             {

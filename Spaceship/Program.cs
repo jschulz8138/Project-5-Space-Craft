@@ -6,6 +6,6 @@ UDLogicHandler _UDLogicHandler = new UDLogicHandler(ship);
 
 // Run both tasks concurrently
 await Task.WhenAll(
-    _UDLogicHandler.StartClientAsync(Spaceship.GroundStationURI),
+    _UDLogicHandler.StartClientAsync(ship.GroundStationURI),
     _UDLogicHandler.StartServerAsync(null)
 );
