@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Collections.Concurrent;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Uplink_Downlink;
 
 namespace Spaceship.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController] // Uncovered line
+    [Route("api/[controller]")] // Uncovered line
     public class AuthenticatorController : ControllerBase
     {
-        private readonly AppLogger _logger;
+        private readonly AppLogger _logger; // Uncovered line
+        private static readonly ConcurrentDictionary<string, short> _loginAttempts = new();
+        private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
         public AuthenticatorController(AppLogger logger)
         {
@@ -26,16 +23,11 @@ namespace Spaceship.Controllers
             {"user1", "password1" },
             {"user2", "password2" }
         };
-        private short _loginAttempts = 0;
-
-        // Static dictionary to store logged-in sessions (as an example)
-        private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserCredentials credentials)
         {
-
-            if (_loginAttempts >= 3)
+            if (_loginAttempts.TryGetValue(credentials.Username, out var attempts) && attempts >= 3)
             {
                 _logger.LogAuthentication(credentials.Username, success: false);
                 return Unauthorized("Too many login attempts.");
@@ -46,27 +38,32 @@ namespace Spaceship.Controllers
                 _logger.LogAuthentication(credentials.Username, success: true);
                 return Ok("Already authenticated.");
             }
+
             bool usernameExists = _users.ContainsKey(credentials.Username);
             bool passwordMatches = usernameExists && _users[credentials.Username] == credentials.Password;
-            
+
             if (usernameExists && passwordMatches)
             {
                 _authenticatedUsers[credentials.Username] = true;
+                _loginAttempts.TryRemove(credentials.Username, out _);
                 HttpContext.Session.SetString("username", credentials.Username);
-                
+
                 _logger.LogAuthentication(credentials.Username, success: true);
                 return Ok("Authenticated");
             }
             else
             {
-                if (!usernameExists && !passwordMatches)
-                    _logger.LogAuthentication(credentials.Username, success: false, reason: "both username and password are invalid");
-                else if (!usernameExists)
+                if (!usernameExists)
+                {
                     _logger.LogAuthentication(credentials.Username, success: false, reason: "username is invalid");
+                }
                 else
-                    _logger.LogAuthentication(credentials.Username, success: false, reason: "password is invalid");
+                {
+                    _loginAttempts.AddOrUpdate(credentials.Username, 1, (key, count) => (short)(count + 1));
+                    _logger.LogAuthentication(credentials.Username, success: false, reason: "invalid password");
+                }
 
-                return Unauthorized("Invalid credentials");
+                return Unauthorized("Invalid credentials.");
             }
         }
 
@@ -83,14 +80,11 @@ namespace Spaceship.Controllers
                 return Ok("Logged out");
             }
 
-            return BadRequest("User is not logged in");
+            return BadRequest("User is not logged in.");
 
         }
 
-        public static bool IsAuthenticated(string username)
-        {
-            return _authenticatedUsers.ContainsKey(username);
-        }
+        public static bool IsAuthenticated(string username) => _authenticatedUsers.ContainsKey(username);
     }
 
     public class UserCredentials
