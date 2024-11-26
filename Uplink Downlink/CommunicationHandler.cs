@@ -3,7 +3,7 @@
     public class CommunicationHandler
     {
         private readonly Link _link;
-        private const string DataRoute = "/api/downlink/receive";
+        private const string DataRoute = "/";
         public CommunicationHandler(string baseUrl)
         {
             _link = new Link(baseUrl);
