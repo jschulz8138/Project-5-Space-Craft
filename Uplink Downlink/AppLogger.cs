@@ -2,11 +2,11 @@
 {
     public abstract class AppLogger
     {
-        protected readonly string logFilePath;
+        protected readonly string LogFilePath;
 
         protected AppLogger(string logFilePath)
         {
-            this.logFilePath = logFilePath;
+            this.LogFilePath = logFilePath;
         }
 
         public abstract void LogMetadata(string method, string endpoint, int statusCode);
@@ -23,7 +23,7 @@
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter(logFilePath, true))
+                using (StreamWriter writer = new StreamWriter(LogFilePath, true))
                 {
                     writer.WriteLine(content);
                 }
