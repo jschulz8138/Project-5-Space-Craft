@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Uplink_Downlink;
 
-namespace LinkServer.Controllers
+namespace Spaceship.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -31,7 +31,6 @@ namespace LinkServer.Controllers
         // Static dictionary to store logged-in sessions (as an example)
         private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
-        //I believe the route is api/Authenticator/login
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserCredentials credentials)
         {
@@ -55,26 +54,17 @@ namespace LinkServer.Controllers
                 _authenticatedUsers[credentials.Username] = true;
                 HttpContext.Session.SetString("username", credentials.Username);
                 
-                // log successful authentication
                 _logger.LogAuthentication(credentials.Username, success: true);
-
                 return Ok("Authenticated");
             }
             else
             {
-                //Log failed authentication attempt and determine specific error messages
                 if (!usernameExists && !passwordMatches)
-                {
                     _logger.LogAuthentication(credentials.Username, success: false, reason: "both username and password are invalid");
-                }
                 else if (!usernameExists)
-                {
                     _logger.LogAuthentication(credentials.Username, success: false, reason: "username is invalid");
-                }
                 else
-                {
                     _logger.LogAuthentication(credentials.Username, success: false, reason: "password is invalid");
-                }
 
                 return Unauthorized("Invalid credentials");
             }
