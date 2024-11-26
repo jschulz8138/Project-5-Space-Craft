@@ -48,7 +48,7 @@ namespace Spaceship
             {
                 endpoints?.MapControllers();
             });
-            await app.RunAsync();
+            await app.RunAsync("http://localhost:5001");
         }
         public async Task StartClientAsync(string hostAndPort)
         {
