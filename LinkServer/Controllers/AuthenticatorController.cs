@@ -4,11 +4,11 @@ using Uplink_Downlink;
 
 namespace LinkServer.Controllers
 {
-    [ApiController] // Uncovered line
-    [Route("api/[controller]")] // Uncovered line
+    [ApiController]
+    [Route("api/[controller]")]
     public class AuthenticatorController : ControllerBase
     {
-        private readonly AppLogger _logger; // Uncovered line
+        private readonly AppLogger _logger;
         private static readonly ConcurrentDictionary<string, short> _loginAttempts = new();
         private static readonly ConcurrentDictionary<string, bool> _authenticatedUsers = new();
 
