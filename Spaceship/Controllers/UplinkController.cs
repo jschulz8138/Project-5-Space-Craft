@@ -3,7 +3,7 @@ using Uplink_Downlink;
 using Spaceship.Filters;
 using Spaceship;
 
-namespace LinkServer.Controllers
+namespace Spaceship.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -23,7 +23,7 @@ namespace LinkServer.Controllers
         public IActionResult SendUplink([FromBody] string packet)
         {
             bool success = _spaceship.Receive(packet.ToUpper());
-
+            //bool success = (packet == null) ? true : false;
             string returnMessage = success ? "Uplink processed successfully." : "Uplink failed to process.";
 
             if (success)

@@ -10,8 +10,8 @@ namespace Spaceship
 {
     public class UDLogicHandler
     {
-        private Ship? _spaceship;
-        public UDLogicHandler(Ship? spaceship)
+        private Ship _spaceship;
+        public UDLogicHandler(Ship spaceship)
         {
             _spaceship = spaceship;
         }
@@ -26,6 +26,7 @@ namespace Spaceship
             builder.Services.AddSwaggerGen();
             builder.Services.AddControllers();
             builder.Services.AddScoped<AuthenticateFilter>();
+            builder.Services.AddSingleton<Ship>(_spaceship);
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
@@ -44,11 +45,8 @@ namespace Spaceship
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseSession();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints?.MapControllers();
-            });
-            await app.RunAsync("http://localhost:5001");
+            app.MapControllers();
+            await app.RunAsync("http://localhost:7001");
         }
         public async Task StartClientAsync(string hostAndPort)
         {
