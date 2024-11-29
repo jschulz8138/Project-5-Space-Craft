@@ -2,13 +2,21 @@
 {
     public class ConnectionManager
     {
-        private readonly Link _link;
+
+        private readonly ILink _link;//changed to ILink to support mocking
         private const string DataRoute = "/api/Authentication/login";
 
         public bool IsAuthenticated { get; private set; }
         public ConnectionManager(string baseUrl)
         {
             _link = new Link(baseUrl);
+            IsAuthenticated = false;
+        }
+
+        //for testing (mocking)
+        public ConnectionManager(ILink link)
+        {
+            _link = link ?? throw new ArgumentNullException(nameof(link));
             IsAuthenticated = false;
         }
 
