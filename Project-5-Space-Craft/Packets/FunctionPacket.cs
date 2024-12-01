@@ -57,6 +57,7 @@ namespace Payload_Ops.Packets
             {
                 case "selfdestructfunction": return new SelfDestructFunction(Command);
                 case "increasethrustfunction": return new IncreaseThrustFunction(Command);
+                case "telemetry" : return new MoveshipFunction(Command);
                 default: return null;
             }
         }
